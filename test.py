@@ -2,6 +2,7 @@ print("DAAR BEN IK WEEEEER")
 
 def test1():
     print("ellooo")
+    print("prank dit is vanaf test")
     
     
 def test2():
