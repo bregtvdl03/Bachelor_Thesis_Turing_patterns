@@ -1,3 +1,8 @@
 print("DAAR BEN IK WEEEEER")
 
-print("change from master")
+def test1():
+    print("ellooo")
+    
+    
+def test2():
+    print("eloo2")
