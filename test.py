@@ -6,3 +6,4 @@ def test1():
     
 def test2():
     print("eloo2")
+    print("change from test")
