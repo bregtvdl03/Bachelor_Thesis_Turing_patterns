@@ -23,7 +23,8 @@ domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD, 
     points=[np.array([-2, -2]), np.array([2, 2])],
     n=[nx, ny],
-    cell_type=mesh.CellType.triangle)
+    cell_type=mesh.CellType.triangle
+)
 
 # Define function space
 V = fem.functionspace(domain, ("Lagrange", 1))
