@@ -27,17 +27,17 @@ V = fem.functionspace(domain, ("Lagrange", 1))
 def initial_condition(x, a=5):
     return np.exp(-a * (x[0]**2 + x[1]**2))
 
-fdim = domain.topology.dim - 1
-boundary_facets = mesh.locate_entities_boundary(
-    msh=domain,
-    dim=fdim,
-    marker=lambda x: np.full(x.shape[1], True, dtype=bool)
-)
-bc = fem.dirichletbc(
-    value=PETSc.ScalarType(0),
-    dofs=fem.locate_dofs_topological(V, fdim, boundary_facets),
-    V=V
-)
+# fdim = domain.topology.dim - 1
+# boundary_facets = mesh.locate_entities_boundary(
+#     msh=domain,
+#     dim=fdim,
+#     marker=lambda x: np.full(x.shape[1], True, dtype=bool)
+# )
+# bc = fem.dirichletbc(
+#     value=PETSc.ScalarType(0),
+#     dofs=fem.locate_dofs_topological(V, fdim, boundary_facets),
+#     V=V
+# )
 
 # u_{n}
 u_n = fem.Function(V)
@@ -89,9 +89,9 @@ for n in range(num_steps):
         loc_b.set(0)
     assemble_vector(b, linear_form)
     
-    apply_lifting(b, [bilinear_form], [[bc]])
-    b.ghostUpdate(addv=PETSc.InsertMode.ADD_VALUES, mode=PETSc.ScatterMode.REVERSE)
-    set_bc(b, [bc])
+    # apply_lifting(b, [bilinear_form], [[bc]])
+    # b.ghostUpdate(addv=PETSc.InsertMode.ADD_VALUES, mode=PETSc.ScatterMode.REVERSE)
+    # set_bc(b, [bc])
     
     solver.solve(b, uh.x.petsc_vec)
     uh.x.scatter_forward()
