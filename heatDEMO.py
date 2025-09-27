@@ -13,8 +13,8 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, a
 
 # Define temporal parameters
 t = 0  # Start time
-T = 1.0  # Final time
-num_steps = 64
+T = 2 * np.pi  # Final time
+num_steps = 128
 dt = T / num_steps  # time step size
 
 # Define mesh
@@ -30,7 +30,7 @@ V = fem.functionspace(domain, ("Lagrange", 1))
 
 # Create initial condition
 def initial_condition(x, a=5):
-    return np.exp(-a * (x[0]**2 + x[1]**2))
+    return 2 * np.exp(-a * ((x[0] - 0.5)**2 + (x[1] - 0.5)**2)) + np.exp(-2*a * ((x[0] + 1)**2 + (x[1] + 0.5)**2))
 
 u_n = fem.Function(V)
 u_n.name = "u_n"
@@ -61,6 +61,87 @@ xdmf.write_function(uh, t)
 # Variational problem
 u = ufl.TrialFunction(V)
 v = ufl.TestFunction(V)
-f = fem.Constant(domain, PETSc.ScalarType(0))
+x = ufl.SpatialCoordinate(domain)
+time = fem.Constant(domain, PETSc.ScalarType(0))
+f = 20 * ufl.exp(-5*((x[0] + ufl.cos(5 * time))**2 + (x[1] + ufl.sin(5 * time))**2))
+# f = fem.Constant(domain, PETSc.ScalarType(0))
 a = u * v * ufl.dx + dt * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
 L = (u_n + dt * f) * v * ufl.dx
+
+bilinear_form = fem.form(a)
+linear_form = fem.form(L)
+
+A = assemble_matrix(bilinear_form, bcs = [bc])
+A.assemble()
+b = create_vector(linear_form)
+
+# Create solver
+solver = PETSc.KSP().create(domain.comm)
+solver.setOperators(A)
+solver.setType(PETSc.KSP.Type.PREONLY)
+solver.getPC().setType(PETSc.PC.Type.LU)
+
+pyvista.start_xvfb()
+
+grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
+
+plotter = pyvista.Plotter()
+plotter.open_gif("out_heat/diffusion.gif", fps=30)
+plotter.show_grid()
+
+grid.point_data["uh"] = uh.x.array
+warped = grid.warp_by_scalar("uh", factor=1)
+
+viridis = mpl.colormaps.get_cmap("viridis").resampled(25)
+sargs = dict(
+    title_font_size=25,
+    label_font_size=20,
+    fmt="%.2e",
+    color="black",
+    position_x=0.1,
+    position_y=0.8,
+    width=0.8,
+    height=0.1
+)
+
+renderer = plotter.add_mesh(
+    warped,
+    show_edges=True,
+    lighting=False,
+    cmap=viridis,
+    scalar_bar_args=sargs,
+    clim=[0, max(uh.x.array)]
+)
+
+for i in range(num_steps):
+    t += dt
+    time.value = t
+
+    # Update the right hand side reusing the initial vector
+    with b.localForm() as loc_b:
+        loc_b.set(0)
+    assemble_vector(b, linear_form)
+
+    # Apply Dirichlet boundary condition to the vector
+    apply_lifting(b, [bilinear_form], [[bc]])
+    b.ghostUpdate(addv=PETSc.InsertMode.ADD_VALUES, mode=PETSc.ScatterMode.REVERSE)
+    set_bc(b, [bc])
+
+    # Solve linear problem
+    solver.solve(b, uh.x.petsc_vec)
+    uh.x.scatter_forward()
+
+    # Update solution at previous time step (u_n)
+    u_n.x.array[:] = uh.x.array
+
+    # Write solution to file
+    xdmf.write_function(uh, t)
+    
+    # Update plot
+    new_warped = grid.warp_by_scalar("uh", factor=1)
+    warped.points[:, :] = new_warped.points
+    warped.point_data["uh"][:] = uh.x.array
+    plotter.write_frame()
+
+plotter.close()
+xdmf.close()
