@@ -12,10 +12,10 @@ from dolfinx import fem, mesh, io, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, apply_lifting, set_bc
 
 # Define temporal parameters
-t = 0  # Start time
-T = 2 * np.pi  # Final time
+t = 0
+T = 2 * np.pi
 num_steps = 128
-dt = T / num_steps  # time step size
+dt = T / num_steps
 
 # Define mesh
 nx, ny = 64, 64
@@ -31,10 +31,6 @@ V = fem.functionspace(domain, ("Lagrange", 1))
 # Create initial condition
 def initial_condition(x, a=5):
     return 2 * np.exp(-a * ((x[0] - 0.5)**2 + (x[1] - 0.5)**2)) + np.exp(-2*a * ((x[0] + 1)**2 + (x[1] + 0.5)**2))
-
-u_n = fem.Function(V)
-u_n.name = "u_n"
-u_n.interpolate(initial_condition)
 
 # Create boundary condition
 fdim = domain.topology.dim - 1
@@ -52,22 +48,30 @@ bc = fem.dirichletbc(
 xdmf = io.XDMFFile(domain.comm, "out_heat/diffusion.xdmf", "w")
 xdmf.write_mesh(domain)
 
-# Define solution variable, and interpolate initial solution for visualization in Paraview
+# u_{n}
+u_n = fem.Function(V)
+u_n.name = "u_n"
+u_n.interpolate(initial_condition)
+
+# u_{n+1}
 uh = fem.Function(V)
 uh.name = "uh"
 uh.interpolate(initial_condition)
+
 xdmf.write_function(uh, t)
 
-# Variational problem
+# Variational problem in UFL
 u = ufl.TrialFunction(V)
 v = ufl.TestFunction(V)
 x = ufl.SpatialCoordinate(domain)
 time = fem.Constant(domain, PETSc.ScalarType(0))
-f = 20 * ufl.exp(-5*((x[0] + ufl.cos(5 * time))**2 + (x[1] + ufl.sin(5 * time))**2))
+f = 5 * ufl.exp(-5*((x[0] + ufl.cos(5 * time))**2 + (x[1] + ufl.sin(5 * time))**2)) + \
+    10 * ufl.exp(-5*((x[0] + ufl.cos(-3 * time))**2 + (x[1] + ufl.sin(-3 * time))**2))
 # f = fem.Constant(domain, PETSc.ScalarType(0))
 a = u * v * ufl.dx + dt * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
 L = (u_n + dt * f) * v * ufl.dx
 
+# Convert UFL variational form to DolfinX
 bilinear_form = fem.form(a)
 linear_form = fem.form(L)
 
@@ -86,7 +90,7 @@ pyvista.start_xvfb()
 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 
 plotter = pyvista.Plotter()
-plotter.open_gif("out_heat/diffusion.gif", fps=30)
+plotter.open_gif("out_heat/diffusion.gif", fps=10)
 plotter.show_grid()
 
 grid.point_data["uh"] = uh.x.array
@@ -100,8 +104,8 @@ sargs = dict(
     color="black",
     position_x=0.1,
     position_y=0.8,
-    width=0.8,
-    height=0.1
+    width=0.5,
+    height=0.05
 )
 
 renderer = plotter.add_mesh(
