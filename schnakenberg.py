@@ -11,7 +11,7 @@ from dolfinx import fem, mesh, io, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
 t = 0
-T = 1.0
+T = 0.3
 num_steps = 128
 dt = T / num_steps
 
@@ -19,6 +19,7 @@ Du = 1.0 # Diffusion coef for u
 Dv = 30.0 # Diffusion coef for v
 Pu = 0.2 # Production coef for u
 Pv = 0.66 # Production coef for v
+gamma = 1.0 # Time scaling
 
 nx, ny = 128, 128
 
@@ -64,8 +65,8 @@ a = u * phi * ufl.dx \
     + v * psi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
 
-L = (u_n + dt * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
-    + (v_n + dt * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
+L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
+    + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
 
 bilinear_form = fem.form(a)
 linear_form = fem.form(L)
@@ -88,7 +89,7 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
-plotter.open_gif("out_schnakenberg/schakenberg.gif", fps=10)
+plotter.open_gif("out_schnakenberg/schakenberg.gif", fps=20)
 plotter.show_grid()
 
 u_grid.point_data["uh"] = u_n.x.array[mapu]
@@ -103,8 +104,7 @@ plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap=blues,
-    clim=[Pu + Pv - 0.2, Pu + Pv + 0.2]
+    cmap=blues
 )
 
 plotter.add_mesh(
@@ -112,12 +112,18 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[Pv / (Pu + Pv)**2 - 0.2, Pv / (Pu + Pv)**2 + 0.2],
     opacity=0.8
+)
+
+time_text = plotter.add_text(
+    "t = 0.00",
+    font_size=10,
+    font="times"
 )
 
 for n in range(num_steps):
     t += dt
+    time_text.SetText(2, f"t = {t:.3f}")
     
     with b.localForm() as loc_b:
         loc_b.set(0)
