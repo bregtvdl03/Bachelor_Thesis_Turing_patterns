@@ -10,16 +10,26 @@ import basix.ufl
 from dolfinx import fem, mesh, io, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-t = 0
-T = 0.3
-num_steps = 128
-dt = T / num_steps
+OUT_FILE = "out_schnakenberg/schakenberg.gif"
 
 Du = 1.0 # Diffusion coef for u
 Dv = 30.0 # Diffusion coef for v
 Pu = 0.2 # Production coef for u
 Pv = 0.66 # Production coef for v
 gamma = 1.0 # Time scaling
+
+def initial_condition_u(x):
+    return Pu + Pv + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    # return [Pu + Pv] * x.shape[1]
+
+def initial_condition_v(x):
+    return Pv / (Pu + Pv)**2 + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    # return [Pv / (Pu + Pv)**2] * x.shape[1]
+
+t = 0
+T = 1.0
+num_steps = 128
+dt = T / num_steps
 
 nx, ny = 128, 128
 
@@ -35,14 +45,6 @@ el_v = basix.ufl.element("Lagrange", basix.CellType.triangle, 1)
 el_mixed = basix.ufl.mixed_element([el_u, el_v])
 
 V = fem.functionspace(domain, el_mixed)
-
-def initial_condition_u(x):
-    return Pu + Pv + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
-    # return [Pu + Pv] * x.shape[1]
-
-def initial_condition_v(x):
-    return Pv / (Pu + Pv)**2 + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
-    # return [Pv / (Pu + Pv)**2] * x.shape[1]
 
 # u_{n}
 u_n, v_n = fem.Function(V).split()
@@ -80,7 +82,7 @@ solver.setOperators(A)
 solver.setType(PETSc.KSP.Type.PREONLY)
 solver.getPC().setType(PETSc.PC.Type.LU)
 
-pyvista.start_xvfb()
+# pyvista.start_xvfb()
 
 V0, mapu = V.sub(0).collapse()
 V1, mapv = V.sub(1).collapse()
@@ -89,7 +91,7 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
-plotter.open_gif("out_schnakenberg/schakenberg.gif", fps=20)
+plotter.open_gif(OUT_FILE, fps=20)
 plotter.show_grid()
 
 u_grid.point_data["uh"] = u_n.x.array[mapu]
@@ -123,7 +125,7 @@ time_text = plotter.add_text(
 
 for n in range(num_steps):
     t += dt
-    time_text.SetText(2, f"t = {t:.3f}")
+    time_text.SetText(2, f"t = {t:.3    f}")
     
     with b.localForm() as loc_b:
         loc_b.set(0)
