@@ -125,7 +125,7 @@ time_text = plotter.add_text(
 
 for n in range(num_steps):
     t += dt
-    time_text.SetText(2, f"t = {t:.3    f}")
+    time_text.SetText(2, f"t = {t:.3f}")
     
     with b.localForm() as loc_b:
         loc_b.set(0)
