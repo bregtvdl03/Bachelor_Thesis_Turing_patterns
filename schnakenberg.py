@@ -8,22 +8,23 @@ from mpi4py import MPI
 
 import basix.ufl
 from dolfinx import fem, mesh, io, plot
-from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, apply_lifting, set_bc
+from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
 t = 0
-T = 2 * np.pi
+T = 1.0
 num_steps = 128
 dt = T / num_steps
 
-Du = 0.02
-Dv = 1.0
-Pu = 0.2
-Pv = 1.0
+Du = 1.0 # Diffusion coef for u
+Dv = 30.0 # Diffusion coef for v
+Pu = 0.2 # Production coef for u
+Pv = 0.66 # Production coef for v
 
-nx, ny = 64, 64
+nx, ny = 128, 128
+
 domain = mesh.create_rectangle(
-    comm=MPI.COMM_WORLD, 
-    points=[np.array([-2, -2]), np.array([2, 2])],
+    comm=MPI.COMM_WORLD,
+    points=[[-2.0, -2.0], [2.0, 2.0]],
     n=[nx, ny],
     cell_type=mesh.CellType.triangle
 )
@@ -35,20 +36,20 @@ el_mixed = basix.ufl.mixed_element([el_u, el_v])
 V = fem.functionspace(domain, el_mixed)
 
 def initial_condition_u(x):
-    return np.random.rand(x.shape[1]) - 0.5
+    return Pu + Pv + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    # return [Pu + Pv] * x.shape[1]
 
 def initial_condition_v(x):
-    return np.random.rand(x.shape[1]) - 0.5
+    return Pv / (Pu + Pv)**2 + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    # return [Pv / (Pu + Pv)**2] * x.shape[1]
 
 # u_{n}
 u_n, v_n = fem.Function(V).split()
 u_n.name = "u_n"
-# u_n.interpolate(lambda x: [0.0]*x.shape[1])
 u_n.interpolate(initial_condition_u)
 
 # v_{n}
 v_n.name = "v_n"
-# v_n.interpolate(lambda x: [0.0]*x.shape[1])
 v_n.interpolate(initial_condition_v)
 
 # u_{n + 1} and v_{n + 1}
@@ -64,7 +65,7 @@ a = u * phi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
 
 L = (u_n + dt * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
-    + (v_n + dt * (Pv + u_n * u_n * v_n)) * psi * ufl.dx
+    + (v_n + dt * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
 
 bilinear_form = fem.form(a)
 linear_form = fem.form(L)
@@ -95,14 +96,24 @@ v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=1)
 v_graph = v_grid.warp_by_scalar("vh", factor=1)
 
+blues = mpl.colormaps.get_cmap("Blues").resampled(20)
+ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(20)
+
 plotter.add_mesh(
     u_graph,
-    show_edges=True
+    show_edges=False,
+    lighting=False,
+    cmap=blues,
+    clim=[Pu + Pv - 0.2, Pu + Pv + 0.2]
 )
 
 plotter.add_mesh(
     v_graph,
-    show_edges=True
+    show_edges=False,
+    lighting=False,
+    cmap=ylorrd,
+    clim=[Pv / (Pu + Pv)**2 - 0.2, Pv / (Pu + Pv)**2 + 0.2],
+    opacity=0.8
 )
 
 for n in range(num_steps):
