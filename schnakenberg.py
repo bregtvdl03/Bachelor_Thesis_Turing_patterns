@@ -32,8 +32,8 @@ def initial_condition_v(x):
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 30.0
-num_steps = 128
+T = 100.0
+num_steps = 256
 dt = T / num_steps
 
 nx, ny = 128, 128
