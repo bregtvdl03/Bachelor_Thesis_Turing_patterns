@@ -18,15 +18,18 @@ Pu = 0.2 # Production coef for u
 Pv = 0.66 # Production coef for v
 gamma = 1.0 # Time scaling
 
+uniform_steady_state_u = Pu + Pv
+uniform_steady_state_v = Pv / (Pu + Pv)**2
+
 def initial_condition_u(x):
-    return Pu + Pv + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    return uniform_steady_state_u + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
     # return [Pu + Pv] * x.shape[1]
 
 def initial_condition_v(x):
-    return Pv / (Pu + Pv)**2 + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
+    return uniform_steady_state_v + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
     # return [Pv / (Pu + Pv)**2] * x.shape[1]
 
-t = 0
+t = 0.0
 T = 1.0
 num_steps = 128
 dt = T / num_steps
@@ -92,7 +95,13 @@ v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=20)
-plotter.show_grid()
+plotter.show_grid(
+    font_size = 15,
+    font_family = "times",
+    xtitle = "x",
+    ytitle = "y",
+    ztitle = "z"
+)
 
 u_grid.point_data["uh"] = u_n.x.array[mapu]
 v_grid.point_data["vh"] = v_n.x.array[mapv]
@@ -101,12 +110,19 @@ v_graph = v_grid.warp_by_scalar("vh", factor=1)
 
 blues = mpl.colormaps.get_cmap("Blues").resampled(20)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(20)
+colorwidth = 0.05
 
 plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap=blues
+    cmap=blues,
+    clim=[uniform_steady_state_u - colorwidth, uniform_steady_state_u + colorwidth],
+    scalar_bar_args={
+        "font_family": "times",
+        "position_x": 0.2,
+        "position_y": 0.9
+    }
 )
 
 plotter.add_mesh(
@@ -114,7 +130,13 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    opacity=0.8
+    opacity=0.8,
+    clim=[uniform_steady_state_v - colorwidth, uniform_steady_state_v + colorwidth],
+    scalar_bar_args={
+        "font_family": "times",
+        "position_x": 0.2,
+        "position_y": 0.82
+    }
 )
 
 time_text = plotter.add_text(
