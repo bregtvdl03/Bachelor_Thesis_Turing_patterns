@@ -7,7 +7,7 @@ from petsc4py import PETSc
 from mpi4py import MPI
 
 import basix.ufl
-from dolfinx import fem, mesh, io, plot
+from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
 OUT_FILE = "out_schnakenberg/schakenberg.gif"
@@ -21,13 +21,15 @@ gamma = 1.0 # Time scaling
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = Pv / (Pu + Pv)**2
 
+perturbation_strength = 0.2
+
 def initial_condition_u(x):
-    return uniform_steady_state_u + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
-    # return [Pu + Pv] * x.shape[1]
+    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
-    return uniform_steady_state_v + 0.2 * (np.random.rand(x.shape[1]) - 0.5)
-    # return [Pv / (Pu + Pv)**2] * x.shape[1]
+    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
 T = 1.0
@@ -36,10 +38,17 @@ dt = T / num_steps
 
 nx, ny = 128, 128
 
-domain = mesh.create_rectangle(
+# domain = mesh.create_rectangle(
+#     comm=MPI.COMM_WORLD,
+#     points=[[-2.0, -2.0], [2.0, 2.0]],
+#     n=[nx, ny],
+#     cell_type=mesh.CellType.triangle
+# )
+
+domain = mesh.create_unit_square(
     comm=MPI.COMM_WORLD,
-    points=[[-2.0, -2.0], [2.0, 2.0]],
-    n=[nx, ny],
+    nx=nx,
+    ny=ny,
     cell_type=mesh.CellType.triangle
 )
 
