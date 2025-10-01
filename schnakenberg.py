@@ -13,10 +13,10 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 OUT_FILE = "out_schnakenberg/schakenberg.gif"
 
 Du = 1.0 # Diffusion coef for u
-Dv = 40.0 # Diffusion coef for v
-Pu = 0.1 # Production coef for u
-Pv = 0.9 # Production coef for v
-gamma = 1.0 # Time scaling
+Dv = 30.0 # Diffusion coef for v
+Pu = 0.2 # Production coef for u
+Pv = 0.8 # Production coef for v
+gamma = 1.0 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = Pv / (Pu + Pv)**2
