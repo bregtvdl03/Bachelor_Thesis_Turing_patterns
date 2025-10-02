@@ -11,11 +11,12 @@ from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
 OUT_FILE = "out_schnakenberg/schakenberg.gif"
+FPS = 40
 
-Du = 1.0 # Diffusion coef for u
-Dv = 30.0 # Diffusion coef for v
-Pu = 0.2 # Production coef for u
-Pv = 0.8 # Production coef for v
+Du = 1.0    # Diffusion coef for u
+Dv = 30.0   # Diffusion coef for v
+Pu = 0.2    # Production coef for u
+Pv = 0.8    # Production coef for v
 gamma = 1.0 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
@@ -32,8 +33,8 @@ def initial_condition_v(x):
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 100.0
-num_steps = 256
+T = 50.0
+num_steps = 512
 dt = T / num_steps
 
 nx, ny = 128, 128
@@ -103,7 +104,9 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
-plotter.open_gif(OUT_FILE, fps=40)
+plotter.open_gif(OUT_FILE, fps=FPS)
+plotter.enable_parallel_projection()
+plotter.isometric_view()
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
