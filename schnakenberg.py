@@ -34,7 +34,7 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 50.0
-num_steps = 512
+num_steps = 128
 dt = T / num_steps
 
 nx, ny = 128, 128
@@ -120,8 +120,8 @@ v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=1)
 v_graph = v_grid.warp_by_scalar("vh", factor=1)
 
-blues = mpl.colormaps.get_cmap("RdPu").resampled(32)
-ylorrd = mpl.colormaps.get_cmap("PuBu").resampled(32)
+blues = mpl.colormaps.get_cmap("Blues").resampled(32)
+ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
 colorwidth = 0.005
 
 plotter.add_mesh(
