@@ -75,6 +75,7 @@ u_sol, v_sol = uv_sol.split()
 (u, v) = ufl.TrialFunctions(V)
 (phi, psi) = ufl.TestFunctions(V)
 
+# BACKWARDS EULER
 a = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + v * psi * ufl.dx \
@@ -82,6 +83,34 @@ a = u * phi * ufl.dx \
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
     + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
+
+
+# SEMI-IMPLICIT REACTION
+# a = u * phi * ufl.dx \
+#     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
+#     + v * psi * ufl.dx \
+#     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx \
+#     - dt * gamma * u * u_n * v_n * phi * ufl.dx \
+#     + dt * gamma * u * u_n * v_n * psi * ufl.dx
+
+# L = (u_n + dt * gamma * (Pu - u_n)) * phi * ufl.dx \
+#     + (v_n + dt * gamma * Pv) * psi * ufl.dx    
+
+
+# CRANK NICOLSON
+# a = u * phi * ufl.dx \
+#     - dt * gamma / 2 * (Pu - u + u * u * v) * phi * ufl.dx \
+#     + dt * Du / 2 * ufl.inner(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
+#     + v * psi * ufl.dx \
+#     - dt * gamma / 2 * (Pv - u * u * v) * psi * ufl.dx \
+#     + dt * Dv / 2 * ufl.inner(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+
+# L = u_n * phi * ufl.dx \
+#     + dt * gamma / 2 * (Pu - u_n + u_n * u_n * v_n) * phi * ufl.dx \
+#     - dt * Du / 2 * ufl.inner(ufl.grad(u_n), ufl.grad(phi)) * ufl.dx \
+#     + v_n * psi * ufl.dx \
+#     + dt * gamma / 2 * (Pv - u_n * u_n * v_n) * psi * ufl.dx \
+#     - dt * Dv / 2 * ufl.inner(ufl.grad(v_n), ufl.grad(psi)) * ufl.dx
 
 bilinear_form = fem.form(a)
 linear_form = fem.form(L)
@@ -160,6 +189,7 @@ time_text = plotter.add_text(
 for n in range(num_steps):
     t += dt
     time_text.SetText(2, f"t = {t:.3f}")
+    print(t)
     
     with b.localForm() as loc_b:
         loc_b.set(0)
