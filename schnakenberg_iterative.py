@@ -118,6 +118,13 @@ solver_v.getPC().setType(PETSc.PC.Type.LU)
 
 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 
+grid.point_data["uh"] = uh.x.array
+grid.point_data["vh"] = vh.x.array
+u_graph = grid.warp_by_scalar("uh", factor=1)
+v_graph = grid.warp_by_scalar("vh", factor=1)
+
+#region Plotting setup
+
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.show_grid()
@@ -130,12 +137,6 @@ plotter.show_grid(
     ytitle = "y",
     ztitle = "z"
 )
-
-
-grid.point_data["uh"] = uh.x.array
-grid.point_data["vh"] = vh.x.array
-u_graph = grid.warp_by_scalar("uh", factor=1)
-v_graph = grid.warp_by_scalar("vh", factor=1)
 
 blues = mpl.colormaps.get_cmap("Blues").resampled(32)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
@@ -174,11 +175,14 @@ time_text = plotter.add_text(
     font="times"
 )
 
+#endregion
+
 for n in range(num_steps):
     t += dt
     time_text.SetText(2, f"t = {t:.3f}")
     print(t)
     
+    # Update and solve u
     with b_u.localForm() as loc_b:
         loc_b.set(0)
     assemble_vector(b_u, linear_form_u)
@@ -186,6 +190,7 @@ for n in range(num_steps):
     solver_u.solve(b_u, uh.x.petsc_vec)
     uh.x.scatter_forward()
     
+    # Update and solve v
     with b_v.localForm() as loc_b:
         loc_b.set(0)
     assemble_vector(b_v, linear_form_v)
@@ -193,6 +198,7 @@ for n in range(num_steps):
     solver_v.solve(b_v, vh.x.petsc_vec)
     vh.x.scatter_forward()
 
+    # Updating and plotting
     u_n.x.array[:] = uh.x.array
     v_n.x.array[:] = vh.x.array
     
