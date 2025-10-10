@@ -54,6 +54,8 @@ domain = mesh.create_unit_square(
 
 V = fem.functionspace(domain, ("Lagrange", 1))
 
+#region Defining functions
+
 # u_{n}
 u_n = fem.Function(V)
 u_n.name = "u_n"
@@ -76,9 +78,27 @@ vh.interpolate(initial_condition_v)
 
 u = ufl.TrialFunction(V)
 phi = ufl.TestFunction(V)
+
+v = ufl.TrialFunction(V)
+psi = ufl.TestFunction(V)
+
+#endregion
+
+#region Variational form
+
 a_u = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx
+
 L_u = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx
+
+a_v = v * psi * ufl.dx \
+    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+
+L_v = (v_n + dt * gamma * (Pv - uh * uh * v_n)) * psi * ufl.dx
+
+#endregion
+
+#region Defining solvers
 
 bilinear_form_u = fem.form(a_u)
 linear_form_u = fem.form(L_u)
@@ -91,14 +111,6 @@ solver_u = PETSc.KSP().create(domain.comm)
 solver_u.setOperators(A_u)
 solver_u.setType(PETSc.KSP.Type.PREONLY)
 solver_u.getPC().setType(PETSc.PC.Type.LU)
-
-#region The same setup for v
-
-v = ufl.TrialFunction(V)
-psi = ufl.TestFunction(V)
-a_v = v * psi * ufl.dx \
-    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
-L_v = (v_n + dt * gamma * (Pv - uh * uh * v_n)) * psi * ufl.dx
 
 bilinear_form_v = fem.form(a_v)
 linear_form_v = fem.form(L_v)
@@ -177,6 +189,8 @@ time_text = plotter.add_text(
 
 #endregion
 
+#region Solving iteratively
+
 for n in range(num_steps):
     t += dt
     time_text.SetText(2, f"t = {t:.3f}")
@@ -213,3 +227,5 @@ for n in range(num_steps):
     plotter.write_frame()
 
 plotter.close()
+
+#endregion
