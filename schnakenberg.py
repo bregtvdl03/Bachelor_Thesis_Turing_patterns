@@ -11,7 +11,7 @@ from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
 OUT_FILE = "out_schnakenberg/schakenberg.gif"
-FPS = 40
+FPS = 10
 
 Du = 1.0    # Diffusion coef for u
 Dv = 30.0   # Diffusion coef for v
@@ -192,7 +192,7 @@ time_text = plotter.add_text(
 for n in range(num_steps):
     t += dt
     time_text.SetText(2, f"{str(int(t/T * 100))}\t/100 %")
-    print(t)
+    print(int(t/T * 100))
     
     with b.localForm() as loc_b:
         loc_b.set(0)
@@ -206,12 +206,13 @@ for n in range(num_steps):
     u_n.x.array[mapu] = u_h.x.array[mapu]
     v_n.x.array[mapv] = v_h.x.array[mapv]
     
-    u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
-    v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
-    u_graph.points[:, :] = u_graph_new.points
-    v_graph.points[:, :] = v_graph_new.points
-    u_graph.point_data["uh"][:] = u_h.x.array[mapu]
-    v_graph.point_data["vh"][:] = v_h.x.array[mapv]
-    plotter.write_frame()
+    if n % 4 == 0:
+        u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
+        v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
+        u_graph.points[:, :] = u_graph_new.points
+        v_graph.points[:, :] = v_graph_new.points
+        u_graph.point_data["uh"][:] = u_h.x.array[mapu]
+        v_graph.point_data["vh"][:] = v_h.x.array[mapv]
+        plotter.write_frame()
 
 plotter.close()
