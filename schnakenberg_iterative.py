@@ -12,6 +12,8 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 OUT_FILE = "out_schnakenberg/schakenberg_iterative.gif"
 FPS = 40
 
+#region ========== PARAMETERS ==========
+
 Du = 1.0    # Diffusion coef for u
 Dv = 30.0   # Diffusion coef for v
 Pu = 0.2    # Production coef for u
@@ -32,8 +34,8 @@ def initial_condition_v(x):
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0
-T = 50.0
-num_steps = 999999
+T = 5.0
+num_steps = 99999
 dt = T / num_steps
 
 nx, ny = 128, 128
@@ -54,7 +56,9 @@ domain = mesh.create_unit_square(
 
 V = fem.functionspace(domain, ("Lagrange", 1))
 
-#region Defining functions
+#endregion
+
+#region ========== DEFINING FUNCTIONS ==========
 
 # u_{n}
 u_n = fem.Function(V)
@@ -84,7 +88,7 @@ psi = ufl.TestFunction(V)
 
 #endregion
 
-#region Variational form
+#region ========== VARIATIONAL FORM ==========
 
 a_u = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx
@@ -98,7 +102,7 @@ L_v = (v_n + dt * gamma * (Pv - uh * uh * v_n)) * psi * ufl.dx
 
 #endregion
 
-#region Defining solvers
+#region ========== DEFINING SOLVERS ==========
 
 bilinear_form_u = fem.form(a_u)
 linear_form_u = fem.form(L_u)
@@ -126,6 +130,7 @@ solver_v.getPC().setType(PETSc.PC.Type.LU)
 
 #endregion
 
+# Uncomment this for offscreen rendering
 # pyvista.start_xvfb()
 
 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
@@ -135,7 +140,7 @@ grid.point_data["vh"] = vh.x.array
 u_graph = grid.warp_by_scalar("uh", factor=1)
 v_graph = grid.warp_by_scalar("vh", factor=1)
 
-#region Plotting setup
+#region ========== PLOTTING SETUP ==========
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
@@ -189,7 +194,7 @@ time_text = plotter.add_text(
 
 #endregion
 
-#region Solving iteratively
+#region ========== SOLVING ITERATIVELY ==========
 
 for n in range(num_steps):
     t += dt

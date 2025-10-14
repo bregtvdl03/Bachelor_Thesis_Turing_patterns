@@ -17,7 +17,7 @@ Du = 1.0    # Diffusion coef for u
 Dv = 30.0   # Diffusion coef for v
 Pu = 0.2    # Production coef for u
 Pv = 0.8    # Production coef for v
-gamma = 1.0 # Reaction scaling
+gamma = 128.0**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = Pv / (Pu + Pv)**2
@@ -33,15 +33,15 @@ def initial_condition_v(x):
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 50.0
-num_steps = 128
+T = 50.0 / 128.0**2
+num_steps = 256
 dt = T / num_steps
 
 nx, ny = 128, 128
 
 domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD,
-    points=[[-128.0, -128.0], [128.0, 128.0]],
+    points=[[-1.0, -1.0], [1.0, 1.0]],
     n=[nx, ny],
     cell_type=mesh.CellType.triangle
 )
@@ -136,6 +136,8 @@ plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
+plotter.view_xy()
+plotter.camera.zoom(0.2)
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -144,20 +146,21 @@ plotter.show_grid(
     ztitle = "z"
 )
 
+warp_factor = 0.1
 u_grid.point_data["uh"] = u_n.x.array[mapu]
 v_grid.point_data["vh"] = v_n.x.array[mapv]
-u_graph = u_grid.warp_by_scalar("uh", factor=1)
-v_graph = v_grid.warp_by_scalar("vh", factor=1)
+u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
+v_graph = v_grid.warp_by_scalar("vh", factor=warp_factor)
 
 blues = mpl.colormaps.get_cmap("Blues").resampled(32)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
-colorwidth = 0.005
+colorwidth = 0.05
 
 plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    opacity=0.8,
+    opacity=0.9,
     cmap=blues,
     clim=[uniform_steady_state_u - colorwidth, uniform_steady_state_u + colorwidth],
     scalar_bar_args={
@@ -181,14 +184,14 @@ plotter.add_mesh(
 )
 
 time_text = plotter.add_text(
-    "t = 0.00",
+    f"{str(int(t/T * 100))}\t/100 %",
     font_size=10,
     font="times"
 )
 
 for n in range(num_steps):
     t += dt
-    time_text.SetText(2, f"t = {t:.3f}")
+    time_text.SetText(2, f"{str(int(t/T * 100))}\t/100 %")
     print(t)
     
     with b.localForm() as loc_b:
@@ -203,8 +206,8 @@ for n in range(num_steps):
     u_n.x.array[mapu] = u_h.x.array[mapu]
     v_n.x.array[mapv] = v_h.x.array[mapv]
     
-    u_graph_new = u_grid.warp_by_scalar("uh", factor=1)
-    v_graph_new = v_grid.warp_by_scalar("vh", factor=1)
+    u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
+    v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
     u_graph.points[:, :] = u_graph_new.points
     v_graph.points[:, :] = v_graph_new.points
     u_graph.point_data["uh"][:] = u_h.x.array[mapu]
