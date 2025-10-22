@@ -10,39 +10,45 @@ import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-OUT_FILE = "out_schnakenberg/schakenberg.gif"
-OUT_SCREENSHOT = "out_schnakenberg/schnakenberg_profile.jpg"
-FPS = 10
+OUT_FILE = "out_grayscott/grayscott.gif"
+FPS = 40
 
-Du = 1.0    # Diffusion coef for u
-Dv = 40.0   # Diffusion coef for v
-Pu = 0.125    # Production coef for u
-Pv = 0.420    # Production coef for v
-gamma = 128.0**2 # Reaction scaling
+Du = 0.16  # Diffusion coef for u
+Dv = 0.08  # Diffusion coef for v
+Pu = 0.2    # Production coef for u
+Pv = 0.8    # Production coef for v
+F = 0.085
+k = 0.06
+gamma = 1.0 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
-uniform_steady_state_v = (Pv / (Pu + Pv)**2) ** (1/1)
+uniform_steady_state_v = Pv / (Pu + Pv)**2
 
-perturbation_strength = 0.1
+perturbation_strength = 0.2
 
 def initial_condition_u(x):
-    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return [uniform_steady_state_u] * x.shape[1]
+    values = np.ones(x.shape[1])
+    mask = (np.abs(x[0]) < 0.1) & (np.abs(x[1]) < 0.1)
+    values[mask] = 0.50 + 0.02 * np.random.rand(mask.sum())
+    return values
 
 def initial_condition_v(x):
-    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return [uniform_steady_state_v] * x.shape[1]
+    values = np.zeros(x.shape[1])
+    mask = (np.abs(x[0]) < 0.1) & (np.abs(x[1]) < 0.1)
+    values[mask] = 0.25 + 0.02 * np.random.rand(mask.sum())
+    return values
+
 
 t = 0.0
-T = 50.0 / gamma
-num_steps = 4096
+T = 1000.0
+num_steps = 2048
 dt = T / num_steps
 
 nx, ny = 128, 128
 
 domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD,
-    points=[[-1.0, -1.0], [1.0, 1.0]],
+    points=[[-8.0, -8.0], [8.0, 8.0]],
     n=[nx, ny],
     cell_type=mesh.CellType.triangle
 )
@@ -76,14 +82,42 @@ u_sol, v_sol = uv_sol.split()
 (u, v) = ufl.TrialFunctions(V)
 (phi, psi) = ufl.TestFunctions(V)
 
-# IMEX
+# BACKWARDS EULER
 a = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + v * psi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
 
-L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
-    + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
+L = (u_n + dt * (F * (1 - u_n) - u_n * v_n * v_n)) * phi * ufl.dx \
+    + (v_n + dt * (u_n * v_n * v_n - (F + k) * v_n)) * psi * ufl.dx
+
+
+# SEMI-IMPLICIT REACTION
+# a = u * phi * ufl.dx \
+#     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
+#     + v * psi * ufl.dx \
+#     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx \
+#     - dt * gamma * u * u_n * v_n * phi * ufl.dx \
+#     + dt * gamma * u * u_n * v_n * psi * ufl.dx
+
+# L = (u_n + dt * gamma * (Pu - u_n)) * phi * ufl.dx \
+#     + (v_n + dt * gamma * Pv) * psi * ufl.dx    
+
+
+# CRANK NICOLSON
+# a = u * phi * ufl.dx \
+#     - dt * gamma / 2 * (Pu - u + u * u * v) * phi * ufl.dx \
+#     + dt * Du / 2 * ufl.inner(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
+#     + v * psi * ufl.dx \
+#     - dt * gamma / 2 * (Pv - u * u * v) * psi * ufl.dx \
+#     + dt * Dv / 2 * ufl.inner(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+
+# L = u_n * phi * ufl.dx \
+#     + dt * gamma / 2 * (Pu - u_n + u_n * u_n * v_n) * phi * ufl.dx \
+#     - dt * Du / 2 * ufl.inner(ufl.grad(u_n), ufl.grad(phi)) * ufl.dx \
+#     + v_n * psi * ufl.dx \
+#     + dt * gamma / 2 * (Pv - u_n * u_n * v_n) * psi * ufl.dx \
+#     - dt * Dv / 2 * ufl.inner(ufl.grad(v_n), ufl.grad(psi)) * ufl.dx
 
 bilinear_form = fem.form(a)
 linear_form = fem.form(L)
@@ -97,7 +131,6 @@ solver.setOperators(A)
 solver.setType(PETSc.KSP.Type.PREONLY)
 solver.getPC().setType(PETSc.PC.Type.LU)
 
-# Uncomment for offscreen rendering
 # pyvista.start_xvfb()
 
 V0, mapu = V.sub(0).collapse()
@@ -110,8 +143,6 @@ plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
-plotter.view_xy()
-plotter.camera.zoom(0.2)
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -120,21 +151,20 @@ plotter.show_grid(
     ztitle = "z"
 )
 
-warp_factor = 0.1
 u_grid.point_data["uh"] = u_n.x.array[mapu]
 v_grid.point_data["vh"] = v_n.x.array[mapv]
-u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
-v_graph = v_grid.warp_by_scalar("vh", factor=warp_factor)
+u_graph = u_grid.warp_by_scalar("uh", factor=1)
+v_graph = v_grid.warp_by_scalar("vh", factor=1)
 
 blues = mpl.colormaps.get_cmap("Blues").resampled(32)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
-colorwidth = 0.2
+colorwidth = 0.005
 
 plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    opacity=0.9,
+    opacity=0.8,
     cmap=blues,
     clim=[uniform_steady_state_u - colorwidth, uniform_steady_state_u + colorwidth],
     scalar_bar_args={
@@ -158,24 +188,15 @@ plotter.add_mesh(
 )
 
 time_text = plotter.add_text(
-    f"{str(int(t/T * 100))}\t/100 %",
+    "t = 0.00",
     font_size=10,
     font="times"
 )
 
-plotter.add_text(
-    "d = 40, a = 0.125, b = 0.420",
-    font_size=10,
-    font="times",
-    position=(5, 5)
-)
-
 for n in range(num_steps):
     t += dt
-    
-    progress = int(t/T * 100)
-    time_text.SetText(2, f"{str(progress)}\t/100 %")
-    print(progress)
+    time_text.SetText(2, f"t = {t:.3f}")
+    print(t)
     
     with b.localForm() as loc_b:
         loc_b.set(0)
@@ -189,16 +210,12 @@ for n in range(num_steps):
     u_n.x.array[mapu] = u_h.x.array[mapu]
     v_n.x.array[mapv] = v_h.x.array[mapv]
     
-    if n % 16 == 0:
-        u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
-        v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
-        u_graph.points[:, :] = u_graph_new.points
-        v_graph.points[:, :] = v_graph_new.points
-        u_graph.point_data["uh"][:] = u_h.x.array[mapu]
-        v_graph.point_data["vh"][:] = v_h.x.array[mapv]
-        plotter.write_frame()
-
-plotter.view_xz()
-plotter.screenshot(OUT_SCREENSHOT, scale = 3)
+    u_graph_new = u_grid.warp_by_scalar("uh", factor=1)
+    v_graph_new = v_grid.warp_by_scalar("vh", factor=1)
+    u_graph.points[:, :] = u_graph_new.points
+    v_graph.points[:, :] = v_graph_new.points
+    u_graph.point_data["uh"][:] = u_h.x.array[mapu]
+    v_graph.point_data["vh"][:] = v_h.x.array[mapv]
+    plotter.write_frame()
 
 plotter.close()
