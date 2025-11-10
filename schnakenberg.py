@@ -16,6 +16,9 @@ FPS = 10
 
 #region ========== PARAMETERS ==========
 
+m = 2
+n = 1
+
 Du = 1.0    # Diffusion coef for u
 Dv = 40.0   # Diffusion coef for v
 Pu = 0.125    # Production coef for u
@@ -23,7 +26,7 @@ Pv = 0.420    # Production coef for v
 gamma = 128.0**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
-uniform_steady_state_v = (Pv / (Pu + Pv)**2) ** (1/1)
+uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 
 perturbation_strength = 0.1
 

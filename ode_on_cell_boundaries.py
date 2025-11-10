@@ -9,12 +9,16 @@ from mpi4py import MPI
 import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
+from dolfinx.io import gmshio
+import gmsh
 
-OUT_FILE = "out_schnakenberg/schakenberg.gif"
-OUT_SCREENSHOT = "out_schnakenberg/schnakenberg_profile.jpg"
+OUT_FILE = "out_cells/test.gif"
 FPS = 10
 
 #region ========== PARAMETERS ==========
+
+m = 2
+n = 1
 
 Du = 1.0    # Diffusion coef for u
 Dv = 40.0   # Diffusion coef for v
@@ -23,7 +27,7 @@ Pv = 0.420    # Production coef for v
 gamma = 128.0**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
-uniform_steady_state_v = (Pv / (Pu + Pv)**2) ** (1/1)
+uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 
 perturbation_strength = 0.1
 
@@ -40,21 +44,55 @@ T = 50.0 / gamma
 num_steps = 1024
 dt = T / num_steps
 
-nx, ny = 128, 128
+#endregion
 
-domain = mesh.create_rectangle(
-    comm=MPI.COMM_WORLD,
-    points=[[-1.0, -1.0], [1.0, 1.0]],
-    n=[nx, ny],
-    cell_type=mesh.CellType.triangle
+#region ========== DEFINING MESH AND FUNCTIONSPACE ==========
+
+gmsh.initialize()
+
+# Parameters
+L = 2.0        # outer square side length (from -1 to 1)
+half_L = L / 2
+cell_size = 0.5
+half_cell = cell_size / 2
+
+# Create model
+gmsh.model.add("square_with_holes")
+
+# Outer square corners
+outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
+
+# Four inner squares (holes)
+holes = []
+centers = [
+    (0.5, 0.5),
+    (-0.5, 0.5),
+    (-0.5, -0.5),
+    (0.5, -0.5)
+]
+for cx, cy in centers:
+    holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
+
+# Cut out the holes from the main square
+main_domain, _ = gmsh.model.occ.cut([(2, outer)], [(2, h) for h in holes])
+
+gmsh.model.occ.synchronize()
+
+# Tag physical groups
+gmsh.model.addPhysicalGroup(2, [main_domain[0][1]], tag=1)
+gmsh.model.setPhysicalName(2, 1, "main_domain")
+
+# Mesh size and generation
+gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.01)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.01)
+gmsh.model.mesh.generate(2)
+
+# Import into FEniCSx
+domain, cell_markers, facet_markers = gmshio.model_to_mesh(
+    gmsh.model, MPI.COMM_WORLD, 0, gdim=2
 )
 
-# domain = mesh.create_unit_square(
-#     comm=MPI.COMM_WORLD,
-#     nx=nx,
-#     ny=ny,
-#     cell_type=mesh.CellType.triangle
-# )
+gmsh.finalize()
 
 el_u = basix.ufl.element("Lagrange", basix.CellType.triangle, 1)
 el_v = basix.ufl.element("Lagrange", basix.CellType.triangle, 1)
@@ -219,9 +257,6 @@ for n in range(num_steps):
         u_graph.point_data["uh"][:] = u_h.x.array[mapu]
         v_graph.point_data["vh"][:] = v_h.x.array[mapv]
         plotter.write_frame()
-
-plotter.view_xz()
-plotter.screenshot(OUT_SCREENSHOT, scale = 3)
 
 plotter.close()
 
