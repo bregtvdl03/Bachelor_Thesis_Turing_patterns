@@ -51,7 +51,7 @@ be the approximations of receptor and ligand at time $t_n = n\tau$ respectively.
 using forward Euler. This gives us an explicit formula for $r_{n + 1}$,
 
 \begin{equation}
-        r_{n + 1} = r_{n} + \tau \gamma (a - r_{n} + r_{n}^{2}l_{n}) \quad \text{on } \partial C, n \in \mathbb{N},
+        r_{n + 1} = r_{n} + \tau \gamma \left( a - r_{n} + r_{n}^{2}l_{n} \right) \quad \text{on } \partial C, n \in \mathbb{N},
 \end{equation}
 
 \noindent
@@ -73,13 +73,17 @@ As for $r$, $l_{0}$ is initialized as the exact discretization of the initial co
 
 \begin{equation}
     \begin{aligned}
-        \int_{E} l_n &= \int_{E} \left[l_{n + 1} \phi - \tau d \Delta l_{n + 1} \phi \right] \\
+        \int_{E} l_n \phi &= \int_{E} \left[ l_{n + 1} \phi - \tau d \Delta l_{n + 1} \phi \right] \\
         &= \int_{E} l_{n + 1} \phi + \tau d \int_{E} \nabla l_{n + 1} \nabla \phi - \tau d \int_{\partial E} \frac{\partial l_{n + 1}}{\partial \nu} \phi\ dS \\
         &= \int_{E} l_{n + 1} \phi + \tau d \int_{E} \nabla l_{n + 1} \nabla \phi - \tau d \int_{\partial C} \gamma (b - r_{n + 1}^{2}l_{n + 1}) \phi\ dS, \\
     \end{aligned}
 \end{equation}
 
 \noindent
-where in the last step we used $\partial E = \partial \Omega\ \cup\ \partial C$, since $\overline{C} \subseteq \Omega$, and the Neumann boundary conditions.
+where in the last step we used that $\partial E$ is the disjoint union of $\partial \Omega$ and $\partial C$, since $\overline{C} \subseteq \Omega$, and the Neumann boundary conditions.
+
+\begin{equation}
+    \int_{\partial C} r_{n + 1} \phi = \int_{\partial C} \left[ r_{n} \phi + \tau \gamma \left( a - r_{n} + r_{n}^{2}l_{n} \right) \phi \right]
+\end{equation}
 
 \end{document}
