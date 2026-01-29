@@ -6,16 +6,15 @@ import numpy as np
 from petsc4py import PETSc
 from mpi4py import MPI
 
-import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
-from dolfinx.io import gmshio
+import dolfinx.io.gmsh as gmshio
 import gmsh
 
 OUT_FILE = "out_cells/test.gif"
-FPS = 1
+FPS = 10
 
-#region ========== PARAMETERS ==========
+#region ========== MODEL PARAMETERS ==========
 
 m = 2
 n = 1
@@ -24,7 +23,7 @@ Du = 1.0    # Diffusion coef for u
 Dv = 40.0   # Diffusion coef for v
 Pu = 0.125    # Production coef for u
 Pv = 0.420    # Production coef for v
-gamma = 128.0**2 # Reaction scaling
+gamma = 64.0**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -32,15 +31,15 @@ uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 perturbation_strength = 0.01
 
 def initial_condition_u(x):
-    # return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    return [uniform_steady_state_u] * x.shape[1]
+    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
-    # return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    return [uniform_steady_state_v] * x.shape[1]
+    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 1.0 / gamma
+T = 50.0 / gamma
 num_steps = 1024
 dt = T / num_steps
 
@@ -50,6 +49,7 @@ dt = T / num_steps
 
 gmsh.initialize()
 
+dim = 2
 L = 2.0
 half_L = L / 2
 cell_size = 0.5
@@ -64,42 +64,34 @@ centers = [(0.5, 0.5), (-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
 for cx, cy in centers:
     holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
 
-main_domain, _ = gmsh.model.occ.cut([(2, outer)], [(2, h) for h in holes])
+main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
 
 gmsh.model.occ.synchronize()
 
-boundaries = gmsh.model.getBoundary(main_domain, oriented=False, recursive=False)
-
-outer_boundary_lines = []
-hole_boundaries = []
-
-for (loop_dim, loop_tag) in boundaries:
-    bb = gmsh.model.getBoundingBox(loop_dim, loop_tag)
-    xmin, ymin, zmin, xmax, ymax, zmax = bb
-    area = (xmax - xmin) * (ymax - ymin)
-    if area > 4e-7:
-        outer_boundary_lines.append(loop_tag)
-    else:
-        hole_boundaries.append(loop_tag)
-
-gmsh.model.addPhysicalGroup(2, [main_domain[0][1]], tag=100)
-gmsh.model.setPhysicalName(2, 100, "main_domain")
-
-gmsh.model.addPhysicalGroup(1, outer_boundary_lines, tag=1)
-gmsh.model.setPhysicalName(1, 1, "outer_boundary")
-
-gmsh.model.addPhysicalGroup(1, hole_boundaries, tag=10)
-gmsh.model.setPhysicalName(1, 10, "holes")
+gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=100)
+gmsh.model.setPhysicalName(dim, 100, "main_domain")
 
 gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.01)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.01)
-gmsh.model.mesh.generate(2)
+gmsh.model.mesh.generate(dim)
 
-msh, cell_markers, facet_markers = gmshio.model_to_mesh(
-    gmsh.model, MPI.COMM_WORLD, 0, gdim=2
-)
+model_data = gmshio.model_to_mesh(gmsh.model, MPI.COMM_WORLD, rank=0, gdim=dim)
+msh = model_data.mesh
 
 gmsh.finalize()
+
+def on_holes(x):
+    flags = np.zeros(x.shape[1], dtype=bool)
+    for (cx, cy) in centers:
+        top    = np.isclose(x[1], cy + half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
+        right  = np.isclose(x[0], cx + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
+        bottom = np.isclose(x[1], cy - half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
+        left   = np.isclose(x[0], cx - half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
+        flags |= top | right | bottom | left
+    return flags
+
+facet_indices = mesh.locate_entities(msh, dim - 1, on_holes)
+facet_markers = mesh.meshtags(msh, dim - 1, facet_indices, 10)
 
 ds = ufl.Measure("ds", domain=msh, subdomain_data=facet_markers)
 
@@ -141,15 +133,17 @@ psi = ufl.TestFunction(V)
 
 a_u = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx
+    # + dt * gamma * (Pu - u + u * u * v_n) * phi * ds(10)
 
-# L_u = u_n * phi * ufl.dx + (dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ds(10)
-L_u = u_n * phi * ufl.dx + (dt * gamma * Pu) * phi * ds(10)
+L_u = u_n * phi * ufl.dx + dt * gamma * (Pu - u_n + u_n * u_n * v_n) * phi * ufl.dx
+# L_u = u_n * phi * ufl.dx + (dt * gamma * Pu) * phi * ds(10)
 
 a_v = v * psi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+    # + dt * gamma * (Pv - u_n * u_n * v) * psi * ds(10)
 
-# L_v = v_n * psi * ufl.dx + (dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ds(10)
-L_v = v_n * psi * ufl.dx
+L_v = v_n * psi * ufl.dx + dt * gamma * (Pv - u_n * u_n * v_n) * psi * ufl.dx
+# L_v = v_n * psi * ufl.dx
 
 #endregion
 
@@ -160,7 +154,7 @@ linear_form_u = fem.form(L_u)
 
 A_u = assemble_matrix(bilinear_form_u)
 A_u.assemble()
-b_u = create_vector(linear_form_u)
+b_u = create_vector(fem.extract_function_spaces(linear_form_u))
 
 solver_u = PETSc.KSP().create(msh.comm)
 solver_u.setOperators(A_u)
@@ -172,7 +166,7 @@ linear_form_v = fem.form(L_v)
 
 A_v = assemble_matrix(bilinear_form_v)
 A_v.assemble()
-b_v = create_vector(linear_form_v)
+b_v = create_vector(fem.extract_function_spaces(linear_form_v))
 
 solver_v = PETSc.KSP().create(msh.comm)
 solver_v.setOperators(A_v)
@@ -186,10 +180,12 @@ solver_v.getPC().setType(PETSc.PC.Type.LU)
 
 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 
+warpfactor = 0.1
+
 grid.point_data["uh"] = uh.x.array
 grid.point_data["vh"] = vh.x.array
-u_graph = grid.warp_by_scalar("uh", factor=1)
-v_graph = grid.warp_by_scalar("vh", factor=1)
+u_graph = grid.warp_by_scalar("uh", factor=warpfactor)
+v_graph = grid.warp_by_scalar("vh", factor=warpfactor)
 
 #region ========== PLOTTING SETUP ==========
 
@@ -198,8 +194,7 @@ plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.show_grid()
 plotter.enable_parallel_projection()
 plotter.isometric_view()
-# plotter.view_xy()
-plotter.view_xz()
+plotter.view_xy()
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -210,7 +205,6 @@ plotter.show_grid(
 
 blues = mpl.colormaps.get_cmap("Blues").resampled(32)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
-colorwidth = 0.005
 
 plotter.add_mesh(
     u_graph,
@@ -240,9 +234,16 @@ plotter.add_mesh(
 )
 
 time_text = plotter.add_text(
-    "t = 0.00",
+    f"{str(int(t/T * 100))}\t/100 %",
     font_size=10,
     font="times"
+)
+
+plotter.add_text(
+    "d = 40, a = 0.125, b = 0.420",
+    font_size=10,
+    font="times",
+    position=(5, 5)
 )
 
 #endregion
@@ -251,8 +252,9 @@ time_text = plotter.add_text(
 
 for n in range(num_steps):
     t += dt
-    time_text.SetText(2, f"t = {t:.3f}")
-    print(t)
+    progress = int(n/num_steps * 100)
+    time_text.SetText(2, f"{str(progress)}\t/100 %")
+    print(progress)
     
     # Update and solve u
     with b_u.localForm() as loc_b:
@@ -274,12 +276,12 @@ for n in range(num_steps):
     u_n.x.array[:] = uh.x.array
     v_n.x.array[:] = vh.x.array
     
-    if n % 1 == 0:
-        new_warped = grid.warp_by_scalar("uh", factor=1)
+    if n % 16 == 0:
+        new_warped = grid.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
         u_graph.point_data["uh"][:] = uh.x.array
 
-        new_warped = grid.warp_by_scalar("vh", factor=1)
+        new_warped = grid.warp_by_scalar("vh", factor=warpfactor)
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
 

@@ -107,7 +107,7 @@ linear_form = fem.form(L)
 
 A = assemble_matrix(bilinear_form)
 A.assemble()
-b = create_vector(linear_form)
+b = create_vector(fem.extract_function_spaces(linear_form))
 
 solver = PETSc.KSP().create(domain.comm)
 solver.setOperators(A)

@@ -5,7 +5,7 @@ import pyvista
 import ufl
 import numpy as np
 import gmsh
-from dolfinx.io import gmshio
+from dolfinx.io import gmsh as gmshio
 
 from petsc4py import PETSc
 from mpi4py import MPI
@@ -66,9 +66,13 @@ gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.01)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.01)
 gmsh.model.mesh.generate(2)
 
-domain, cell_markers, facet_markers = gmshio.model_to_mesh(
+mesh_data = gmshio.model_to_mesh(
     gmsh.model, MPI.COMM_WORLD, 0, gdim=2
 )
+
+domain = mesh_data.mesh
+cell_markers = mesh_data.cell_tags
+facet_markers = mesh_data.facet_tags
 
 gmsh.finalize()
 
@@ -109,11 +113,11 @@ u = ufl.TrialFunction(V)
 v = ufl.TestFunction(V)
 x = ufl.SpatialCoordinate(domain)
 time = fem.Constant(domain, PETSc.ScalarType(0))
-f = 5 * ufl.exp(-5*((x[0] + ufl.cos(5 * time))**2 + (x[1] + ufl.sin(5 * time))**2)) + \
-    10 * ufl.exp(-5*((x[0] + ufl.cos(-3 * time))**2 + (x[1] + ufl.sin(-3 * time))**2))
+f = 50 * ufl.exp(-5*((x[0] + ufl.cos(5 * time))**2 + (x[1] + ufl.sin(5 * time))**2)) + \
+    100 * ufl.exp(-5*((x[0] + ufl.cos(-3 * time))**2 + (x[1] + ufl.sin(-3 * time))**2))
 # f = fem.Constant(domain, PETSc.ScalarType(0))
 a = u * v * ufl.dx + dt * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
-L = (u_n + dt * f) * v * ufl.dx + dt * 100 * v * ds(10)
+L = (u_n + dt * f) * v * ufl.dx
 
 # Convert UFL variational form to DolfinX
 bilinear_form = fem.form(a)
@@ -121,7 +125,7 @@ linear_form = fem.form(L)
 
 A = assemble_matrix(bilinear_form, bcs = [bc])
 A.assemble()
-b = create_vector(linear_form)
+b = create_vector(fem.extract_function_spaces(linear_form))
 
 # Create solver
 solver = PETSc.KSP().create(domain.comm)
@@ -158,7 +162,7 @@ renderer = plotter.add_mesh(
     lighting=False,
     cmap=viridis,
     scalar_bar_args=sargs,
-    clim=[-1, 1]
+    clim=[0, 1]
 )
 
 for i in range(num_steps):
