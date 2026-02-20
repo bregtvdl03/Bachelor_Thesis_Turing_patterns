@@ -1,0 +1,24 @@
+\begin{definition}
+    A function $\phi$ is said to have \emph{compact support} if the closure of the set
+    \begin{equation*}
+        \text{supp}(\phi) := \{ x \in \Omega \mid \phi (x) \neq 0 \}
+    \end{equation*}
+    is a compact subset of $\Omega$. The space of all smooth functions with compact support in $\Omega$ is denoted by $C^\infty_c(\Omega)$.
+\end{definition}
+
+\begin{theorem}[Fundamental Lemma of the Calculus of Variations]
+    \label{thm:flcv}
+    Let $\Omega \subseteq \R^{m}$ be open and $f \in L^{2}(\Omega)$. If
+    \begin{equation*}
+        \int_{\Omega} f \phi = 0
+    \end{equation*}
+    holds for all $\phi \in C^{\infty}_{c}(\Omega)$, then $f = 0$ almost everywhere on $\Omega$.
+\end{theorem}
+
+\begin{definition}
+    When we are differentiating functions in $C^k$ defined on a subset of $\R^m$, we sometimes use the abbreviated notation
+    \begin{equation*}
+        D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_m^{\alpha_m}} ,
+    \end{equation*}
+    where $\alpha = (\alpha_1, \dots, \alpha_m) \in \N^m$ is called a multi-index and $|\alpha| := \alpha_1 + \dots + \alpha_m$. Note that this notation primarily makes sense when $|\alpha| \leq k$, since the order of differentiation is not relevant when that is the case.
+\end{definition}

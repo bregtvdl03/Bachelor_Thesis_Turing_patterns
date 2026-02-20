@@ -1,0 +1,88 @@
+To loosen the requirements for differentiable functions, we introduce \emph{weak derivatives}. Consider an open and bounded domain $\Omega \subseteq \mathbb{R}^{m}$ and let $C^{\infty}_{c}(\Omega)$ denote the space of smooth functions $\phi: \Omega \to \mathbb{R}$ with compact support in $\Omega$. Then for any continuously differentiable function $u \in C^{1}(\Omega)$ and $\phi \in C_{c}^{\infty}(\Omega)$, we have
+
+\begin{equation}
+    \int_{\Omega} u_{x_i} \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi\ dS - \int_{\Omega} u \phi_{x_i} = - \int_{\Omega} u \phi_{x_i} ,
+\end{equation}
+
+\noindent
+since $\phi$ is 0 on the boundary. Consequentially, for any multi-index $\alpha \in \mathbb{N}^{m}$, we have
+
+\begin{equation}
+    \int_{\Omega} D^{\alpha} u \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha}  \phi,
+\end{equation}
+
+\noindent
+which motivates the following definition.
+
+\begin{definition}
+    Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \mathbb{N}^{m}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
+    
+    \begin{equation}
+        \int_{\Omega} v \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha} \phi
+    \end{equation}
+
+    \noindent
+    for every $\phi \in C^{\infty}_{c}(\Omega)$.
+\end{definition}
+
+This notion essentially has the same idea of regular derivatives, but the requirements on $u$ are much weaker. To be able to talk about \emph{the} $\alpha$-th weak derivative, we show that weak derivatives are unique in $L^{1}$, or unique in measure.
+
+\begin{theorem}
+    The $\alpha$-th weak derivative of $u$, if it exists, is uniquely defined up to a set of measure zero.
+\end{theorem}
+
+\begin{proof}
+    Suppose that $v$ and $w$ are two $\alpha$-th weak derivatives of $u$. Then for every $\phi \in C^{\infty}_{c}(\Omega)$,
+    
+    \begin{equation*}
+        \int_{\Omega} v \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha} \phi = \int_{\Omega} w \phi ,
+    \end{equation*}
+
+    \noindent
+    which gives
+
+    \begin{equation*}
+        \int_{\Omega} (v - w) \phi = 0
+    \end{equation*}
+
+    \noindent
+    for every $\phi \in C^{\infty}_{c}(\Omega)$. We can now use the Fundamental Lemma of the Calculus of Variations \flcv to see that $v - w$ is 0 almost everywhere, which means that $u = v$ almost everywhere, completing the proof.
+\end{proof}
+
+We now define the \emph{Sobolev space}, which is central to the theory of weak derivatives.
+
+\begin{definition}
+    The \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which all the $\alpha$-th weak derivatives exist and are in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
+
+    \begin{equation*}
+        W^{k, p}(\Omega) := \{ u \in L^{p}(\Omega) \mid D^{\alpha} u \in L^{p}(\Omega),\ |\alpha| \leq k \}
+    \end{equation*}
+
+    \noindent
+    We also write $H^{k}(\Omega) := W^{k, 2}(\Omega)$,
+
+    \begin{equation*}
+        H^{k}_{0}(\Omega) := \{ u \in H^{k} \mid u = 0 \text{ on } \partial \Omega \}
+    \end{equation*}
+
+    \noindent
+    and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$.\footnotemark
+\end{definition}
+
+\footnotetext{This is usually defined in a different way, but since all the underlying theory is not needed for this thesis, we skip the full derivation. The complete theory can be found in PDEs by Evans.}
+
+Using the same method, we can weaken the requirements for solutions to a partial differential equation. Consider, for instance, the heat equation on $\Omega_{T} := (0, T) \times \Omega$ with homogeneous Dirichlet boundary conditions. For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}(\Omega_{T}) \cap C^{0}(\overline{\Omega_{T}})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $\overline{\Omega_{T}}$. We can multiply the heat equation by a test function $\phi \in C_{c}^{\infty}(\Omega)$ and integrate on $\Omega$ to see
+
+\begin{equation}
+    \int_{\Omega} u_{t} \phi = \int_{\Omega} \Delta u \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi\ dS - \int_{\Omega} \nabla u \cdot \nabla \phi = - \int_{\Omega} \nabla u \cdot \nabla \phi .
+\end{equation}
+
+\noindent
+We can also write this as 
+
+\begin{equation}
+    \langle u_{t}, \phi \rangle = - \langle \nabla u, \nabla \phi \rangle ,
+\end{equation}
+
+\noindent
+where $\langle \cdot, \cdot \rangle$ denotes the inner product on both $L^{2}(\Omega)$ and $L^{2}(\Omega; \mathbb{R}^{m})$.

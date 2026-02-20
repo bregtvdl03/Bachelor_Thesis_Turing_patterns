@@ -1,0 +1,64 @@
+\documentclass[oneside]{book}
+
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{tgpagella}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true
+}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\pderiv}[2][]{\frac{\partial #1}{\partial #2}}
+\newcommand{\flcv}{\hyperref[thm:flcv]{(FLCV)}\ }
+
+\newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
+    colback=red!10,
+    colframe=red!10,
+    coltitle=black,
+    fonttitle=\bfseries,
+    boxrule=0mm,
+    boxsep=0mm,
+    toptitle=4mm,
+    top=2mm,
+    bottom=4mm,
+    left=\parindent,
+    right=\parindent,
+    width=\linewidth,
+    center,
+    sharp corners,
+    title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+}
+
+\newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
+    colback=blue!10,
+    colframe=blue!10,
+    coltitle=black,
+    fonttitle=\bfseries,
+    boxrule=0mm,
+    boxsep=0mm,
+    toptitle=4mm,
+    top=2mm,
+    bottom=4mm,
+    left=\parindent,
+    right=\parindent,
+    width=\linewidth,
+    center,
+    sharp corners,
+    title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+}
+
+\begin{document}
+
+\chapter{Preliminaries}
+\input{Chapters/Preliminaries/Ch_Preliminaries}
+
+\chapter{Simulations}
+\input{Chapters/Simulations/Ch_Simulations}
+
+\end{document}
