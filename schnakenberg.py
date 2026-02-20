@@ -10,7 +10,7 @@ import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-OUT_FILE = "out_schnakenberg/schakenberg.gif"
+OUT_FILE = "out_schnakenberg/schnakenberg.gif"
 OUT_SCREENSHOT = "out_schnakenberg/schnakenberg_profile.jpg"
 FPS = 10
 

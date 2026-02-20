@@ -7,7 +7,7 @@ from petsc4py import PETSc
 from mpi4py import MPI
 
 from dolfinx import fem, mesh, plot
-from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
+from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, assign
 import dolfinx.io.gmsh as gmshio
 import gmsh
 
@@ -23,24 +23,26 @@ Du = 1.0    # Diffusion coef for u
 Dv = 40.0   # Diffusion coef for v
 Pu = 0.125    # Production coef for u
 Pv = 0.420    # Production coef for v
-gamma = 64.0**2 # Reaction scaling
+gamma = 64.0 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 
-perturbation_strength = 0.01
+perturbation_strength = 0.1
 
 def initial_condition_u(x):
     return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return uniform_steady_state_u + perturbation_strength * (np.cos(x[0] * 2 * np.pi))
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
     return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return uniform_steady_state_v + perturbation_strength * (np.sin(x[0] * 2 * np.pi))
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 50.0 / gamma
-num_steps = 1024
+T = 100.0 / gamma
+num_steps = 2048
 dt = T / num_steps
 
 #endregion
@@ -50,9 +52,11 @@ dt = T / num_steps
 gmsh.initialize()
 
 dim = 2
-L = 2.0
+# L = 2
+L = 32
 half_L = L / 2
-cell_size = 0.5
+# cell_size = 0.5
+cell_size = 8
 half_cell = cell_size / 2
 
 gmsh.model.add("square_with_holes")
@@ -60,7 +64,8 @@ gmsh.model.add("square_with_holes")
 outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
 
 holes = []
-centers = [(0.5, 0.5), (-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
+# centers = [(0.5, 0.5), (-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
+centers = [(8.0, 8.0), (-8.0, 8.0), (-8.0, -8.0), (8.0, -8.0)]
 for cx, cy in centers:
     holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
 
@@ -71,43 +76,54 @@ gmsh.model.occ.synchronize()
 gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=100)
 gmsh.model.setPhysicalName(dim, 100, "main_domain")
 
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.01)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.01)
+# gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.015)
+# gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.005)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.24)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.08)
 gmsh.model.mesh.generate(dim)
 
 model_data = gmshio.model_to_mesh(gmsh.model, MPI.COMM_WORLD, rank=0, gdim=dim)
-msh = model_data.mesh
 
 gmsh.finalize()
+
+msh = model_data.mesh
 
 def on_holes(x):
     flags = np.zeros(x.shape[1], dtype=bool)
     for (cx, cy) in centers:
-        top    = np.isclose(x[1], cy + half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
-        right  = np.isclose(x[0], cx + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
-        bottom = np.isclose(x[1], cy - half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
-        left   = np.isclose(x[0], cx - half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
+        top     = np.isclose(x[1], cy + half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
+        right   = np.isclose(x[0], cx + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
+        bottom  = np.isclose(x[1], cy - half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
+        left    = np.isclose(x[0], cx - half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
         flags |= top | right | bottom | left
     return flags
 
 facet_indices = mesh.locate_entities(msh, dim - 1, on_holes)
 facet_markers = mesh.meshtags(msh, dim - 1, facet_indices, 10)
 
-ds = ufl.Measure("ds", domain=msh, subdomain_data=facet_markers)
+msh.topology.create_entities(dim - 1)
+boundary_msh, boundary_msh_emap = mesh.create_submesh(msh, dim - 1, facet_indices)[:2]
 
-V = fem.functionspace(msh, ("Lagrange", 1))
+ds      = ufl.Measure("ds", domain=msh, subdomain_data=facet_markers)
+dx      = ufl.Measure("dx", domain=msh)
+ds_b    = ufl.Measure("dx", domain=boundary_msh)
+
+V   = fem.functionspace(msh         , ("Lagrange", 1))
+Vb  = fem.functionspace(boundary_msh, ("Lagrange", 1))
+
+W = ufl.MixedFunctionSpace(V, Vb)
 
 #endregion
 
 #region ========== DEFINING FUNCTIONS ==========
 
 # u_{n}
-u_n = fem.Function(V)
+u_n = fem.Function(Vb)
 u_n.name = "u_n"
 u_n.interpolate(initial_condition_u)
 
 # u_{n+1}
-uh = fem.Function(V)
+uh = fem.Function(Vb)
 uh.name = "uh"
 uh.interpolate(initial_condition_u)
 
@@ -121,80 +137,68 @@ vh = fem.Function(V)
 vh.name = "vh"
 vh.interpolate(initial_condition_v)
 
-u = ufl.TrialFunction(V)
-phi = ufl.TestFunction(V)
-
-v = ufl.TrialFunction(V)
-psi = ufl.TestFunction(V)
+v, u = ufl.TrialFunctions(W)
+psi, phi = ufl.TestFunctions(W)
 
 #endregion
 
 #region ========== VARIATIONAL FORM ==========
 
-a_u = u * phi * ufl.dx \
-    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx
-    # + dt * gamma * (Pu - u + u * u * v_n) * phi * ds(10)
+# TODO: try fractional theta method: https://www.sciencedirect.com/science/article/pii/S0168874X15001377
 
-L_u = u_n * phi * ufl.dx + dt * gamma * (Pu - u_n + u_n * u_n * v_n) * phi * ufl.dx
-# L_u = u_n * phi * ufl.dx + (dt * gamma * Pu) * phi * ds(10)
+a = u * phi * ds(10) \
+    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ds(10) \
+    + v * psi * dx \
+    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * dx \
+    + dt * gamma * (u) * phi * ds(10) \
 
-a_v = v * psi * ufl.dx \
-    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
-    # + dt * gamma * (Pv - u_n * u_n * v) * psi * ds(10)
-
-L_v = v_n * psi * ufl.dx + dt * gamma * (Pv - u_n * u_n * v_n) * psi * ufl.dx
-# L_v = v_n * psi * ufl.dx
+L = u_n * phi * ds(10) \
+    + v_n * psi * dx \
+    + dt * gamma * (Pu) * phi * ds(10) \
+    + dt * gamma * (Pv) * psi * ds(10) \
+    + dt * gamma * (u_n * u_n * v_n) * phi * ds(10) \
+    - dt * gamma * (u_n * u_n * v_n) * psi * ds(10) \
+    # - dt * Dv * gamma * (u_n * u_n * v_n) * psi * ds(10) \
 
 #endregion
 
 #region ========== DEFINING SOLVERS ==========
 
-bilinear_form_u = fem.form(a_u)
-linear_form_u = fem.form(L_u)
+bilinear_form = fem.form(ufl.extract_blocks(a), entity_maps=[boundary_msh_emap])
+linear_form = fem.form(ufl.extract_blocks(L), entity_maps=[boundary_msh_emap])
 
-A_u = assemble_matrix(bilinear_form_u)
-A_u.assemble()
-b_u = create_vector(fem.extract_function_spaces(linear_form_u))
+A = assemble_matrix(bilinear_form)
+A.assemble()
+b = create_vector(fem.extract_function_spaces(linear_form))
 
-solver_u = PETSc.KSP().create(msh.comm)
-solver_u.setOperators(A_u)
-solver_u.setType(PETSc.KSP.Type.PREONLY)
-solver_u.getPC().setType(PETSc.PC.Type.LU)
-
-bilinear_form_v = fem.form(a_v)
-linear_form_v = fem.form(L_v)
-
-A_v = assemble_matrix(bilinear_form_v)
-A_v.assemble()
-b_v = create_vector(fem.extract_function_spaces(linear_form_v))
-
-solver_v = PETSc.KSP().create(msh.comm)
-solver_v.setOperators(A_v)
-solver_v.setType(PETSc.KSP.Type.PREONLY)
-solver_v.getPC().setType(PETSc.PC.Type.LU)
+solver = PETSc.KSP().create(msh.comm)
+solver.setOperators(A)
+solver.setType(PETSc.KSP.Type.PREONLY)
+solver.getPC().setType(PETSc.PC.Type.LU)
 
 #endregion
+
+#region ========== PLOTTING SETUP ==========
 
 # Uncomment this for offscreen rendering
 # pyvista.start_xvfb()
 
+warpfactor = 1
+
+grid_b = pyvista.UnstructuredGrid(*plot.vtk_mesh(Vb))
 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 
-warpfactor = 0.1
-
-grid.point_data["uh"] = uh.x.array
+grid_b.point_data["uh"] = uh.x.array
 grid.point_data["vh"] = vh.x.array
-u_graph = grid.warp_by_scalar("uh", factor=warpfactor)
+u_graph = grid_b.warp_by_scalar("uh", factor=warpfactor)
 v_graph = grid.warp_by_scalar("vh", factor=warpfactor)
-
-#region ========== PLOTTING SETUP ==========
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.show_grid()
 plotter.enable_parallel_projection()
-plotter.isometric_view()
-plotter.view_xy()
+# plotter.isometric_view()
+# plotter.view_xy()
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -210,9 +214,8 @@ plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    opacity=0.8,
     cmap=blues,
-    clim=[0, 1],
+    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -225,7 +228,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[0, 1],
+    clim=[uniform_steady_state_v - perturbation_strength, uniform_steady_state_v + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -246,6 +249,8 @@ plotter.add_text(
     position=(5, 5)
 )
 
+plotter.write_frame()
+
 #endregion
 
 #region ========== SOLVING ITERATIVELY ==========
@@ -256,28 +261,30 @@ for n in range(num_steps):
     time_text.SetText(2, f"{str(progress)}\t/100 %")
     print(progress)
     
-    # Update and solve u
-    with b_u.localForm() as loc_b:
-        loc_b.set(0)
-    assemble_vector(b_u, linear_form_u)
+    try:
+        with b.localForm() as loc_b:
+            loc_b.set(0)
+        assemble_vector(b, linear_form)
+        x = create_vector([V, Vb])
+        solver.solve(b, x)
+        x.ghostUpdate(addv=PETSc.InsertMode.INSERT, mode=PETSc.ScatterMode.FORWARD)
+    except PETSc.Error as e:  # type: ignore
+        if e.ierr == 92:
+            print("The required PETSc solver/preconditioner is not available. Exiting.")
+            print(e)
+            exit(0)
+        else:
+            raise e
     
-    solver_u.solve(b_u, uh.x.petsc_vec)
-    uh.x.scatter_forward()
-    
-    # Update and solve v
-    with b_v.localForm() as loc_b:
-        loc_b.set(0)
-    assemble_vector(b_v, linear_form_v)
-    
-    solver_v.solve(b_v, vh.x.petsc_vec)
-    vh.x.scatter_forward()
+    assign(x, [vh, uh])
+    x.destroy()
 
     # Updating and plotting
     u_n.x.array[:] = uh.x.array
     v_n.x.array[:] = vh.x.array
     
     if n % 16 == 0:
-        new_warped = grid.warp_by_scalar("uh", factor=warpfactor)
+        new_warped = grid_b.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
         u_graph.point_data["uh"][:] = uh.x.array
 
