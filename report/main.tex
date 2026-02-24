@@ -11,9 +11,12 @@
 \hypersetup{
     colorlinks=true
 }
+\usepackage{cleveref}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\inner}[1]{\left\langle #1 \right\rangle}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
 \newcommand{\pderiv}[2][]{\frac{\partial #1}{\partial #2}}
 \newcommand{\flcv}{\hyperref[thm:flcv]{(FLCV)}\ }
 
@@ -32,10 +35,32 @@
     width=\linewidth,
     center,
     sharp corners,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
     title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
 }
 
 \newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
+    colback=yellow!10,
+    colframe=yellow!10,
+    coltitle=black,
+    fonttitle=\bfseries,
+    boxrule=0mm,
+    boxsep=0mm,
+    toptitle=4mm,
+    top=2mm,
+    bottom=4mm,
+    left=\parindent,
+    right=\parindent,
+    width=\linewidth,
+    center,
+    sharp corners,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+}
+
+\newtcolorbox[use counter from=definition, number within=chapter]{lemma}[1][]{
     colback=blue!10,
     colframe=blue!10,
     coltitle=black,
@@ -50,7 +75,9 @@
     width=\linewidth,
     center,
     sharp corners,
-    title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={Lemma~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
 }
 
 \begin{document}

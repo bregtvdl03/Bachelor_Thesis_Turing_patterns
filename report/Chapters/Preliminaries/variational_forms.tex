@@ -1,0 +1,15 @@
+Using the same method, we can weaken the requirements for solutions to a partial differential equation. Consider, for instance, the heat equation on $\Omega_{T} := (0, T) \times \Omega$ with homogeneous Dirichlet boundary conditions. For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}(\Omega_{T}) \cap C^{0}(\overline{\Omega_{T}})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $\overline{\Omega_{T}}$. We can multiply the heat equation by a test function $\phi \in C_{c}^{\infty}(\Omega)$ and integrate on $\Omega$ to see
+
+\begin{equation}
+    \int_{\Omega} u_{t} \phi = \int_{\Omega} \Delta u \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi\ dS - \int_{\Omega} \nabla u \cdot \nabla \phi = - \int_{\Omega} \nabla u \cdot \nabla \phi .
+\end{equation}
+
+\noindent
+We can also write this as 
+
+\begin{equation}
+    \langle u_{t}, \phi \rangle = - \langle \nabla u, \nabla \phi \rangle ,
+\end{equation}
+
+\noindent
+where $\langle \cdot, \cdot \rangle$ denotes the inner product on both $L^{2}(\Omega)$ and $L^{2}(\Omega; \mathbb{R}^{m})$.
