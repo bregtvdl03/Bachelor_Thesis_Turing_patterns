@@ -32,12 +32,10 @@ perturbation_strength = 0.1
 
 def initial_condition_u(x):
     return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return uniform_steady_state_u + perturbation_strength * (np.cos(x[0] * 2 * np.pi))
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
     return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return uniform_steady_state_v + perturbation_strength * (np.sin(x[0] * 2 * np.pi))
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
