@@ -12,6 +12,7 @@
     colorlinks=true
 }
 \usepackage{cleveref}
+\tcbuselibrary{breakable}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
@@ -37,7 +38,8 @@
     sharp corners,
     before skip=\baselineskip,
     after skip=\baselineskip,
-    title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+    title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi},
+    breakable,
 }
 
 \newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
@@ -78,6 +80,26 @@
     before skip=\baselineskip,
     after skip=\baselineskip,
     title={Lemma~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+}
+
+\newtcolorbox[use counter from=definition, number within=chapter]{proposition}[1][]{
+    colback=blue!10,
+    colframe=blue!10,
+    coltitle=black,
+    fonttitle=\bfseries,
+    boxrule=0mm,
+    boxsep=0mm,
+    toptitle=4mm,
+    top=2mm,
+    bottom=4mm,
+    left=\parindent,
+    right=\parindent,
+    width=\linewidth,
+    center,
+    sharp corners,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={Proposition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
 }
 
 \begin{document}

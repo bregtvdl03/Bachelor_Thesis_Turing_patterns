@@ -10,7 +10,7 @@ We begin by recalling some general concepts that play an important role througho
     is a compact subset of $X$. For any open $\Omega \subseteq \R^m$, the space of all smooth functions with compact support in $\Omega$ is denoted by $C^\infty_c(\Omega)$.
 \end{definition}
 
-An important property of these functions is that they must be 0 on the boundary of $\Omega$. In the particular context of PDE analysis, they are often referred to as \emph{test functions}, but a more generally used term is \emph{variations}. They have a wide range of applications, discussed in the field of the Calculus of Variations. A large portion of the theory is built around the following result, hence its name.
+An important property of these functions is that they must be 0 on the boundary of $\Omega$. In the particular context of PDE analysis, they are often referred to as \emph{test functions}, but a more general term is \emph{variations}. They have a wide range of applications, discussed in the field of the Calculus of Variations. A large portion of its theory is built around the following result, hence its name.
 
 \begin{lemma}[Fundamental Lemma of the Calculus of Variations]
     \label{thm:flcv}
@@ -30,7 +30,7 @@ An important property of these functions is that they must be 0 on the boundary 
         D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_m^{\alpha_m}} ,
     \end{equation*}
 
-    where $\alpha = (\alpha_1, \dots, \alpha_m) \in \N^m$ is called a multi-index and $|\alpha| := \alpha_1 + \dots + \alpha_m$. Note that this notation primarily makes sense when $|\alpha| \leq k$, since the order of differentiation is not relevant when that is the case.
+    where $\alpha = (\alpha_1, \dots, \alpha_m) \in \N^m$ is called a multi-index and $|\alpha| := \alpha_1 + \dots + \alpha_m \leq k$.
 \end{definition}
 
 \begin{definition}
@@ -42,3 +42,5 @@ An important property of these functions is that they must be 0 on the boundary 
 
     for all compact subsets $K$ of $\Omega$. The space of all locally integrable functions on $\Omega$ is denoted by $L^1_\text{loc}(\Omega)$.
 \end{definition}
+
+An important fact that should be noted is that every funcion that is square-integrable is also locally integrable. That is, $L^2(\Omega) \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
