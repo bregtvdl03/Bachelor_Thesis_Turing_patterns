@@ -11,7 +11,7 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, a
 import dolfinx.io.gmsh as gmshio
 import gmsh
 
-OUT_FILE = "out_cells/spheres.gif"
+OUT_FILE = "out_cells/3d_spheres.gif"
 FPS = 10
 
 #region ========== MODEL PARAMETERS ==========
@@ -19,11 +19,11 @@ FPS = 10
 m = 2
 n = 1
 
-Du = 1.0    # Diffusion coef for u
-Dv = 40.0   # Diffusion coef for v
-Pu = 0.125    # Production coef for u
-Pv = 0.420    # Production coef for v
-gamma = 64.0 # Reaction scaling
+Du      = 1.0       # Diffusion coef for u
+Dv      = 40.0      # Diffusion coef for v
+Pu      = 0.125     # Production coef for u
+Pv      = 0.420     # Production coef for v
+gamma   = 64.0      # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -32,12 +32,10 @@ perturbation_strength = 0.1
 
 def initial_condition_u(x):
     return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return uniform_steady_state_u + perturbation_strength * (np.cos(x[0] * 2 * np.pi))
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
     return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return uniform_steady_state_v + perturbation_strength * (np.sin(x[0] * 2 * np.pi))
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
@@ -52,10 +50,8 @@ dt = T / num_steps
 gmsh.initialize()
 
 dim = 3
-# L = 2
 L = 32
 half_L = L / 2
-# cell_size = 0.5
 cell_size = 8
 half_cell = cell_size / 2
 
@@ -64,11 +60,8 @@ gmsh.model.add("square_with_holes")
 outer = gmsh.model.occ.addBox(-half_L, -half_L, -half_L, L, L, L)
 
 holes = []
-# centers = [(0.5, 0.5), (-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5)]
 centers = [(8.0, 8.0, 8.0), (-8.0, 8.0, 8.0), (-8.0, -8.0, 8.0), (8.0, -8.0, 8.0), (8.0, 8.0, -8.0), (-8.0, 8.0, -8.0), (-8.0, -8.0, -8.0), (8.0, -8.0, -8.0)]
 for (cx, cy, cz) in centers:
-    # holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
-    # holes.append(gmsh.model.occ.addBox(cx - half_cell, cy - half_cell, cz - half_cell, cell_size, cell_size, cell_size))
     holes.append(gmsh.model.occ.addSphere(cx, cy, cz, half_cell))
 
 main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
@@ -78,8 +71,6 @@ gmsh.model.occ.synchronize()
 gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=100)
 gmsh.model.setPhysicalName(dim, 100, "main_domain")
 
-# gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.015)
-# gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.005)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 10)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.5)
 gmsh.model.mesh.generate(dim)
@@ -93,15 +84,8 @@ msh = model_data.mesh
 def on_holes(x):
     flags = np.zeros(x.shape[1], dtype=bool)
     for (cx, cy, cz) in centers:
-        # right   = np.isclose(x[0], cx + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell) & (cz - half_cell <= x[2]) & (x[2] <= cz + half_cell)
-        # left    = np.isclose(x[0], cx - half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell) & (cz - half_cell <= x[2]) & (x[2] <= cz + half_cell)
-        # front   = np.isclose(x[1], cy + half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell) & (cz - half_cell <= x[2]) & (x[2] <= cz + half_cell)
-        # back    = np.isclose(x[1], cy - half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell) & (cz - half_cell <= x[2]) & (x[2] <= cz + half_cell)
-        # top     = np.isclose(x[2], cz + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell) & (cy - half_cell <= x[1]) & (x[1] <= cy + half_cell)
-        # bottom  = np.isclose(x[2], cz - half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell) & (cx - half_cell <= x[0]) & (x[0] <= cx + half_cell)
-        # flags |= top | right | bottom | left | front | back
         c = np.reshape([cx, cy, cz], (3, 1))
-        dist = np.linalg.norm(x - c, axis=0)
+        dist = np.linalg.norm(x - c, ord=2, axis=0)
         flags |= np.isclose(dist, half_cell)
     return flags
 
@@ -165,7 +149,6 @@ L = u_n * phi * ds(10) \
     + dt * gamma * (Pv) * psi * ds(10) \
     + dt * gamma * (u_n * u_n * v_n) * phi * ds(10) \
     - dt * gamma * (u_n * u_n * v_n) * psi * ds(10) \
-    # - dt * Dv * gamma * (u_n * u_n * v_n) * psi * ds(10) \
 
 #endregion
 
@@ -276,7 +259,7 @@ for n in range(num_steps):
         x = create_vector([V, Vb])
         solver.solve(b, x)
         x.ghostUpdate(addv=PETSc.InsertMode.INSERT, mode=PETSc.ScatterMode.FORWARD)
-    except PETSc.Error as e:  # type: ignore
+    except PETSc.Error as e:
         if e.ierr == 92:
             print("The required PETSc solver/preconditioner is not available. Exiting.")
             print(e)
@@ -287,7 +270,6 @@ for n in range(num_steps):
     assign(x, [vh, uh])
     x.destroy()
 
-    # Updating and plotting
     u_n.x.array[:] = uh.x.array
     v_n.x.array[:] = vh.x.array
     
