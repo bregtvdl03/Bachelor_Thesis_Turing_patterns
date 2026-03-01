@@ -2,6 +2,7 @@ import matplotlib as mpl
 import pyvista
 import ufl
 import numpy as np
+import itertools
 
 from petsc4py import PETSc
 from mpi4py import MPI
@@ -60,7 +61,7 @@ gmsh.model.add("square_with_holes")
 outer = gmsh.model.occ.addBox(-half_L, -half_L, -half_L, L, L, L)
 
 holes = []
-centers = [(8.0, 8.0, 8.0), (-8.0, 8.0, 8.0), (-8.0, -8.0, 8.0), (8.0, -8.0, 8.0), (8.0, 8.0, -8.0), (-8.0, 8.0, -8.0), (-8.0, -8.0, -8.0), (8.0, -8.0, -8.0)]
+centers = list(itertools.product([-cell_size, cell_size], repeat=dim))
 for (cx, cy, cz) in centers:
     holes.append(gmsh.model.occ.addBox(cx - half_cell, cy - half_cell, cz - half_cell, cell_size, cell_size, cell_size))
 
