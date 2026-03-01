@@ -61,7 +61,7 @@ gmsh.model.add("square_with_holes")
 outer = gmsh.model.occ.addBox(-half_L, -half_L, -half_L, L, L, L)
 
 holes = []
-centers = list(itertools.product([-cell_size, cell_size], repeat=dim))
+centers = list(itertools.product([-L/4, L/4], repeat=dim))
 for (cx, cy, cz) in centers:
     holes.append(gmsh.model.occ.addBox(cx - half_cell, cy - half_cell, cz - half_cell, cell_size, cell_size, cell_size))
 

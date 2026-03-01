@@ -56,7 +56,7 @@ gmsh.initialize()
 dim = 2
 L = 32
 half_L = L / 2
-cell_size = 8
+cell_size = 12
 half_cell = cell_size / 2
 
 gmsh.model.add("square_with_holes")
@@ -64,7 +64,7 @@ gmsh.model.add("square_with_holes")
 outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
 
 holes = []
-centers = list(itertools.product([-cell_size, cell_size], repeat=dim))
+centers = list(itertools.product([-L/4, L/4], repeat=dim))
 for (cx, cy) in centers:
     holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
 
