@@ -56,7 +56,7 @@ gmsh.initialize()
 dim = 2
 L = 32
 half_L = L / 2
-cell_size = 12
+cell_size = 8
 half_cell = cell_size / 2
 
 gmsh.model.add("square_with_holes")

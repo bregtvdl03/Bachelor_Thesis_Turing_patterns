@@ -10,8 +10,8 @@ import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-OUT_FILE = "out_schnakenberg/schakenberg.gif"
-OUT_SCREENSHOT = "out_schnakenberg/schnakenberg_profile.jpg"
+OUT_FILE = "out_schnakenberg/kleurtestje.gif"
+OUT_SCREENSHOT = None   # "out_schnakenberg/schnakenberg_profile.jpg"
 FPS = 10
 
 #region ========== PARAMETERS ==========
@@ -147,8 +147,10 @@ v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
 v_graph = v_grid.warp_by_scalar("vh", factor=warp_factor)
 
-blues = mpl.colormaps.get_cmap("Blues").resampled(64)
-ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(64)
+# blues = mpl.colormaps.get_cmap("Blues").resampled(64)
+# ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(64)
+blues = mpl.colormaps.get_cmap("inferno").resampled(64)
+ylorrd = mpl.colormaps.get_cmap("viridis").resampled(64)
 colorwidth = 0.1
 
 plotter.add_mesh(
@@ -157,7 +159,7 @@ plotter.add_mesh(
     lighting=False,
     opacity=0.9,
     cmap=blues,
-    clim=[0, 5 * uniform_steady_state_u],
+    clim=[0, 4.3],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -170,7 +172,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[0.5 * uniform_steady_state_v, 2 * uniform_steady_state_v],
+    clim=[0, 4.3],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -223,8 +225,9 @@ for n in range(num_steps):
         v_graph.point_data["vh"][:] = v_h.x.array[mapv]
         plotter.write_frame()
 
-plotter.view_xz()
-plotter.screenshot(OUT_SCREENSHOT, scale = 3)
+if OUT_SCREENSHOT:
+    plotter.view_xz()
+    plotter.screenshot(OUT_SCREENSHOT, scale = 3)
 
 plotter.close()
 
