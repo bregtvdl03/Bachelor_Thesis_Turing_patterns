@@ -1,10 +1,16 @@
 \documentclass[oneside]{book}
 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{ifthen}
+
+\usepackage{enumitem}
 \usepackage{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{amsmath}
 \usepackage{tgpagella}
 \usepackage{tcolorbox}
 \usepackage{hyperref}
@@ -20,6 +26,7 @@
 \newcommand{\norm}[1]{\left\| #1 \right\|}
 \newcommand{\pderiv}[2][]{\frac{\partial #1}{\partial #2}}
 \newcommand{\flcv}{\hyperref[thm:flcv]{(FLCV)}\ }
+\DeclareMathOperator*{\esssup}{ess\,sup}
 
 \newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
     colback=red!10,
@@ -102,12 +109,85 @@
     title={Proposition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
 }
 
+% \def\thesistitle{Models for receptor clustering on the cell membrane}
+\def\thesistitle{The Prosciutto Question}
+\def\thesissubtitle{}
+\def\thesisauthorfirst{Bregt}
+\def\thesisauthorsecond{van der Lugt}
+\def\thesissupervisorfirst{dr. Stefanie}
+\def\thesissupervisorsecond{Sonner}
+\def\thesissecondreaderfirst{dr. Vanja}
+\def\thesissecondreadersecond{Nikolic}
+\def\thesisdate{\today}
+
+\def\thesistype{Bachelor Thesis in Mathematics} 
+
+\title{\thesistitle}
+\author{\thesisauthorfirst\space\thesisauthorsecond}
+\date{\thesisdate}
+
 \begin{document}
+
+\begin{titlepage}
+	\thispagestyle{empty}
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+	\center
+	\Large Radboud University Nijmegen\\[.7cm]
+	\includegraphics[width=25mm]{img/in_dei_nomine_feliciter.eps}\\[.5cm]
+	Faculty of Science\\[0.5cm]
+	
+	\HRule \\[0.4cm]
+	{ \huge \bfseries \thesistitle}\\[0.1cm]
+        \ifthenelse{\equal{\thesissubtitle}{}}{}{\thesissubtitle\\}
+	\HRule \\[.5cm]
+	\large \thesistype \\[.5cm]
+	\begin{minipage}{0.4\textwidth}
+	\begin{flushleft} \large
+	\emph{Author:}\\
+	\thesisauthorfirst\space \thesisauthorsecond
+	\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+	\begin{flushright} \large
+	\emph{Supervisor:} \\
+	\thesissupervisorfirst\space \thesissupervisorsecond \\[1em]
+	\emph{Second reader:} \\
+	\thesissecondreaderfirst\space \thesissecondreadersecond
+	\end{flushright}
+	\end{minipage}\\[4cm]
+	\vfill
+	{\large \thesisdate}\\
+	\clearpage
+\end{titlepage}
+
+\tableofcontents
+
+\clearpage
+
+\chapter{The Prosciutto Question}
+
+hoi hoi hai
+
+\includegraphics[width=\linewidth]{img/image.png}
 
 \chapter{Preliminaries}
 \input{Chapters/Preliminaries/Ch_Preliminaries}
 
 \chapter{Simulations}
 \input{Chapters/Simulations/Ch_Simulations}
+
+\noindent
+$u: [0, T] \times \partial C \to \R$ represents receptors, $u_b: [0, T] \times \partial C \to \R$ complex, $v: [0, T] \times E \to \R$ ligand. $k_1, k_2 \in \R$ reaction coefficients, $d_1, d_2 \in \R$ decay coefficients, $D \in \R$ diffusion coefficient, $p_1, p_2$ some production functions. ($p_1(u) = au,\ p_2(v) = bv$?)
+
+\begin{equation*}
+    \begin{aligned}
+        \partial_t u &= - k_1 u^2 v + k_2 u_b + p_1(u) - d_1 u & &\text{on } (0, T) \times \partial C \\
+        \partial_t u_b &= k_1 u^2 v - k_2 u_b - d_2 u_b & &\text{on } (0, T) \times \partial C \\
+        \partial_t v &= D \Delta v + p_2(v) & &\text{on } (0, T) \times E \\
+        D \partial_\nu v &= - k_1 u^2 v + k_2 u_b & &\text{on } [0, T) \times \partial C \\
+        D \partial_\nu v &= 0 & &\text{on } [0, T) \times \partial \Omega \\
+    \end{aligned}
+\end{equation*}
 
 \end{document}

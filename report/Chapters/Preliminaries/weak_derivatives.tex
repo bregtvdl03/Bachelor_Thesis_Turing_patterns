@@ -16,7 +16,7 @@ since $\phi$ is 0 on the boundary. Consequentially, for any function $u \in C^k(
 \end{equation}
 
 \noindent
-Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. Instead, the $\alpha$-th derivative of $u$ could be described as an integrable function satisfying \cref{eq:weak_deriv_expr}, motivating the following definition.
+Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. In fact, we can completely remove the hypothesis that $u$ is differentiable, and define the \emph{weak derivative} of $u$ as a function that behaves in a similar way as \cref{eq:weak_deriv_expr} when tested against a function $\phi \in C^\infty_c(\Omega)$.
 
 \begin{definition}
     Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \N^{m}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
@@ -26,7 +26,7 @@ Note that for this last expression to make sense, the function $D^\alpha u$ does
     \end{equation}
 
     \noindent
-    for every $\phi \in C^{\infty}_{c}(\Omega)$.
+    for every test function $\phi \in C^{\infty}_{c}(\Omega)$.
 \end{definition}
 
 We often use the same notation for weak derivatives as we do for regular derivatives. When $D^\alpha u$ is used, we should carefully think about which derivative is meant here.
@@ -67,7 +67,7 @@ We now define the \emph{Sobolev space}, which is central to the theory of weak d
     When equipped with the norm
     
     \begin{equation*}
-        \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L_p(\Omega)}^p \right)^{1/p} ,
+        \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L^p(\Omega)}^p \right)^{1/p} ,
     \end{equation*}
 
     the space becomes complete, and thus forms a Banach space.
@@ -81,21 +81,13 @@ We now define the \emph{Sobolev space}, which is central to the theory of weak d
     forming a Hilbert space. A useful subset of $H^k(\Omega)$ is $H^k_0(\Omega)$, which is defined as the closure of $C^\infty_c(\Omega)$ as a subset of $H^k(\Omega)$. Lastly, we define and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$.
 \end{definition}
 
-When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1_0(\Omega)$.
+When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can say that $H_0^1(\Omega)$ is the subset of all functions $u \in H^1(\Omega)$ that vanish on the boundary, i.e.
 
 \begin{equation*}
-    H^{k}_{0}(\Omega) := \{ u \in H^{k}(\Omega) \mid u = 0 \text{ on } \partial \Omega \}
+    H^{1}_{0}(\Omega) = \{ u \in H^{1}(\Omega) \mid u = 0 \text{ on } \partial \Omega \}.
 \end{equation*}
 
 \noindent
-$u: [0, T] \times \partial C \to \R$ represents receptors, $u_b: [0, T] \times \partial C \to \R$ complex, $v: [0, T] \times E \to \R$ ligand. $k_1, k_2 \in \R$ reaction coefficients, $d_1, d_2 \in \R$ decay coefficients, $D \in \R$ diffusion coefficient, $p_1, p_2$ some production functions. ($p_1(u) = au,\ p_2(v) = bv$?)
+This space is often used for models with homogeneous Dirichlet boundary conditions. The models we will look at mainly use Neumann boundary conditions.
 
-\begin{equation*}
-    \begin{aligned}
-        \partial_t u &= - k_1 u^2 v + k_2 u_b + p_1(u) - d_1 u & &\text{on } (0, T) \times \partial C \\
-        \partial_t u_b &= k_1 u^2 v - k_2 u_b - d_2 u_b & &\text{on } (0, T) \times \partial C \\
-        \partial_t v &= D \Delta v + p_2(v) & &\text{on } (0, T) \times E \\
-        D \partial_\nu v &= - k_1 u^2 v + k_2 u_b & &\text{on } [0, T) \times \partial C \\
-        D \partial_\nu v &= 0 & &\text{on } [0, T) \times \partial \Omega \\
-    \end{aligned}
-\end{equation*}
+Weak derivatives and Sobolev spaces are generally only used for space variables. The PDEs we will be looking at also include a derivative with respect to time. This is accounted for in a different manner, but it builds upon the last few definitions.
