@@ -1,13 +1,6 @@
 We begin by recalling and defining some general concepts that play an important role throughout this thesis.
 
-Let $X$ be a Banach space and $T > 0$. A function $f: [0, T] \to X$ is called \emph{strongly measurable} if there is a sequence of simple functions $(f_n)_{n \in \N}$ that converges pointwise to $f$ at almost every $t \in [0, T]$. Now for $p \in [1, \infty]$, the space
-
-\begin{equation*}
-    L^{p}(0, T; X)
-\end{equation*}
-
-\noindent
-consists of all strongly measurable functions $u$ such that
+Let $X$ be a Banach space and $T > 0$. A function $f: [0, T] \to X$ is called \emph{strongly measurable} if there is a sequence of simple functions $(f_n)_{n \in \N}$ that converges pointwise to $f$ at almost every $t \in [0, T]$. Now for $p \in [1, \infty]$, the space $L^{p}(0, T; X)$ consists of all strongly measurable functions $u$ such that
 
 \begin{equation*}
     \norm{u}_{L^p(0, T; X)} := \left( \int_0^T \norm{u(t)}_X dt \right)^{1/p} < \infty
@@ -21,21 +14,14 @@ for $p \in [1, \infty)$, and
 \end{equation*}
 
 \noindent
-Lastly,
-
-\begin{equation*}
-    C([0, T]; X)
-\end{equation*}
-
-\noindent
-denotes the space of all continuous functions $u: [0, T] \to X$ with
+Lastly, $C([0, T]; X)$ denotes the space of all continuous functions $u: [0, T] \to X$ with
 
 \begin{equation*}
     \norm{u}_{C([0, T]; X)} := \max_{t \in [0, T]} \norm{u(t)}_X < \infty.
 \end{equation*}
 
 \noindent
-We can take $X$ to be, for instance, $L^2(\Omega)$. Then formally, $C([0, T]; L^2(\Omega))$ consists of continuous functions $u$ from the interval time [0, T] to $L^2(\Omega)$. For a more intuitive interpretation, you might feel inclined to interpret them as the corresponding functions $\widetilde{u}$ from $[0, T] \times \Omega$ to $\R$, given by $\widetilde{u}(t, x) = u(t)(x)$. We do need to be careful when we use this interpretation, though, as the notation might make it seem like these functions $\widetilde{u}$ are continuous in time, while this is generally not the case.
+We can take $X$ to be, for instance, $L^2(\Omega)$. Then formally, $C([0, T]; L^2(\Omega))$ consists of continuous functions $u$ from the interval time [0, T] to $L^2(\Omega)$. For a more intuitive interpretation, you might feel inclined to interpret them as the corresponding functions $\widetilde{u}$ from $[0, T] \times \Omega$ to $\R$, given by $\widetilde{u}(t, x) = u(t)(x)$. We do need to be careful when we use this interpretation, though, as the notation might make it seem like these functions $\widetilde{u}$ are continuous in time, while this is generally not the case. A more accurate way to think about this, is that at every time $t$, the set of points $x \in \Omega$ where $\widetilde{u}$ has a discontinuity in time has measure zero.
 
 The next ideas are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
 

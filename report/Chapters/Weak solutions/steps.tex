@@ -1,0 +1,49 @@
+\begin{enumerate}
+    \item For every $v^* \in \mathcal{X}$, define $\mathcal{T}_1 (v^*)$ as the solution $(u^*, u_b^*) \in \mathcal{Y}^2$ to the ODEs \ref{temp:ode} with frozen reactions.
+    \item For every $(u^*, u_b^*) \in \mathcal{Y}^2$, define $\mathcal{T}_2 (u^*, u_b^*)$ as the solution $v^* \in \mathcal{X}$ of the PDE \ref{temp:pde} with frozen flux.
+\end{enumerate}
+
+We want to use the Picard-Lindel\"of theorem to prove existence and uniqueness of the ODEs. If we fix a solution of the PDEs $v$, we have a system
+
+\begin{equation}
+    \label{temp:ode}
+    \begin{aligned}
+        \partial_t u(t,x)    &= f(t, x, u(t,x), u_b(t,x)), \\
+        \partial_t u_b(t,x)  &= g(t, x, u(t,x), u_b(t,x)), \\
+    \end{aligned}
+\end{equation}
+
+\noindent
+where $f$ and $g$ both depend on the trace $v$. We need $f$ and $g$ to be Lipschitz continuous in $u$ and $u_b$ and continuous in time. The fomer follows from the definition of the model(???), but for the latter, we need continuity of $v$ on $\partial C$. In other words, for every $x \in \partial C$, we need the function $t \mapsto v \vert_{\partial C}(t, x)$ to be continuous. Then for every $x$, we can solve the system \ref{temp:ode} for $u(\ \cdot\ , x)$ and $u_b(\ \cdot\ , x)$. What can we say about $u(t,\ \cdot\ )$ and $u_b(t,\ \cdot\ )$?
+
+For fixed $u$ and $u_b$, we have the following equations for $v$:
+
+\begin{equation}
+    \label{temp:pde}
+    \begin{aligned}
+        v_t(t, x) &= D\Delta v(t, x) && \text{on } (0, T) \times E,\\
+        D \pderiv[v]{\nu}(t, x) &= h(t, x, v(t, x)) && \text{on } (0, T) \times \partial C,\\
+        D \pderiv[v]{\nu}(t, x) &= 0 && \text{on } (0, T) \times \partial C,\\
+    \end{aligned}
+\end{equation}
+
+\noindent
+where $h$ depends on $u$ and $u_b$.
+
+\begin{equation*}
+    \begin{aligned}
+        \mathcal{X} &:= \left\{ v \in L^2(0, T; \Omega) \cap C([0, T]; L^2(\Omega)) \mid v \geq 0 \text{ and } v \vert_{\partial C}(\ \cdot\ , x) \in C([0, T]) \text{ for every } x \in \partial C \right\} \\
+        \mathcal{Y} &:= \left\{ u \in L^2(0, T; H^1(\Omega)) \mid u \geq 0 \text{ and } u' \in L^2(0, T; H^{-1}(\Omega)) \right\}
+    \end{aligned}
+\end{equation*}
+
+\noindent
+Questions:
+
+\begin{enumerate}
+    \item ODE is not Lipschitz, only locally?
+    \item Picard Lindel\"of for weak solutions?
+    \item Inward flow theorem for weak solutions?
+    \item When do we have time continuity of the trace?
+    \item System of ODEs $\rightarrow$ What can we say about $u(t,\ \cdot\ )$?
+\end{enumerate}
