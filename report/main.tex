@@ -19,6 +19,9 @@
 }
 \usepackage{cleveref}
 \tcbuselibrary{breakable}
+\usepackage{todonotes}
+
+\newcommand{\towrite}[1]{\todo[inline,color=yellow!10]{TO WRITE: #1}}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
@@ -26,6 +29,8 @@
 \newcommand{\norm}[1]{\left\| #1 \right\|}
 \newcommand{\pderiv}[2][]{\frac{\partial #1}{\partial #2}}
 \newcommand{\flcv}{\hyperref[thm:flcv]{(FLCV)}\ }
+\newcommand{\odespace}{\mathcal{X}}
+\newcommand{\pdespace}{\mathcal{Y}}
 \DeclareMathOperator*{\esssup}{ess\,sup}
 
 \newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
@@ -166,28 +171,16 @@
 \clearpage
 
 \chapter{Preliminaries}
+\label{ch:Preliminaries}
 \input{Chapters/Preliminaries/Ch_Preliminaries}
 
 \chapter{Turing patterns}
 \input{Chapters/Turing_Patterns/Ch_Turing_Patterns.tex}
 
-\chapter{Weak solutions}
-\input{Chapters/Weak solutions/Ch_Weak_Solutions.tex}
+\chapter{A bulk-surface model}
+\input{Chapters/BS_Model/Ch_BS_Model.tex}
 
 \chapter{Simulations}
 \input{Chapters/Simulations/Ch_Simulations}
-
-\noindent
-$u: [0, T] \times \partial C \to \R$ represents receptors, $u_b: [0, T] \times \partial C \to \R$ complex, $v: [0, T] \times E \to \R$ ligand. $k_1, k_2 \in \R$ reaction coefficients, $d_1, d_2 \in \R$ decay coefficients, $D \in \R$ diffusion coefficient, $p_1, p_2$ some production functions. ($p_1(u) = au,\ p_2(v) = bv$?)
-
-\begin{equation*}
-    \begin{aligned}
-        \partial_t u &= - k_1 u^2 v + k_2 u_b + p_1(u) - d_1 u & &\text{on } (0, T) \times \partial C \\
-        \partial_t u_b &= k_1 u^2 v - k_2 u_b - d_2 u_b & &\text{on } (0, T) \times \partial C \\
-        \partial_t v &= D \Delta v + p_2(v) & &\text{on } (0, T) \times E \\
-        D \partial_\nu v &= - k_1 u^2 v + k_2 u_b & &\text{on } [0, T) \times \partial C \\
-        D \partial_\nu v &= 0 & &\text{on } [0, T) \times \partial \Omega \\
-    \end{aligned}
-\end{equation*}
 
 \end{document}
