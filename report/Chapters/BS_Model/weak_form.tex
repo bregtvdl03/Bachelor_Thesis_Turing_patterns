@@ -1,0 +1,18 @@
+Before we start proving the existence of solutions to this model, we must discuss what kind of solutions we are looking for. Specifically, we will derive the weak formulation of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss the function spaces that are involved.
+
+As in \cref{sec:weak_forms}, we multiply $v_t$ by a test function $\phi \in C_c^\infty(\Omega)$ and integrate to get
+
+\begin{equation*}
+    \begin{aligned}
+        \int_\Omega v_t \phi = D \int_\Omega \Delta v \phi &= D \int_{\partial \Omega} \nabla v \cdot \nu \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi \\
+         &= D \int_{\partial \Gamma} \nabla v \cdot \nu \phi \ dS + D \int_{\partial \Gamma_e} \nabla v \cdot \nu \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi \\
+         &= - \int_{\partial \Gamma} f(u, u_b, v) \phi \ dS + \int_{\partial \Gamma} r(v) \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi, \\
+    \end{aligned}
+\end{equation*}
+
+\noindent
+which we can also write as
+
+\begin{equation}
+    \inner{v_t, \phi}_{L^2(\Omega)} = - \inner{f(u, u_b, v), \phi}_{L^2(\Gamma)} + \inner{r(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)}.
+\end{equation}

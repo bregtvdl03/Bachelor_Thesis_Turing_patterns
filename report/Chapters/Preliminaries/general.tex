@@ -1,31 +1,6 @@
-We begin by recalling and defining some general concepts that play an important role throughout this thesis.
+We begin by recalling and defining some general tools that play an important role throughout this thesis. The first few concepts are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
 
-Let $X$ be a Banach space and $T > 0$. A function $f: [0, T] \to X$ is called \emph{strongly measurable} if there is a sequence of simple functions $(f_n)_{n \in \N}$ that converges pointwise to $f$ at almost every $t \in [0, T]$. Now for $p \in [1, \infty]$, the space $L^{p}(0, T; X)$ consists of all strongly measurable functions $u$ such that
-
-\begin{equation*}
-    \norm{u}_{L^p(0, T; X)} := \left( \int_0^T \norm{u(t)}_X dt \right)^{1/p} < \infty
-\end{equation*}
-
-\noindent
-for $p \in [1, \infty)$, and
-
-\begin{equation*}
-    \norm{u}_{L^\infty(0, T; X)} := \esssup_{t\ \in\ [0, T]} \norm{u(t)}_X < \infty.
-\end{equation*}
-
-\noindent
-Lastly, $C([0, T]; X)$ denotes the space of all continuous functions $u: [0, T] \to X$ with
-
-\begin{equation*}
-    \norm{u}_{C([0, T]; X)} := \max_{t \in [0, T]} \norm{u(t)}_X < \infty.
-\end{equation*}
-
-\noindent
-We can take $X$ to be, for instance, $L^2(\Omega)$. Then formally, $C([0, T]; L^2(\Omega))$ consists of continuous functions $u$ from the interval time [0, T] to $L^2(\Omega)$. For a more intuitive interpretation, you might feel inclined to interpret them as the corresponding functions $\widetilde{u}$ from $[0, T] \times \Omega$ to $\R$, given by $\widetilde{u}(t, x) = u(t)(x)$. We do need to be careful when we use this interpretation, though, as the notation might make it seem like these functions $\widetilde{u}$ are continuous in time, while this is generally not the case. A more accurate way to think about this, is that at every time $t$, the set of points $x \in \Omega$ where $\widetilde{u}$ has a discontinuity in time has measure zero.
-
-The next ideas are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
-
-Let $X$ now be a topological space. A function $\phi: X \to \R$ is said to have \emph{compact support} if the set
+Let $X$ be a topological space. A function $\phi: X \to \R$ is said to have \emph{compact support} if the set
 
 \begin{equation*}
     \text{supp}(\phi) := \overline{\{ x \in X \mid \phi (x) \neq 0 \}}
@@ -36,9 +11,8 @@ is a compact subset of $X$. For any open $\Omega \subseteq \R^m$, the space of a
 
 An important property of these functions is that they must be 0 on the boundary of $\Omega$. In the particular context of PDE analysis, they are often referred to as \emph{test functions}, but a more general term is \emph{variations}. They have a wide range of applications, discussed in the field of the Calculus of Variations. A large portion of its theory is built around the following result, hence its name.
 
-\begin{lemma}[Fundamental Lemma of the Calculus of Variations]
-    \label{thm:flcv}
-    Let $\Omega \subseteq \R^{m}$ be open and $f \in L^{2}(\Omega)$. If
+\begin{lemma}{Fundamental Lemma of the Calculus of Variations}{flcv}
+    Let $\Omega \subseteq \R^{d}$ be open and $f \in L^{1}_\text{loc}(\Omega)$. If
 
     \begin{equation*}
         \int_{\Omega} f \phi = 0
@@ -49,24 +23,25 @@ An important property of these functions is that they must be 0 on the boundary 
 
 Multiplying with a test function and integrating is sometimes referred to as \emph{testing against} a test function $\phi \in C^\infty_c(\Omega)$. 
 
-\begin{definition}
-    When we are differentiating functions in $C^k$ defined in a subset of $\R^m$, we sometimes use the abbreviated notation
+\begin{definition}{}{}
+    When we are differentiating functions in $C^k$ defined in a subset of $\R^d$, we sometimes use the abbreviated notation
 
     \begin{equation*}
-        D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_m^{\alpha_m}} ,
+        D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_d^{\alpha_d}} ,
     \end{equation*}
 
-    where $\alpha = (\alpha_1, \dots, \alpha_m) \in \N^m$ is called a multi-index and $|\alpha| := \alpha_1 + \dots + \alpha_m \leq k$.
+    where $\alpha = (\alpha_1, \dots, \alpha_d) \in \N^d$ is called a \emph{multi-index} and $|\alpha| := \alpha_1 + \dots + \alpha_d \leq k$.
 \end{definition}
 
-\begin{definition}
+\begin{definition}{}{}
     Let $\Omega \subseteq \R^m$ be open. A function $f: \Omega \to \R$ is said to be \emph{locally integrable} if
 
     \begin{equation*}
         \int_K |f| < \infty
     \end{equation*}
 
-    for all compact subsets $K$ of $\Omega$. The space of all locally integrable functions on $\Omega$ is denoted by $L^1_\text{loc}(\Omega)$.
+    for all compact subsets $K$ of $\Omega$. The space of all locally integrable functions is denoted by $L^1_\text{loc}(\Omega)$, where we identify two functions with each other if they agree almost everywhere in $\Omega$.
 \end{definition}
+\todo{Put this before FLCV}
 
-An important fact that should be noted is that every funcion that is square-integrable is also locally integrable. That is, $L^2(\Omega) \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
+An important fact that should be noted is that every function that is square-integrable is also locally integrable. That is, $L^2(\Omega) \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.

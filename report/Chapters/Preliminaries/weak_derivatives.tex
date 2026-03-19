@@ -1,6 +1,6 @@
 Before we talk about weak solutions to PDEs, we need to define spaces of functions that are potential candidates for solutions. We derive this space by weakening the conditions of differentiable functions.
 
-Consider an open and bounded domain $\Omega \subseteq \R^{m}$. Then for any continuously differentiable function $u \in C^{1}(\Omega)$ and test function $\phi \in C_{c}^{\infty}(\Omega)$, we have
+Consider an open and bounded domain $\Omega \subseteq \R^{d}$. Then for any continuously differentiable function $u \in C^{1}(\Omega)$ and test function $\phi \in C_{c}^{\infty}(\Omega)$, we have
 
 \begin{equation}
     \label{random}
@@ -8,18 +8,18 @@ Consider an open and bounded domain $\Omega \subseteq \R^{m}$. Then for any cont
 \end{equation}
 
 \noindent
-since $\phi$ is 0 on the boundary. Consequentially, for any function $u \in C^k(\Omega)$ and multi-index $\alpha \in \N^{m}$ with $|\alpha| \leq k$, we have
+since $\phi$ is 0 on the boundary. Consequentially, for any function $u \in C^k(\Omega)$ and multi-index $\alpha \in \N^{d}$ with $|\alpha| \leq k$, we have
 
 \begin{equation}
     \label{eq:weak_deriv_expr}
-    \int_{\Omega} D^{\alpha} u \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha}  \phi.
+    \int_{\Omega} D^{\alpha} u \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha}  \phi,
 \end{equation}
 
 \noindent
-Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. In fact, we can completely remove the hypothesis that $u$ is differentiable, and define the \emph{weak derivative} of $u$ as a function that behaves in a similar way as \cref{eq:weak_deriv_expr} when tested against a function $\phi \in C^\infty_c(\Omega)$.
+using the fact that $D^\beta \phi$ has compact support as well, for every $\beta \in \N^d$ with $|\beta| \leq k$. Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. In fact, we can completely remove the hypothesis that $u$ is $k$ times continuously differentiable, and define the \emph{weak derivative} of $u$ as a function that behaves in a similar way as \cref{eq:weak_deriv_expr} when tested against a function $\phi \in C^\infty_c(\Omega)$.
 
-\begin{definition}
-    Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \N^{m}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
+\begin{definition}{}{}
+    Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \N^{d}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
     
     \begin{equation}
         \int_{\Omega} v \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha} \phi
@@ -29,13 +29,13 @@ Note that for this last expression to make sense, the function $D^\alpha u$ does
     for every test function $\phi \in C^{\infty}_{c}(\Omega)$.
 \end{definition}
 
-We often use the same notation for weak derivatives as we do for regular derivatives. When $D^\alpha u$ is used, we should carefully think about which derivative is meant here.
+We often use the same notation for weak derivatives as we do for regular derivatives. When $D^\alpha u$ is used, we should carefully think about which derivative is meant here. This notion extends to any differential operator that can classically be written in terms of partial derivatives, like the gradient $\nabla$ or Laplacian $\Delta := \pderiv[^2]{x^2_1} + \dots + \pderiv[^2]{x^2_d}$. To be able to talk about \emph{the} $\alpha$-th weak derivative, we show that weak derivatives are unique.
 
-This notion essentially has the same idea of regular derivatives, but the requirements on $u$ are much weaker. To be able to talk about \emph{the} $\alpha$-th weak derivative, we show that weak derivatives are unique in $L^{1}$, or unique in measure.
-
-\begin{proposition}
-    The $\alpha$-th weak derivative of $u$, if it exists, is uniquely defined up to a set of measure zero.
+\begin{proposition}{}{}
+    If the $\alpha$-th weak derivative of $u$ exists, it is unique up to a set of measure zero.
 \end{proposition}
+
+The proof of this proposition is a good example of how the Fundamental Lemma of the Calculus of Variations can be used.
 
 \begin{proof}
     Suppose that $v$ and $w$ are two $\alpha$-th weak derivatives of $u$. Then for every $\phi \in C^{\infty}_{c}(\Omega)$,
@@ -55,10 +55,10 @@ This notion essentially has the same idea of regular derivatives, but the requir
     for every $\phi \in C^{\infty}_{c}(\Omega)$. We can now use the Fundamental Lemma of the Calculus of Variations \flcv to see that $v - w$ is 0 almost everywhere, which means that $v = w$ almost everywhere, completing the proof.
 \end{proof}
 
-We now define the \emph{Sobolev space}, which is central to the theory of weak derivatives.
+With this new notion of weak differentiability, we can define new spaces of regularity. These spaces are fundamental to the analysis of PDEs and will be used a lot in this thesis. 
 
-\begin{definition}
-    For $k \in \N$ and $p \in [1, \infty]$, the \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which all the $\alpha$-th weak derivatives exist and are in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
+\begin{definition}{}{}
+    For $k \in \N$ and $p \in [1, \infty]$, the \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which the $\alpha$-th weak derivative exists and is in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
 
     \begin{equation*}
         W^{k, p}(\Omega) := \{ u \in L^{p}(\Omega) \mid D^{\alpha} u \in L^{p}(\Omega),\ |\alpha| \leq k \} .
@@ -71,24 +71,75 @@ We now define the \emph{Sobolev space}, which is central to the theory of weak d
     \end{equation*}
 
     the space becomes complete, and thus forms a Banach space.
-    
+
+    \bigskip
     Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$, but for $p = 2$ it also forms a Hilbert space. We can say this for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
 
     \begin{equation*}
         \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{L^2(\Omega)} ,
     \end{equation*}
 
-    forming a Hilbert space. A useful subset of $H^k(\Omega)$ is $H^k_0(\Omega)$, which is defined as the closure of $C^\infty_c(\Omega)$ as a subset of $H^k(\Omega)$. Lastly, we define and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$.
+    forming a Hilbert space.
+    
+    \bigskip
+    A useful subset of $W^{k,p}(\Omega)$ is $W^{k,p}_0(\Omega)$, which is defined as the closure of $C^\infty_c(\Omega)$ as a subset of $W^{k,p}(\Omega)$. For the case of $k = 2$, we write  $H^k_0(\Omega) := W^{k,2}_0(\Omega)$. 
+    
+    \bigskip
+    Lastly, we define and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$, and denote the pairing between these two spaces as $\pair{\cdot, \cdot}$, i.e. $\pair{f, u} := f(u)$.
 \end{definition}
 
-When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can say that $H_0^1(\Omega)$ is the subset of all functions $u \in H^1(\Omega)$ that vanish on the boundary, i.e.
+When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can describe $H_0^1(\Omega)$ as the subset of $H^1(\Omega)$ containing all functions that vanish on the boundary. This interpretation has an important caveat. By definition, $H^1(\Omega)$ is a subset of $L^2(\Omega)$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary $\partial \Omega$ is a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
+
+\begin{proposition}{Approximation by smooth functions}{approx_by_smooth}
+    If the boundary $\partial \Omega$ is Lipschitz and $ 1 \leq p < \infty$, the set of all smooth functions $C^\infty(\overline{\Omega})$ is dense in $W^{k,p}(\Omega)$.
+\end{proposition}
+
+More precisely, for any function $u \in W^{k,p}(\Omega)$, there is a sequence of smooth functions defined on the closure of $\Omega$, $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$, such that
 
 \begin{equation*}
-    H^{1}_{0}(\Omega) = \{ u \in H^{1}(\Omega) \mid u = 0 \text{ on } \partial \Omega \}.
+    \norm{u - u_n}_{W^{k,p}(\Omega)} \to 0 \quad\quad \text{as } n \to \infty.
 \end{equation*}
 
 \noindent
-This space is often used for models with homogeneous Dirichlet boundary conditions. The models we will look at mainly use Neumann boundary conditions.
+This allows us to extend our knowledge of functions defined on the boundary to functions in $W^{k,p}(\Omega)$ in general.
+
+\begin{theorem}{Trace Theorem}{}
+    If the boundary $\partial \Omega$ is Lipschitz, there is a bounded linear operator $T: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ such that
+    
+    \begin{enumerate}[label=(\roman*)]
+        \item $Tu = u \vert_{\partial \Omega}$ for any $u \in W^{1,p}(\Omega) \cap C(\overline{\Omega})$, and
+        \item \label{item:trace_property_2} $\norm{Tu}_{L^2(\partial \Omega)} \leq C \norm{u}_{W^{1,p}(\Omega)}$,
+    \end{enumerate}
+    
+    where the constant $C > 0$ only depends on $p$ and $\Omega$.
+\end{theorem}
+
+A full proof of this theorem can be found in \cite{evans2010partial}, but we will describe the general outline here. 
+
+\begin{proof}
+    As we previously discussed, we can start by defining $Tu := u \vert_{\partial \Omega}$ for any $u \in C^1(\overline{\Omega})$. The first step in extending this definition is to use that the boundary is Lipschitz to locally flatten it and prove \cref{item:trace_property_2} for $u \in C^1(\overline{\Omega})$ in a neighbourhood of some point $x \in \partial \Omega$. We can then use the fact that $\Omega$ is bounded to see that $\partial \Omega$ is compact, which allows us to get a finite amount of points $x_1, \dots, x_n \in \partial \Omega$ with corresponding constants $C_1, \dots, C_n$, combining them to conclude \cref{item:trace_property_2} for the entirety of $\partial \Omega$.
+
+    For the general case of $u \in W^{1,p}(\Omega)$, we can use \cref{prop:approx_by_smooth} to get an approximation for $u$ of smooth functions $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$. The first part of the proof then implies that
+
+    \begin{equation*}
+        \norm{Tu_n - Tu_m}_{L^2(\partial \Omega)} = \norm{T \left( u_n - u_m \right)}_{L^2(\partial \Omega)} \leq C \norm{u_n - u_m}_{W^{k,p}(\Omega)},
+    \end{equation*}
+
+    \noindent
+    which means that $(T u_n)_{n \in \N}$ is a Cauchy sequence. We have used that $T$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $L^2(\partial \Omega)$ is a Hilbert space, we can define
+
+    \begin{equation*}
+        Tu := \lim_{n \to \infty} T u_n = \lim_{n \to \infty} u_n \vert_{\partial \Omega},
+    \end{equation*}
+
+    \noindent
+    which satisfies the same bound.
+
+    The proof is completed by noting that if $u \in W^{1,p}(\Omega) \cap C(\overline{\Omega})$, then there are smooth functions $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$ converging to $u$ uniformly on $\overline{\Omega}$, so $Tu = u \vert_{\partial \Omega}$.
+\end{proof}
+
+\begin{definition}{}{}
+    This operator $T: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ is referred to as the \emph{trace operator}. $Tu$ is called the \emph{trace} of $u$, and is sometimes denoted by $u \vert_{\partial \Omega}$.
+\end{definition}
+
 \todo{traces}
-\todo{Bochner spaces}
-\todo{Caratheodory ?}

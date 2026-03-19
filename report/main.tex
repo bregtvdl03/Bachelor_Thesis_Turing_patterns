@@ -13,27 +13,54 @@
 \usepackage{amsthm}
 \usepackage{tgpagella}
 \usepackage{tcolorbox}
+\tcbuselibrary{breakable,theorems}
 \usepackage{hyperref}
 \hypersetup{
-    colorlinks=true
+    colorlinks=true,
+    citecolor=red
 }
 \usepackage{cleveref}
-\tcbuselibrary{breakable}
+\crefname{equation}{Equation}{Equations}
 \usepackage{todonotes}
-
-\newcommand{\towrite}[1]{\todo[inline,color=yellow!10]{TO WRITE: #1}}
+\usepackage{enumitem}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
-\newcommand{\inner}[1]{\left\langle #1 \right\rangle}
+\newcommand{\pair}[1]{\left\langle #1 \right\rangle}
+\newcommand{\inner}[1]{\left( #1 \right)}
 \newcommand{\norm}[1]{\left\| #1 \right\|}
 \newcommand{\pderiv}[2][]{\frac{\partial #1}{\partial #2}}
-\newcommand{\flcv}{\hyperref[thm:flcv]{(FLCV)}\ }
+\newcommand{\flcv}{\hyperref[lem:flcv]{(FLCV)}\ }
 \newcommand{\odespace}{\mathcal{X}}
 \newcommand{\pdespace}{\mathcal{Y}}
 \DeclareMathOperator*{\esssup}{ess\,sup}
 
-\newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
+% \newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
+%     colback=red!10,
+%     colframe=red!10,
+%     coltitle=black,
+%     fonttitle=\bfseries,
+%     boxrule=0mm,
+%     boxsep=0mm,
+%     toptitle=4mm,
+%     top=2mm,
+%     bottom=4mm,
+%     left=\parindent,
+%     right=\parindent,
+%     width=\linewidth,
+%     center,
+%     sharp corners,
+%     before skip=\baselineskip,
+%     after skip=\baselineskip,
+%     label type=definition,
+%     title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi},
+%     breakable,
+% }
+
+\newtcbtheorem[
+    number within=chapter,
+    crefname={Definition}{Definitions}
+]{definition}{Definition}{
     colback=red!10,
     colframe=red!10,
     coltitle=black,
@@ -50,13 +77,18 @@
     sharp corners,
     before skip=\baselineskip,
     after skip=\baselineskip,
-    title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi},
-    breakable,
-}
+    separator sign none,
+    description delimiters={(}{)},
+    breakable
+}{def}
 
-\newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
-    colback=yellow!10,
-    colframe=yellow!10,
+\newtcbtheorem[
+    use counter from=definition,
+    number within=chapter,
+    crefname={Theorem}{Theorems}
+]{theorem}{Theorem}{
+    colback=green!10,
+    colframe=green!10,
     coltitle=black,
     fonttitle=\bfseries,
     boxrule=0mm,
@@ -71,10 +103,16 @@
     sharp corners,
     before skip=\baselineskip,
     after skip=\baselineskip,
-    title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
-}
+    separator sign none,
+    description delimiters={(}{)},
+    breakable
+}{thm}
 
-\newtcolorbox[use counter from=definition, number within=chapter]{lemma}[1][]{
+\newtcbtheorem[
+    use counter from=definition,
+    number within=chapter,
+    crefname={Lemma}{Lemmas}
+]{lemma}{Lemma}{
     colback=blue!10,
     colframe=blue!10,
     coltitle=black,
@@ -91,10 +129,16 @@
     sharp corners,
     before skip=\baselineskip,
     after skip=\baselineskip,
-    title={Lemma~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
-}
+    separator sign none,
+    description delimiters={(}{)},
+    breakable
+}{lem}
 
-\newtcolorbox[use counter from=definition, number within=chapter]{proposition}[1][]{
+\newtcbtheorem[
+    use counter from=definition,
+    number within=chapter,
+    crefname={Proposition}{Propositions}
+]{proposition}{Proposition}{
     colback=blue!10,
     colframe=blue!10,
     coltitle=black,
@@ -111,8 +155,31 @@
     sharp corners,
     before skip=\baselineskip,
     after skip=\baselineskip,
-    title={Proposition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
-}
+    separator sign none,
+    description delimiters={(}{)},
+    breakable
+}{prop}
+
+% \newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
+%     colback=yellow!10,
+%     colframe=yellow!10,
+%     coltitle=black,
+%     fonttitle=\bfseries,
+%     boxrule=0mm,
+%     boxsep=0mm,
+%     toptitle=4mm,
+%     top=2mm,
+%     bottom=4mm,
+%     left=\parindent,
+%     right=\parindent,
+%     width=\linewidth,
+%     center,
+%     sharp corners,
+%     before skip=\baselineskip,
+%     after skip=\baselineskip,
+%     label type=theorem,
+%     title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
+% }
 
 % \def\thesistitle{Models for receptor clustering on the cell membrane}
 \def\thesistitle{The Prosciutto Question}
@@ -182,5 +249,8 @@
 
 \chapter{Simulations}
 \input{Chapters/Simulations/Ch_Simulations}
+
+\bibliographystyle{alpha}
+\bibliography{references.bib}
 
 \end{document}

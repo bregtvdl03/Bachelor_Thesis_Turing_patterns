@@ -1,0 +1,126 @@
+Our goal in this section is to prove the following theorem.
+
+\begin{theorem}{Existence and uniqueness of weak solutions}{eq_and_un}
+    Let $u_0, u_{b, 0} \in L^2(\partial \Omega)$ and $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then for small enough $T > 0$, there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
+\end{theorem}
+
+As previously mentioned, the proof will be structured around an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
+
+Let us first concretely demonstrate what we mean by ``freezing'' the terms that depend on $v$. Fix $v^* \in \pdespace$ and consider the modified system of ODEs given by
+
+\begin{equation}\label{eq:frozen_odes}
+    \begin{aligned}
+        u_t         &= - f(u, u_b, Tv^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= f(u, u_b, Tv^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
+    \end{aligned}
+\end{equation}
+\todo{weak form?}
+
+\noindent
+where $Tv^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
+
+\begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
+    Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative.
+\end{lemma}
+
+\begin{proof}
+    \todo{proof}
+\end{proof}
+
+Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
+
+We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
+
+\begin{equation}\label{eq:frozen_pde}
+    \begin{aligned}
+        \inner{v_t, \phi}_{L^2(\Omega)} &= - \inner{f(u^*, u_b^*, v), \phi}_{L^2(\Gamma)} + \inner{r(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)} \\
+        &= \inner{g(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)}, \\
+    \end{aligned}
+\end{equation}
+\todo{fix more?}
+
+\noindent
+where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this definition because $u^*$ and $u_b^*$ are fixed. We have now decoupled the PDE from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
+
+\begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
+    Let $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative.
+\end{lemma}
+
+\begin{proof}
+    \todo{proof}
+\end{proof}
+
+This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u, u_b) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
+
+\begin{lemma}{}{contraction}
+    For $T > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $\gamma \in [0, 1)$ such that
+    
+    \begin{equation*}
+        \norm{\mathcal{T} v}_\pdespace \leq \gamma \norm{v}_\pdespace
+    \end{equation*}
+
+    for every $v \in \pdespace$.
+\end{lemma}
+
+\begin{proof}
+    \todo{proof}
+\end{proof}
+
+We have now gathered enough results to prove the main statement of this section.
+
+\begin{proof}[Proof of \cref{thm:eq_and_un}]
+    Using \cref{lem:contraction}, let $T > 0$ such that $\mathcal{T}$ is a contraction. Then by the Banach fixed-point theorem, there exists a unique fixed point $v^*$ of $\mathcal{T}$. Next, define $(u^*, u_b^*) := \mathcal{T}_1 v^*$. Then by definition, $u^*$ and $u_b^*$ solve \cref{eq:frozen_odes} with $v^*$ as the frozen input. On the other hand, $\mathcal{T}_2 (u^*, u_b^*) = \mathcal{T}v^* = v^*$ solves \cref{eq:frozen_pde} with $u^*$ and $u_b^*$ as the inputs to the frozen reactions. In other words, $u^*$, $u_b^*$ and $v^*$ are weak solutions to \cref{sys:ODEs,sys:PDEs,sys:Init}.
+
+    To show uniqueness of the weak solutions, it is enough to note that for any weak solution $u^*, u_b^*$ and $v^*$, we have that $v^*$ is a fixed point of $\mathcal{T}$. This follows directly from the uniqueness results from \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}. Since the Banach fixed-point theorem tells us that fixed points are unique, we know that weak solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} are too.
+\end{proof}
+
+
+% \begin{enumerate}
+%     \item For every $v^* \in \mathcal{X}$, define $\mathcal{T}_1 (v^*)$ as the solution $(u^*, u_b^*) \in \mathcal{Y}^2$ to the ODEs~\ref{temp:ode} with frozen reactions.
+%     \item For every $(u^*, u_b^*) \in \mathcal{Y}^2$, define $\mathcal{T}_2 (u^*, u_b^*)$ as the solution $v^* \in \mathcal{X}$ of the PDE~\ref{temp:pde} with frozen flux.
+% \end{enumerate}
+
+% We want to use the Picard-Lindel\"of theorem to prove existence and uniqueness of the ODEs. If we fix a solution of the PDEs $v$, we have a system
+
+% \begin{equation}
+%     \label{temp:ode}
+%     \begin{aligned}
+%         \partial_t u(t,x)    &= f(t, x, u(t,x), u_b(t,x)), \\
+%         \partial_t u_b(t,x)  &= g(t, x, u(t,x), u_b(t,x)), \\
+%     \end{aligned}
+% \end{equation}
+
+% \noindent
+% where $f$ and $g$ both depend on the trace $v$. We need $f$ and $g$ to be Lipschitz continuous in $u$ and $u_b$ and continuous in time. The former follows from the definition of the model(???), but for the latter, we need continuity of $v$ on $\partial C$. In other words, for every $x \in \partial C$, we need the function $t \mapsto v \vert_{\partial C}(t, x)$ to be continuous. Then for every $x$, we can solve the system~\ref{temp:ode} for $u(\ \cdot\ , x)$ and $u_b(\ \cdot\ , x)$. What can we say about $u(t,\ \cdot\ )$ and $u_b(t,\ \cdot\ )$?
+
+% For fixed $u$ and $u_b$, we have the following equations for $v$:
+
+% \begin{equation}
+%     \label{temp:pde}
+%     \begin{aligned}
+%         v_t(t, x) &= D\Delta v(t, x) && \text{on } (0, T) \times E,\\
+%         D \pderiv[v]{\nu}(t, x) &= h(t, x, v(t, x)) && \text{on } (0, T) \times \partial C,\\
+%         D \pderiv[v]{\nu}(t, x) &= 0 && \text{on } (0, T) \times \partial C,\\
+%     \end{aligned}
+% \end{equation}
+
+% \noindent
+% where $h$ depends on $u$ and $u_b$.
+
+% \begin{equation*}
+%     \begin{aligned}
+%         \mathcal{X} &:= \left\{ v \in L^2(0, T; \Omega) \cap C([0, T]; L^2(\Omega)) \mid v \geq 0 \text{ and } v \vert_{\partial C}(\ \cdot\ , x) \in C([0, T]) \text{ for every } x \in \partial C \right\} \\
+%         \mathcal{Y} &:= \left\{ u \in L^2(0, T; H^1(\Omega)) \mid u \geq 0 \text{ and } u' \in L^2(0, T; H^{-1}(\Omega)) \right\}
+%     \end{aligned}
+% \end{equation*}
+
+% \noindent
+% Questions:
+
+% \begin{enumerate}
+%     \item ODE is not Lipschitz, only locally?
+%     \item Picard Lindel\"of for weak solutions?
+%     \item Inward flow theorem for weak solutions?
+%     \item When do we have time continuity of the trace?
+%     \item System of ODEs $\rightarrow$ What can we say about $u(t,\ \cdot\ )$?
+% \end{enumerate}
