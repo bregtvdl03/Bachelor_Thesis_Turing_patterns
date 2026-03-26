@@ -16,7 +16,7 @@ FPS = 10
 
 #region ========== PARAMETERS ==========
 
-m = 2
+m = 1
 n = 1
 
 Du = 1.0    # Diffusion coef for u
@@ -40,7 +40,7 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 50.0 / gamma
-num_steps = 1024
+num_steps = 2048
 dt = T / num_steps
 
 nx, ny = 128, 128
@@ -94,6 +94,9 @@ a = u * phi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + v * psi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+
+# L = (u_n + dt * gamma * (Pu - u_n + u_n * v_n)) * phi * ufl.dx \
+#     + (v_n + dt * gamma * (Pv - u_n * v_n)) * psi * ufl.dx
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
     + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
@@ -159,7 +162,7 @@ plotter.add_mesh(
     lighting=False,
     opacity=0.9,
     cmap=blues,
-    clim=[0, 4.3],
+    clim=[uniform_steady_state_u - 0.1, uniform_steady_state_u + 0.1],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -172,7 +175,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[0, 4.3],
+    clim=[uniform_steady_state_v - 0.1, uniform_steady_state_v + 0.1],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -216,7 +219,7 @@ for n in range(num_steps):
     u_n.x.array[mapu] = u_h.x.array[mapu]
     v_n.x.array[mapv] = v_h.x.array[mapv]
     
-    if n % 16 == 0:
+    if n % 32 == 0:
         u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
         v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
         u_graph.points[:, :] = u_graph_new.points
