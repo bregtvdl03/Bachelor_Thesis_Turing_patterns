@@ -1,14 +1,68 @@
 \todo{actual biological terms}
 
-Consider an open and bounded set $U \subseteq \R^d$ \todo{with Lipschitz boundary?} and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$ and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained by $U$, i.e. no cells should cross the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and place on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands.\todo{figure}
+Consider an open and bounded set $U \subseteq \R^d$ with Lipschitz boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with Lipschitz boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained by $U$, i.e. no cells should cross the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and place on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands.\todo{figure}
 
-The ligands can move freely through the extracellular space. This can modeled by the standard diffusion (or heat) equation. For the sake of simplification, we assume the individual receptors will be fixed in their position on the cell membrane.
+\begin{figure}[!t]
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+
+    \fill[cyan!20, even odd rule]
+    plot[smooth cycle, tension=0.6] coordinates {
+        (-3,1.5)
+        (-1.5,2.5)
+        (1,2.3)
+        (3,1.5)
+        (3.5,0)
+        (2,-1)
+        (0,-1.5)
+        (-2,-1)
+        (-3,-0.2)
+    }
+    (-1.5,0.7) circle (0.7)
+    (1.8,0.8) circle (0.8)
+    (0,-0.8) circle (0.4);
+    
+    % Outer irregular boundary
+    \draw[line width=1pt]
+      plot[smooth cycle, tension=0.6] coordinates {
+        (-3,1.5)
+        (-1.5,2.5)
+        (1,2.3)
+        (3,1.5)
+        (3.5,0)
+        (2,-1)
+        (0,-1.5)
+        (-2,-1)
+        (-3,-0.2)
+      };
+    
+    % Inner circles
+    \draw[line width=1pt] (-1.5,0.7) circle (0.7);
+    \draw[line width=1pt] (1.8,0.8) circle (0.8);
+    \draw[line width=1pt] (0,-0.8) circle (0.4);
+    
+    % Labels
+    \node at (0.0,1.0) {$\Omega$};
+    \node at (1.3,0.6) {$\Gamma$};
+    \node at (-0.2,2.8) {$\Gamma_e$};
+    \node at (2.0,1.2) {$\nu$};
+    \node at (2.356, -1.268) {$\nu$};
+    
+    % Arrows (boundary directions)
+    \draw[->, line width=1pt] (1.8,1.6) -- (1.8,1.2);
+    \draw[->, line width=1pt] (2,-1) -- (2.156, -1.368);
+    
+    \end{tikzpicture}
+    \caption{A sketch of a possible domain in the case that $d= 2$. The blue background represents $\Omega$ and the two kinds of boundaries are indicated, along with the outward unit normal vector $\nu$.}
+\end{figure}
+
+The ligands can move freely through the extracellular space. This can modelled by the standard diffusion (or heat) equation. For the sake of simplification, we assume the individual receptors will be fixed in their position on the cell membrane.
 
 When a ligand binds to a free receptor, the concentration of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. The rate of this reaction is proportional to $u^2 v$\todo{or $uv$}. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new one again. The concentration of bounded receptors decrease, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is proportional to the concentration of bounded receptors $u_b$.
 
 The last two things that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter or model through the cell membrane. We assume this production happens at a constant rate. The free and bounded receptors also decay after some time, proportional to their respective concentrations.
 
-We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $k_\text{on}, k_\text{off} > 0$, respectively, the production constants by $p_u, p_v > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward\todo{inward?} unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
+We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $k_\text{on}, k_\text{off} > 0$, respectively, the production constants by $p_u, p_v > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
 
 \begin{equation*}
     f(u, u_b, v) := k_\text{on} u^2 v - k_\text{off} u_b,
@@ -40,9 +94,9 @@ Since the dynamics of the ligands include diffusion, they can be described by th
 \begin{equation}
     \label{sys:PDEs}
     \begin{aligned}
-        v_t                     &= D \Delta v               & \text{in }& (0, T) \times \Omega, \\
-        D \nabla v \cdot \nu    &= - f(u, u_b, v) + r(v)    & \text{on }& [0, T) \times \Gamma, \\
-        D \nabla v \cdot \nu    &= 0                        & \text{on }& [0, T) \times \Gamma_e. \\
+        v_t                 &= D \Delta v               & \text{in }& (0, T) \times \Omega, \\
+        D \pderiv[v]{\nu}   &= - f(u, u_b, v) + r(v)    & \text{on }& [0, T) \times \Gamma, \\
+        D \pderiv[v]{\nu}   &= 0                        & \text{on }& [0, T) \times \Gamma_e. \\
     \end{aligned}
 \end{equation}
 

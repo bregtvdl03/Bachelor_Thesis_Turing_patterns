@@ -1,7 +1,7 @@
 Our goal in this section is to prove the following theorem.
 
 \begin{theorem}{Existence and uniqueness of weak solutions}{eq_and_un}
-    Let $u_0, u_{b, 0} \in L^2(\partial \Omega)$ and $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then for small enough $T > 0$, there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
+    Let $u_0, u_{b, 0} \in L^2(\partial \Omega)$ and $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
 \end{theorem}
 
 As previously mentioned, the proof will be structured around an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
@@ -10,17 +10,17 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
-        u_t         &= - f(u, u_b, Tv^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, Tv^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
+        u_t         &= - f(u, u_b, \gamma v^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
     \end{aligned}
 \end{equation}
 \todo{weak form?}
 
 \noindent
-where $Tv^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
+where $\gamma v^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
-    Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative.
+    Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
@@ -43,7 +43,7 @@ We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \i
 where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this definition because $u^*$ and $u_b^*$ are fixed. We have now decoupled the PDE from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
 
 \begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
-    Let $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative.
+    Let $v_0 \in L^2(\Omega)$ be non-negative initial conditions and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
@@ -53,10 +53,10 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u, u_b) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
 
 \begin{lemma}{}{contraction}
-    For $T > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $\gamma \in [0, 1)$ such that
+    For $\widetilde{T} > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that
     
     \begin{equation*}
-        \norm{\mathcal{T} v}_\pdespace \leq \gamma \norm{v}_\pdespace
+        \norm{\mathcal{T} v}_\pdespace \leq q \norm{v}_\pdespace
     \end{equation*}
 
     for every $v \in \pdespace$.

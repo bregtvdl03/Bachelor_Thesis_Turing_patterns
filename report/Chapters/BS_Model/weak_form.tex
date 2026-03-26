@@ -1,12 +1,19 @@
-Before we start proving the existence of solutions to this model, we must discuss what kind of solutions we are looking for. Specifically, we will derive the weak formulation of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss the function spaces that are involved.
+Before we start proving the existence of solutions to this model, we must discuss what kind of solutions we are looking for. Specifically, we will derive the weak formulations of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss the function spaces that are involved.
 
-As in \cref{sec:weak_forms}, we multiply $v_t$ by a test function $\phi \in C_c^\infty(\Omega)$ and integrate to get
+As in \cref{sec:weak_forms}, we first suppose that $u$, $u_b$ and $v$ are smooth solutions. Then we can interpret them as functions $\mathbf{u}: [0, T] \to L^2(\Gamma)$, $\mathbf{u_b}: [0, T] \to L^2(\Gamma)$ and $\mathbf{v}: [0, T] \to H^1(\Omega)$, defined by
+
+\begin{equation*}
+    \mathbf{u}(t) := u(t, \cdot),   \quad\quad  \mathbf{u_b}(t) := u_b(t, \cdot)    \quad\quad  \text{and } \quad\quad  \mathbf{v}(t) := v(t, \cdot).
+\end{equation*}
+
+\noindent
+Then by multiplying $\mathbf{v}'$ by a test function $\phi \in C^\infty_c(\Omega)$ and integrating on $\Omega$, we get
 
 \begin{equation*}
     \begin{aligned}
-        \int_\Omega v_t \phi = D \int_\Omega \Delta v \phi &= D \int_{\partial \Omega} \nabla v \cdot \nu \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi \\
-         &= D \int_{\partial \Gamma} \nabla v \cdot \nu \phi \ dS + D \int_{\partial \Gamma_e} \nabla v \cdot \nu \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi \\
-         &= - \int_{\partial \Gamma} f(u, u_b, v) \phi \ dS + \int_{\partial \Gamma} r(v) \phi \ dS - D \int_\Omega \nabla v \cdot \nabla \phi, \\
+        \int_\Omega \mathbf{v}' \phi = D \int_\Omega \Delta \mathbf{v} \phi     &= - D \int_\Omega \nabla \mathbf{v} \cdot \nabla \phi + D \int_{\partial \Omega} \pderiv[\mathbf{v}]{\nu} \phi \ dS \\
+                                                                                &= - D \int_\Omega \nabla \mathbf{v} \cdot \nabla \phi + D \int_{\Gamma} \pderiv[\mathbf{v}]{\nu} \phi \ dS                 + D \int_{\Gamma_e} \pderiv[\mathbf{v}]{\nu} \phi \ dS \\
+                                                                                &= - D \int_\Omega \nabla \mathbf{v} \cdot \nabla \phi - \int_{\Gamma} f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}) \phi \ dS    + \int_{\Gamma} r(\mathbf{v}) \phi \ dS, \\
     \end{aligned}
 \end{equation*}
 
@@ -14,5 +21,10 @@ As in \cref{sec:weak_forms}, we multiply $v_t$ by a test function $\phi \in C_c^
 which we can also write as
 
 \begin{equation}
-    \inner{v_t, \phi}_{L^2(\Omega)} = - \inner{f(u, u_b, v), \phi}_{L^2(\Gamma)} + \inner{r(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)}.
+    \inner{\mathbf{v}', \phi}_{L^2(\Omega)} = - D \inner{\nabla \mathbf{v}, \nabla \phi}_{L^2(\Omega; \R^d)} - \inner{f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}), \phi}_{L^2(\Gamma)} + \inner{r(\mathbf{v}), \phi}_{L^2(\Gamma)},
 \end{equation}
+
+\noindent
+for all $t \in [0, T]$.
+
+This 
