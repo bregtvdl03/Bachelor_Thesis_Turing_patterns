@@ -11,23 +11,44 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
         u_t         &= - f(u, u_b, \gamma v^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
     \end{aligned}
 \end{equation}
 \todo{weak form?}
 
 \noindent
-where $\gamma v^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
+These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
     Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
-    \todo{proof}
+    Let us begin by summarizing the problem in one formula. Fix $x \in \Omega$ and denote 
+    
+    \begin{equation*}
+        w(t) := \begin{pmatrix}
+            u(t, x) \\
+            u_b(t, x)
+        \end{pmatrix}.
+    \end{equation*}
+    
+    \noindent
+    Then \cref{eq:frozen_odes} can be described by
+
+    \begin{equation}
+        w'(t) = F(w(t), t),
+    \end{equation}
+
+    \noindent
+    where $F: \R^3 \to \R^2$ is defined by
+
+    \begin{equation*}
+        F(w, t) := 
+    \end{equation*}
 \end{proof}
 
-Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
+Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v^* \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
 
 We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
 
@@ -50,7 +71,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     \todo{proof}
 \end{proof}
 
-This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u, u_b) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
+This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u^*, u_b^*) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
 
 \begin{lemma}{}{contraction}
     For $\widetilde{T} > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that

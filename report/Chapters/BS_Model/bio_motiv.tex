@@ -81,13 +81,13 @@ respectively. The concentrations of receptors can then be described by the syste
 \begin{equation}
     \label{sys:ODEs}
     \begin{aligned}
-        u_t         &= - f(u, u_b, v) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, v) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
+        u_t         &= - f(u, u_b, \gamma v) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= f(u, u_b, \gamma v) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
     \end{aligned}
 \end{equation}
 
 \noindent
-Note that even though they are given by only two equations, this is actually a system of uncountably many ODEs. For every boundary point $x \in \Gamma$, we have one ODE for the function $t \mapsto u(t, x)$ and one for the function $t \mapsto u_b(t, x)$.
+where $\gamma v$ denotes the trace of $v$, as discussed in \cref{sec:weak_derivatives}. Note that even though they are given by only two equations, this is actually a system of uncountably many ODEs. For every boundary point $x \in \Gamma$, we have one ODE for the function $t \mapsto u(t, x)$ and one for the function $t \mapsto u_b(t, x)$.
 
 Since the dynamics of the ligands include diffusion, they can be described by the PDEs given by
 

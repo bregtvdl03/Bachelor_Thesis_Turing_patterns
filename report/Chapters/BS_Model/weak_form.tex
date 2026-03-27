@@ -7,7 +7,20 @@ As in \cref{sec:weak_forms}, we first suppose that $u$, $u_b$ and $v$ are smooth
 \end{equation*}
 
 \noindent
-Then by multiplying $\mathbf{v}'$ by a test function $\phi \in C^\infty_c(\Omega)$ and integrating on $\Omega$, we get
+Now if we denote the weak time derivatives of $\mathbf{u}$ and $\mathbf{u_b}$ by $\mathbf{u}'$ and $\mathbf{u_b}'$, respectively, we can write \cref{sys:ODEs} as
+
+\begin{equation}\label{eq:weak_ode}
+    \begin{aligned}
+        \mathbf{u}'     &= -f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}) + p(\mathbf{u}), \\
+        \mathbf{u_b}'   &= f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}) + q(\mathbf{u_b}).
+    \end{aligned}
+\end{equation}
+\todo{or integral representation}
+
+\noindent
+Weak solutions of \cref{sys:ODEs} are then required to satisfy \cref{eq:weak_ode} for almost every $t \in [0, T]$ and $x \in \Omega$.
+
+Contrary to the ODEs, the PDE is not defined separately for every $x$. Instead, we have to work on the entire domain simultaneously. By multiplying $\mathbf{v}'$ by a test function $\phi \in C^\infty_c(\Omega)$ and integrating on $\Omega$ for fixed $t$, we get
 
 \begin{equation*}
     \begin{aligned}
@@ -20,11 +33,14 @@ Then by multiplying $\mathbf{v}'$ by a test function $\phi \in C^\infty_c(\Omega
 \noindent
 which we can also write as
 
-\begin{equation}
-    \inner{\mathbf{v}', \phi}_{L^2(\Omega)} = - D \inner{\nabla \mathbf{v}, \nabla \phi}_{L^2(\Omega; \R^d)} - \inner{f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}), \phi}_{L^2(\Gamma)} + \inner{r(\mathbf{v}), \phi}_{L^2(\Gamma)},
+\begin{equation}\label{eq:weak_pde}
+    \inner{\mathbf{v}', \phi}_{L^2(\Omega)} = - D \inner{\nabla \mathbf{v}, \nabla \phi}_{L^2(\Omega; \R^d)} - \inner{f(\mathbf{u}, \mathbf{u_b}, \mathbf{v}), \phi}_{L^2(\Gamma)} + \inner{r(\mathbf{v}), \phi}_{L^2(\Gamma)}.
 \end{equation}
 
-\noindent
-for all $t \in [0, T]$.
+Since we have used integration with respect to space in this computation, this expression only depends on time. A weak solution of \cref{sys:PDEs} is therefore required to satisfy \cref{eq:weak_pde} at almost every $t \in [0, T]$.
+\todo{define $\odespace$ and $\pdespace$}
 
-This 
+\begin{definition}{}{}
+    The functions $\mathbf{u}, \mathbf{u_b} \in \odespace$ and $\mathbf{v} \in \pdespace$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if they satisfy \cref{eq:weak_ode} for almost every $t \in [0, T]$ and $x \in \Omega$, and \cref{eq:weak_pde} for almost every $t \in [0, T]$.
+\end{definition}
+\todo{correct?}
