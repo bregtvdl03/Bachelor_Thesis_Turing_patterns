@@ -36,16 +36,24 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     \noindent
     Then \cref{eq:frozen_odes} can be described by
 
-    \begin{equation}
+    \begin{equation}\label{eq:cara_ode}
         w'(t) = F(w(t), t),
     \end{equation}
 
     \noindent
-    where $F: \R^3 \to \R^2$ is defined by
+    where $F: \R^2 \times \R \to \R^2$ is defined by
 
     \begin{equation*}
-        F(w, t) := 
+        F(w, t) := \begin{pmatrix}
+            -f(u, u_b, \gamma v^*(t, x)) + p(u) \\
+            f(u, u_b, \gamma v^*(t, x)) + q(u_b) \\
+        \end{pmatrix},
     \end{equation*}
+
+    \noindent
+    for each $w = (u, u_b) \in \R^2$ and $t \in \R$. Note that this definition only makes sense because both $x$ and $v^*$ are fixed by assumption.
+
+    Now, we want to apply Carath\'eodory's existence theorem to the ODE of \cref{eq:cara_ode}. One can easily see that $F$ is measurable in $t$ for each fixed $w$, and continuous in $w$. \todo{assumptions on $f, q, p$}. 
 \end{proof}
 
 Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v^* \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
