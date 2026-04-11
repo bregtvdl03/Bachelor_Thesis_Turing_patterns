@@ -4,56 +4,69 @@ Our goal in this section is to prove the following theorem.
     Let $u_0, u_{b, 0} \in L^2(\partial \Omega)$ and $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
 \end{theorem}
 
-As previously mentioned, the proof will be structured around an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
+As previously mentioned, the proof will be based on an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
 
 Let us first concretely demonstrate what we mean by ``freezing'' the terms that depend on $v$. Fix $v^* \in \pdespace$ and consider the modified system of ODEs given by
 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
         u_t         &= - f(u, u_b, \gamma v^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
+        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
     \end{aligned}
 \end{equation}
 \todo{weak form?}
 
 \noindent
-These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about the PDE.
+where $\gamma v^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about $v$ satisfying the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
     Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
-    Let us begin by summarizing the problem in one formula. Fix $x \in \Omega$ and denote 
-    
-    \begin{equation*}
-        w(t) := \begin{pmatrix}
-            u(t, x) \\
-            u_b(t, x)
-        \end{pmatrix}.
-    \end{equation*}
-    
-    \noindent
-    Then \cref{eq:frozen_odes} can be described by
+    Fix $x$ and define $w$ and $F$ as in \cref{eq:weak_ode,eq:ode_system_function}, except using $\gamma v^*$ instead of $v$. We will first show that $F$ satisfies the requirements for \cref{thm:caratheodory}. We can then apply this theorem to get a local solution, and prove that we can extend it to the entirety $[0, T]$. We will see that this solution satisfies the non-negativity and boundedness requirement, that the solution $w$ is unique, and that its components $u$ and $u_b$ have the desired regularity in both space and time.
 
-    \begin{equation}\label{eq:cara_ode}
-        w'(t) = F(w(t), t),
-    \end{equation}
+    Set $t_0 = 0$ and $x_0 = (u_0(x), u_{b, 0}(x))$. For every fixed $t$, $F$ is continuous in $w$, and since $\gamma v^*$ is measurable in time and $F$ depends continuously on $\gamma v^*$, $F$ is measurable in $t$ for every fixed $w$. The continuity of $F$ in $w$ also implies that $F$ is bounded in $w$ in any rectangle $R$ we choose, so we only need $\gamma v^*$ to be of sufficient time-regularity such that we have a time-dependent measurable function $m$ that bounds $|F|$ in $R$. \todo{time-regularity of $\gamma v^*$}
 
-    \noindent
-    where $F: \R^2 \times \R \to \R^2$ is defined by
+    Now we can use \cref{thm:caratheodory} to get a local solution $\widetilde{w}_1: [0, \beta_1] \to \R^2$ in the extended sense for some $\beta_1 > 0$, satisfying $\widetilde{w}_1(0) = (u_0(x), u_{b, 0}(x))$. We can now set $t_0$ to be $\beta_1$ and $x_0$ to be $\widetilde{w}_1(\beta_1)$ and apply \cref{thm:caratheodory} a second time to get a new solution $\widetilde{w}_2$ in the extended sense on the interval $|t - \beta_1| < \beta_2$ for some $b_2 > 0$. This $\widetilde{w}_2$ now satisfies $\widetilde{w}_2(\beta_1) = \widetilde{w}_1(\beta_1)$, so we can \emph{glue} these solutions together and define
 
     \begin{equation*}
-        F(w, t) := \begin{pmatrix}
-            -f(u, u_b, \gamma v^*(t, x)) + p(u) \\
-            f(u, u_b, \gamma v^*(t, x)) + q(u_b) \\
-        \end{pmatrix},
+        w_2(t) := \begin{cases}
+            \widetilde{w}_1(t) & \text{ if } t \in [0, \beta_1), \\
+            \widetilde{w}_2(t) & \text{ if } t \in [\beta_1, \beta_1 + \beta_2], \\
+        \end{cases}
     \end{equation*}
 
     \noindent
-    for each $w = (u, u_b) \in \R^2$ and $t \in \R$. Note that this definition only makes sense because both $x$ and $v^*$ are fixed by assumption.
+    for $t \in [0, \beta_1 + \beta_2]$. We can keep defining new extensions iteratively. At iteration $i$, we have a definition of $w_i$ on $[0, \beta_1 + \dots + \beta_i]$, so we set
+    
+    \begin{equation*}
+        t_0 = \beta_1 + \dots + \beta_i \quad\quad \text{and}  \quad\quad x_0 = w_i(t_0) = \widetilde{w}_i(\beta_1 + \dots + \beta_i)
+    \end{equation*}
+    
+    \noindent
+    and apply \cref{thm:caratheodory} to get a new local extension $\widetilde{w}_{i + 1}$ on the interval $|t - t_0| < \beta_{i + 1}$ for some $\beta_{i + 1} > 0$. This allows us to define a new function $w_{i + 1}$ by
 
-    Now, we want to apply Carath\'eodory's existence theorem to the ODE of \cref{eq:cara_ode}. One can easily see that $F$ is measurable in $t$ for each fixed $w$, and continuous in $w$. \todo{assumptions on $f, q, p$}. 
+    \begin{equation*}
+        w_{i + 1}(t) := \begin{cases}
+            \widetilde{w}_1(t) & \text{ if } t \in [0, \beta_1), \\
+            \widetilde{w}_2(t) & \text{ if } t \in [\beta_1, \beta_1 + \beta_2), \\
+            \quad\vdots \\
+            \widetilde{w}_{i + 1}(t) & \text{ if } t \in [\beta_1 + \dots + \beta_i, \beta_1 + \dots + \beta_{i + 1}], \\
+        \end{cases}
+    \end{equation*}
+
+    \noindent
+    This process creates a sequence of partial sums
+
+    \begin{equation*}
+        \left( T_i \right)_{i \geq 1} := \left( \beta_1 + \dots + \beta_i \right)_{i \geq 1}
+    \end{equation*}
+
+    \noindent
+    and a sequence of functions $\left( w_i \right)_{i \geq 1}$, where $w_i$ is defined on the interval $[0, T_i]$. Since $\left( T_i \right)_{i \geq 1}$ is strictly increasing, it either diverges to infinity, converges to a value greater than or equal to $T$, or it converges to a value $\widetilde{T} \in (0, T)$. In the first two cases, this means that we now have a solution (possibly after passing some limit\todo{show that this limit is absolutely continuous}) on $[0, T]$. In the last case, we can further extend the solution until we have a solution on $[0, T]$.\todo{Zorn?}
+
+    To show that this solution is non-negative, we can use \cref{thm:nagumo}\todo{Nagumo for caratheodory ode?}.
 \end{proof}
 
 Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v^* \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
@@ -66,7 +79,6 @@ We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \i
         &= \inner{g(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)}, \\
     \end{aligned}
 \end{equation}
-\todo{fix more?}
 
 \noindent
 where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this definition because $u^*$ and $u_b^*$ are fixed. We have now decoupled the PDE from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.

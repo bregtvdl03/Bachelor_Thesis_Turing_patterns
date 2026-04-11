@@ -17,3 +17,9 @@
   - Weak formulations
     - Example
     - Inner product notation
+
+
+- def abs cont
+- def extended sense
+- state caratheodory
+- 

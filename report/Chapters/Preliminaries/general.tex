@@ -7,7 +7,7 @@ Let $X$ be a topological space. A function $\phi: X \to \R$ is said to have \emp
 \end{equation*}
 
 \noindent
-is a compact subset of $X$. For any open $\Omega \subseteq \R^m$, the space of all smooth functions with compact support in $\Omega$ is denoted by $C^\infty_c(\Omega)$.
+is a compact subset of $X$. For any open $\Omega \subseteq \R^d$, the space of all smooth functions with compact support in $\Omega$ is denoted by $C^\infty_c(\Omega)$.
 
 An important property of these functions is that they must be 0 on the boundary of $\Omega$. In the particular context of PDE analysis, they are often referred to as \emph{test functions}, but a more general term is \emph{variations}. They have a wide range of applications, discussed in the field of the Calculus of Variations. A large portion of its theory is built around the following result, hence its name.
 
@@ -34,7 +34,7 @@ Multiplying with a test function and integrating is sometimes referred to as \em
 \end{definition}
 
 \begin{definition}{}{}
-    Let $\Omega \subseteq \R^m$ be open. A function $f: \Omega \to \R$ is said to be \emph{locally integrable} if
+    Let $\Omega \subseteq \R^d$ be open. A function $f: \Omega \to \R$ is said to be \emph{locally integrable} if
 
     \begin{equation*}
         \int_K |f| < \infty
@@ -45,3 +45,58 @@ Multiplying with a test function and integrating is sometimes referred to as \em
 \todo{Put this before FLCV}
 
 An important fact that should be noted is that every function that is square-integrable is also locally integrable. That is, $L^2(\Omega) \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
+
+\begin{definition}{}{}
+    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\varepsilon > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
+
+    \begin{equation*}
+        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \varepsilon.
+    \end{equation*}
+\end{definition}
+
+\begin{proposition}{}{}
+    A function $f: [a, b] \to \R$ is absolutely continuous if and only if $f$ has derivative $f'$ almost everywhere, $f'$ is integrable, and
+
+    \begin{equation*}
+        f(x) = f(a) + \int_{a}^{x} f'(t)\ dt
+    \end{equation*}
+
+    for every $x \in [a, b]$.
+\end{proposition}
+
+\begin{definition}{}{}
+    Let $n$ be a positive integer, $I$ an interval, $x: I \to \R^n$ and $f: S \to \R^n$ for some set $S \subseteq \R \times \R^n$. Then $x$ is called a \emph{solution of}
+
+    \begin{equation}\label{eq:standard_ode}
+        x'(t) = f(t, x(t))
+    \end{equation}
+
+    \emph{in the extended sense on $I$} if $x$ is absolutely continuous, $(t, x(t)) \in S$ for every $t \in I$ and \cref{eq:standard_ode} is satisfied for almost every $t \in I$.
+\end{definition}
+
+\begin{theorem}{Carath\'eodory's existence theorem}{caratheodory}
+    Let $n$ be a positive integer, $a, b > 0$ and $(t_0, x_0) \in \R \times \R^n$. Define
+
+    \begin{equation*}
+        R := \{ (t, x) \in \R \times \R^n \mid |t - t_0| \leq a \text{ and } \|x - x_0\| \leq b \}
+    \end{equation*}
+
+    and let $f: R \to \R^n$ be continuous in $x$ for every fixed $t$, measurable in $t$ for every fixed $x$ and bounded by some time-dependent integrable function $m$,
+    
+    \begin{equation*}
+        |f(t, x)| \leq m(t)
+    \end{equation*}
+
+    for all $(t, x) \in R$. Then the differential equation
+
+    \begin{equation*}
+        x'(t) = f(t, x(t))
+    \end{equation*}
+
+    has a solution in the extended sense on the interval $|t - t_0| \leq \beta$ for some $\beta > 0$, satisfying $x(0) = x_0$.
+\end{theorem}
+
+\begin{theorem}{Nagumo's invariance theorem}{nagumo}
+    blub
+\end{theorem}
+\todo{which}
