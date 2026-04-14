@@ -169,10 +169,9 @@ v_graph = grid.warp_by_scalar("vh", factor=warpfactor)
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
-plotter.show_grid()
 plotter.enable_parallel_projection()
-# plotter.isometric_view()
-# plotter.view_xy()
+plotter.isometric_view()
+plotter.view_xy()
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -188,7 +187,7 @@ plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap=blues,
+    cmap="Blues",
     clim=[-0.1, 3],
     scalar_bar_args={
         "font_family": "times",
@@ -202,7 +201,7 @@ plotter.add_mesh(
     opacity=0.1,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
+    cmap="Reds",
     clim=[uniform_steady_state_v - perturbation_strength, uniform_steady_state_v + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
@@ -264,10 +263,6 @@ for n in range(num_steps):
         new_warped = grid.warp_by_scalar("vh", factor=warpfactor)
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
-        
-        # minimum = np.min(uh.x.array)
-        # maximum = np.max(uh.x.array)
-        # print(F"MIN: {minimum}, MAX: {maximum}")
 
         plotter.write_frame()
 

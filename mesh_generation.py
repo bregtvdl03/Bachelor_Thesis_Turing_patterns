@@ -29,7 +29,7 @@ gmsh.model.occ.synchronize()
 DISTANCE_FIELD_TAG  = 1
 SAMPLING            = 999
 THRESHOLD_FIELD_TAG = 2
-SIZE_MIN            = 0.05
+SIZE_MIN            = 0.2
 SIZE_MAX            = 4
 DIST_MIN            = 0
 DIST_MAX            = 2
