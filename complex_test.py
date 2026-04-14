@@ -2,17 +2,15 @@ import matplotlib as mpl
 import pyvista
 import ufl
 import numpy as np
-import itertools
+import cmath
 
 from petsc4py import PETSc
 from mpi4py import MPI
 
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, assign
-import dolfinx.io.gmsh as gmshio
-import gmsh
 
-OUT_FILE = "out_cells/2d_squares_complex.gif"
+OUT_FILE = "out_cells/complex_test.gif"
 FPS = 10
 
 DOMAIN_TAG      = 100
@@ -23,21 +21,53 @@ MEMBRANE_TAG    = 10
 m = 2
 n = 1
 
-Du      = 1.0       # Diffusion coef for u
-Dv      = 40.0      # Diffusion coef for v
-Pu      = 0.125     # Production coef for u
-Pv      = 0.420     # Production coef for v
-k1      = 2       # k_on
-k2      = 2       # k_off
-gamma   = 64.0      # Reaction scaling
+Du      = 1.0           # Diffusion coef for u
+Dw      = 1.0           # Diffusion coef for w
+Dv      = 40.0          # Diffusion coef for v
+Pu      = 0.125         # Production coef for u
+Pv      = 0.420         # Production coef for v
+k1      = 1.0           # k_on
+k2      = 1.0           # k_off
+du      = 1.0           # Decay coef for u
+dw      = 1.0           # Decay coef for w
+dv      = 0.1           # Decay coef for v
+rho     = (m + n) * dw  # Upregulation coef
+gamma   = 128.0 ** 2          # Reaction scaling
+
+# g = k1 / (k2 + dw)
+# a = k2 * g - k1
+# b = (dv * rho * g / (n * a) + m * dv / n) ** m
+# c = - (Pu + rho * g * Pv / (n * a) + m * Pv / n) ** m - du ** m * dv / (n * a)
+# d = du ** m * Pv / (n * a)
+
+# p = [b, 0, c, d]
+# roots = np.roots(p)
+# real_roots = []
+# for r in roots:
+#     if np.isreal(r):
+#         real_roots.append(r.real)
+#         break
+
+# uniform_steady_state_v = min(real_roots)
+# uniform_steady_state_u = ((Pv - dv * uniform_steady_state_v) / (n * a * uniform_steady_state_v ** n)) ** (1/m)
+# uniform_steady_state_w = g * uniform_steady_state_u ** m * uniform_steady_state_v ** n
 
 uniform_steady_state_u = Pu + Pv
+uniform_steady_state_w = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 
 perturbation_strength = 0.1
 
+print(f"uni_st_st_u: {uniform_steady_state_u}")
+print(f"uni_st_st_w: {uniform_steady_state_w}")
+print(f"uni_st_st_v: {uniform_steady_state_v}")
+
 def initial_condition_u(x):
     return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uniform_steady_state_u] * x.shape[1]
+    
+def initial_condition_w(x):
+    return uniform_steady_state_w + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
@@ -53,86 +83,46 @@ dt = T / num_steps
 
 #region ========== DEFINING MESH AND FUNCTIONSPACE ==========
 
-gmsh.initialize()
-
 dim = 2
-L = 32
+L = 2.0
 half_L = L / 2
-cell_size = 8
-half_cell = cell_size / 2
 
-gmsh.model.add("square_with_holes")
+nx, ny = 128, 128
 
-outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
+msh = mesh.create_rectangle(
+    comm=MPI.COMM_WORLD,
+    points=[[-half_L, -half_L], [half_L, half_L]],
+    n=[nx, ny],
+    cell_type=mesh.CellType.triangle
+)
 
-holes = []
-centers = list(itertools.product([-L/4, L/4], repeat=dim))
-for (cx, cy) in centers:
-    holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
+V   = fem.functionspace(msh, ("Lagrange", 1))
 
-main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
-
-gmsh.model.occ.synchronize()
-
-gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=DOMAIN_TAG)
-gmsh.model.setPhysicalName(dim, DOMAIN_TAG, "main_domain")
-
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.12)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.04)
-gmsh.model.mesh.generate(dim)
-
-model_data = gmshio.model_to_mesh(gmsh.model, MPI.COMM_WORLD, rank=0, gdim=dim)
-
-gmsh.finalize()
-
-msh = model_data.mesh
-
-def on_holes(x):
-    flags = np.zeros(x.shape[1], dtype=bool)
-    for (cx, cy) in centers:
-        c = np.reshape([cx, cy, 0], (3, 1))
-        dist = np.linalg.norm(x - c, ord=np.inf, axis=0)
-        flags |= np.isclose(dist, half_cell)
-    return flags
-
-facet_indices = mesh.locate_entities(msh, dim - 1, on_holes)
-facet_markers = mesh.meshtags(msh, dim - 1, facet_indices, MEMBRANE_TAG)
-
-msh.topology.create_entities(dim - 1)
-boundary_msh, boundary_msh_emap = mesh.create_submesh(msh, dim - 1, facet_indices)[:2]
-
-ds      = ufl.Measure("ds", domain=msh, subdomain_data=facet_markers)
-dx      = ufl.Measure("dx", domain=msh)
-ds_b    = ufl.Measure("dx", domain=boundary_msh)
-
-V   = fem.functionspace(msh         , ("Lagrange", 1))
-Vb  = fem.functionspace(boundary_msh, ("Lagrange", 1))
-
-W = ufl.MixedFunctionSpace(V, Vb, Vb)
+W = ufl.MixedFunctionSpace(V, V, V)
 
 #endregion
 
 #region ========== DEFINING FUNCTIONS ==========
 
 # u_{n}
-u_n = fem.Function(Vb)
+u_n = fem.Function(V)
 u_n.name = "u_n"
-u_n.interpolate(initial_condition_v)
+u_n.interpolate(initial_condition_u)
 
 # u_{n+1}
-uh = fem.Function(Vb)
+uh = fem.Function(V)
 uh.name = "uh"
-uh.interpolate(initial_condition_v)
+uh.interpolate(initial_condition_u)
 
 # w_{n}
-w_n = fem.Function(Vb)
+w_n = fem.Function(V)
 w_n.name = "w_n"
-w_n.interpolate(initial_condition_v)
+w_n.interpolate(initial_condition_w)
 
 # w_{n+1}
-wh = fem.Function(Vb)
+wh = fem.Function(V)
 wh.name = "wh"
-wh.interpolate(initial_condition_v)
+wh.interpolate(initial_condition_w)
 
 # v_{n}
 v_n = fem.Function(V)
@@ -151,33 +141,34 @@ psi, phi, chi = ufl.TestFunctions(W)
 
 #region ========== VARIATIONAL FORM ==========
 
-# TODO: try fractional theta method: https://www.sciencedirect.com/science/article/pii/S0168874X15001377
+a = u * phi * ufl.dx \
+    + w * chi * ufl.dx \
+    + v * psi * ufl.dx \
+    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
+    + dt * Dw * ufl.dot(ufl.grad(w), ufl.grad(chi)) * ufl.dx \
+    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx \
+    + dt * gamma * du * u * phi * ufl.dx \
+    + dt * gamma * dw * w * chi * ufl.dx \
+    + dt * gamma * dv * v * psi * ufl.dx \
+    - dt * gamma * m * k2 * w * phi * ufl.dx \
+    + dt * gamma *     k2 * w * chi * ufl.dx \
+    - dt * gamma * n * k2 * w * psi * ufl.dx \
 
-a = u * phi * ds(MEMBRANE_TAG) \
-    + w * chi * ds(MEMBRANE_TAG) \
-    + v * psi * dx \
-    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ds(MEMBRANE_TAG) \
-    + dt * Du * ufl.dot(ufl.grad(w), ufl.grad(chi)) * ds(MEMBRANE_TAG) \
-    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * dx \
-    + dt * gamma * (u - k2 * w) * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * k2 * w * chi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k2 * w * psi * ds(MEMBRANE_TAG) \
-
-L = u_n * phi * ds(MEMBRANE_TAG) \
-    + w_n * chi * ds(MEMBRANE_TAG) \
-    + v_n * psi * dx \
-    + dt * gamma * Pu * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * Pv * psi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k1 * (u_n * u_n * v_n) * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * k1 * (u_n * u_n * v_n) * chi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k1 * (u_n * u_n * v_n) * psi * ds(MEMBRANE_TAG) \
+L = u_n * phi * ufl.dx \
+    + w_n * chi * ufl.dx \
+    + v_n * psi * ufl.dx \
+    + dt * gamma * (Pu + rho * w_n) * phi * ufl.dx \
+    + dt * gamma * Pv * psi * ufl.dx \
+    - dt * gamma * m * k1 * (u_n * u_n * v_n) * phi * ufl.dx \
+    + dt * gamma *     k1 * (u_n * u_n * v_n) * chi * ufl.dx \
+    - dt * gamma * n * k1 * (u_n * u_n * v_n) * psi * ufl.dx \
 
 #endregion
 
 #region ========== DEFINING SOLVERS ==========
 
-bilinear_form   = fem.form(ufl.extract_blocks(a), entity_maps=[boundary_msh_emap])
-linear_form     = fem.form(ufl.extract_blocks(L), entity_maps=[boundary_msh_emap])
+bilinear_form = fem.form(ufl.extract_blocks(a))
+linear_form   = fem.form(ufl.extract_blocks(L))
 
 A = assemble_matrix(bilinear_form)
 A.assemble()
@@ -197,8 +188,8 @@ solver.getPC().setType(PETSc.PC.Type.LU)
 
 warpfactor = 1.0
 
-grid_u = pyvista.UnstructuredGrid(*plot.vtk_mesh(Vb))
-grid_w = pyvista.UnstructuredGrid(*plot.vtk_mesh(Vb))
+grid_u = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
+grid_w = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 grid_v = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
 
 grid_u.point_data["uh"] = uh.x.array
@@ -222,7 +213,8 @@ plotter.show_grid(
     ztitle = "z"
 )
 
-blues = mpl.colormaps.get_cmap("Blues").resampled(32)
+blues  = mpl.colormaps.get_cmap("Blues").resampled(32)
+jet    = mpl.colormaps.get_cmap("jet").resampled(32)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
 
 plotter.add_mesh(
@@ -242,12 +234,12 @@ plotter.add_mesh(
     w_graph,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
-    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
+    cmap=jet,
+    clim=[uniform_steady_state_w - perturbation_strength, uniform_steady_state_w + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.9
+        "position_y": 0.82
     }
 )
 
@@ -261,7 +253,7 @@ plotter.add_mesh(
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.82
+        "position_y": 0.74
     }
 )
 
@@ -294,7 +286,7 @@ for n in range(num_steps):
         with b.localForm() as loc_b:
             loc_b.set(0)
         assemble_vector(b, linear_form)
-        x = create_vector([V, Vb, Vb])
+        x = create_vector([V, V, V])
         solver.solve(b, x)
         x.ghostUpdate(addv=PETSc.InsertMode.INSERT, mode=PETSc.ScatterMode.FORWARD)
     except PETSc.Error as e:
@@ -325,9 +317,9 @@ for n in range(num_steps):
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
         
-        print(f"u: {np.linalg.norm(uh.x.array, ord=np.inf)}")
-        print(f"w: {np.linalg.norm(wh.x.array, ord=np.inf)}")
-        print(f"v: {np.linalg.norm(vh.x.array, ord=np.inf)}")
+        print(f"u: {np.min(uh.x.array)} \t to \t {np.max(uh.x.array)}")
+        print(f"w: {np.min(wh.x.array)} \t to \t {np.max(wh.x.array)}")
+        print(f"v: {np.min(vh.x.array)} \t to \t {np.max(vh.x.array)}")
 
         plotter.write_frame()
 

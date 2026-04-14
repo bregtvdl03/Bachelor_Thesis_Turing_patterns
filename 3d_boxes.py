@@ -72,8 +72,8 @@ gmsh.model.occ.synchronize()
 gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=100)
 gmsh.model.setPhysicalName(dim, 100, "main_domain")
 
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 10)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.5)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.5)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.6)
 gmsh.model.mesh.generate(dim)
 
 model_data = gmshio.model_to_mesh(gmsh.model, MPI.COMM_WORLD, rank=0, gdim=dim)
