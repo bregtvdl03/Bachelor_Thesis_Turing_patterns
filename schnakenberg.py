@@ -1,7 +1,10 @@
-import matplotlib as mpl
 import pyvista
 import ufl
 import numpy as np
+
+import time
+import os
+from datetime import timedelta
 
 from petsc4py import PETSc
 from mpi4py import MPI
@@ -10,8 +13,8 @@ import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-OUT_FILE = "out_schnakenberg/schnakenberg.gif"
-OUT_SCREENSHOT = "out_schnakenberg/schnakenberg_profile.jpg"
+OUT_FILE = "out_schnakenberg/kleurtestje.gif"
+OUT_SCREENSHOT = None   # "out_schnakenberg/schnakenberg_profile.jpg"
 FPS = 10
 
 #region ========== PARAMETERS ==========
@@ -20,9 +23,9 @@ m = 2
 n = 1
 
 Du = 1.0    # Diffusion coef for u
-Dv = 40.0   # Diffusion coef for v
-Pu = 0.125    # Production coef for u
-Pv = 0.420    # Production coef for v
+Dv = 10.0   # Diffusion coef for v
+Pu = 0.1    # Production coef for u
+Pv = 0.9    # Production coef for v
 gamma = 128.0**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
@@ -32,18 +35,22 @@ perturbation_strength = 0.1
 
 def initial_condition_u(x):
     return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_u
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
     return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_v
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 50.0 / gamma
-num_steps = 1024
+T = 100.0 / gamma
+num_steps = 2048
 dt = T / num_steps
 
-nx, ny = 128, 128
+WRITE_EVERY = 32
+
+nx, ny = 256, 256
 
 domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD,
@@ -51,13 +58,6 @@ domain = mesh.create_rectangle(
     n=[nx, ny],
     cell_type=mesh.CellType.triangle
 )
-
-# domain = mesh.create_unit_square(
-#     comm=MPI.COMM_WORLD,
-#     nx=nx,
-#     ny=ny,
-#     cell_type=mesh.CellType.triangle
-# )
 
 el_u = basix.ufl.element("Lagrange", basix.CellType.triangle, 1)
 el_v = basix.ufl.element("Lagrange", basix.CellType.triangle, 1)
@@ -91,8 +91,8 @@ u_sol, v_sol = uv_sol.split()
 
 # IMEX
 a = u * phi * ufl.dx \
-    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + v * psi * ufl.dx \
+    + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
@@ -128,10 +128,11 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
+# plotter = pyvista.Plotter(shape=(1, 2), window_size=(3072, 768))
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
-plotter.view_xy()
+# plotter.view_xy()
 plotter.camera.zoom(0.2)
 plotter.show_grid(
     font_size = 20,
@@ -147,17 +148,23 @@ v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
 v_graph = v_grid.warp_by_scalar("vh", factor=warp_factor)
 
-blues = mpl.colormaps.get_cmap("Blues").resampled(64)
-ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(64)
+# blues = mpl.colormaps.get_cmap("Blues").resampled(64)
+# ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(2)
 colorwidth = 0.1
+
+# plotter.subplot(0,1)
+# plotter.enable_parallel_projection()
+# plotter.isometric_view()
+# plotter.view_xy()
+# plotter.camera.zoom(0.2)
 
 plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    opacity=0.9,
-    cmap=blues,
-    clim=[0, 5 * uniform_steady_state_u],
+    opacity=1.0,
+    cmap="Blues",
+    clim=[0.0, 4.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -165,23 +172,25 @@ plotter.add_mesh(
     }
 )
 
+# plotter.subplot(0,0)
+
 plotter.add_mesh(
     v_graph,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
-    clim=[0.5 * uniform_steady_state_v, 2 * uniform_steady_state_v],
+    cmap="Reds",
+    clim=[0.0, 2.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.82
+        "position_y": 0.9
     }
 )
 
 time_text = plotter.add_text(
     f"{str(int(t/T * 100))}\t/100 %",
-    font_size=10,
-    font="times"
+    font_size=14,
+    font="times",
 )
 
 plotter.add_text(
@@ -195,12 +204,13 @@ plotter.add_text(
 
 #region ========== SOLVE PROBLEM AND PLOT ==========
 
+start = time.monotonic()
+
 for n in range(num_steps):
     t += dt
     
     progress = int(t/T * 100)
     time_text.SetText(2, f"{str(progress)}\t/100 %")
-    print(progress)
     
     with b.localForm() as loc_b:
         loc_b.set(0)
@@ -214,7 +224,7 @@ for n in range(num_steps):
     u_n.x.array[mapu] = u_h.x.array[mapu]
     v_n.x.array[mapv] = v_h.x.array[mapv]
     
-    if n % 16 == 0:
+    if n % WRITE_EVERY == 0:
         u_graph_new = u_grid.warp_by_scalar("uh", factor=warp_factor)
         v_graph_new = v_grid.warp_by_scalar("vh", factor=warp_factor)
         u_graph.points[:, :] = u_graph_new.points
@@ -222,9 +232,14 @@ for n in range(num_steps):
         u_graph.point_data["uh"][:] = u_h.x.array[mapu]
         v_graph.point_data["vh"][:] = v_h.x.array[mapv]
         plotter.write_frame()
+        
+        os.system("clear")
+        eta = timedelta(seconds=round((time.monotonic() - start) / (n + 1) * num_steps - time.monotonic() + start))
+        print(f"ETA: {eta}")
 
-plotter.view_xz()
-plotter.screenshot(OUT_SCREENSHOT, scale = 3)
+if OUT_SCREENSHOT:
+    plotter.view_xz()
+    plotter.screenshot(OUT_SCREENSHOT, scale = 3)
 
 plotter.close()
 
