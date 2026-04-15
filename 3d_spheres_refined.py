@@ -155,7 +155,7 @@ solver.getPC().setType(PETSc.PC.Type.LU)
 #region ========== PLOTTING SETUP ==========
 
 # Uncomment this for offscreen rendering
-# pyvista.start_xvfb()
+pyvista.start_xvfb()
 
 warpfactor = 0
 
@@ -171,7 +171,6 @@ plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
-plotter.view_xy()
 plotter.show_grid(
     font_size = 15,
     font_family = "times",
@@ -188,7 +187,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap="Blues",
-    clim=[-0.1, 3],
+    clim=[0.0, 3],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -256,6 +255,7 @@ for n in range(num_steps):
     v_n.x.array[:] = vh.x.array
     
     if n % 16 == 0:
+        print(progress)
         new_warped = grid_b.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
         u_graph.point_data["uh"][:] = uh.x.array
