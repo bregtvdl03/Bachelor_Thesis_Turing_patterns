@@ -12,7 +12,7 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, a
 import dolfinx.io.gmsh as gmshio
 import gmsh
 
-OUT_FILE = "out_cells/3d_spheres.gif"
+OUT_FILE = "out_cells/trash.gif"
 FPS = 10
 
 #region ========== MODEL PARAMETERS ==========
@@ -186,9 +186,8 @@ v_graph = grid.warp_by_scalar("vh", factor=warpfactor)
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
-plotter.show_grid()
 plotter.enable_parallel_projection()
-# plotter.isometric_view()
+plotter.isometric_view()
 # plotter.view_xy()
 plotter.show_grid(
     font_size = 15,
@@ -205,8 +204,8 @@ plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap=blues,
-    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
+    cmap="jet",
+    clim=[0, 3.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -216,10 +215,10 @@ plotter.add_mesh(
 
 plotter.add_mesh(
     v_graph,
-    opacity=0.1,
+    opacity=0.2,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
+    cmap="Reds",
     clim=[uniform_steady_state_v - perturbation_strength, uniform_steady_state_v + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
