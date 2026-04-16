@@ -30,9 +30,9 @@ DISTANCE_FIELD_TAG  = 1
 SAMPLING            = 999
 THRESHOLD_FIELD_TAG = 2
 SIZE_MIN            = 0.1
-SIZE_MAX            = 4
+SIZE_MAX            = 2
 DIST_MIN            = 0
-DIST_MAX            = 1
+DIST_MAX            = 2
 
 gmsh.model.mesh.field.add("Distance", DISTANCE_FIELD_TAG)
 gmsh.model.mesh.field.setNumbers(DISTANCE_FIELD_TAG, "SurfacesList", sphere_surfaces)

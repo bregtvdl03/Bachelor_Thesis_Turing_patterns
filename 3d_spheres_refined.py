@@ -4,6 +4,10 @@ import ufl
 import numpy as np
 import itertools
 
+import time
+from datetime import timedelta
+import os
+
 from petsc4py import PETSc
 from mpi4py import MPI
 
@@ -14,6 +18,7 @@ import gmsh
 
 OUT_FILE = "out_cells/3d_spheres_refined.gif"
 FPS = 10
+WRITE_EVERY = 32
 
 #region ========== MODEL PARAMETERS ==========
 
@@ -40,8 +45,8 @@ def initial_condition_v(x):
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
-T = 50.0 / gamma
-num_steps = 2048
+T = 100.0 / gamma
+num_steps = 4096
 dt = T / num_steps
 
 #endregion
@@ -171,13 +176,13 @@ plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
-plotter.show_grid(
-    font_size = 15,
-    font_family = "times",
-    xtitle = "x",
-    ytitle = "y",
-    ztitle = "z"
-)
+# plotter.show_grid(
+#     font_size = 15,
+#     font_family = "times",
+#     xtitle = "x",
+#     ytitle = "y",
+#     ztitle = "z"
+# )
 
 blues = mpl.colormaps.get_cmap("jet").resampled(64)
 ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
@@ -186,14 +191,16 @@ plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap="Blues",
-    clim=[0.0, 3],
+    cmap="jet",
+    clim=[0.0, 2],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
         "position_y": 0.9
     }
 )
+
+plotter.remove_scalar_bar()
 
 plotter.add_mesh(
     v_graph,
@@ -208,19 +215,21 @@ plotter.add_mesh(
         "position_y": 0.82
     }
 )
+plotter.remove_scalar_bar()
 
-time_text = plotter.add_text(
-    f"{str(int(t/T * 100))}\t/100 %",
-    font_size=10,
-    font="times"
-)
 
-plotter.add_text(
-    "d = 40, a = 0.125, b = 0.420",
-    font_size=10,
-    font="times",
-    position=(5, 5)
-)
+# time_text = plotter.add_text(
+#     f"{str(int(t/T * 100))}\t/100 %",
+#     font_size=10,
+#     font="times"
+# )
+
+# plotter.add_text(
+#     "d = 40, a = 0.125, b = 0.420",
+#     font_size=10,
+#     font="times",
+#     position=(5, 5)
+# )
 
 plotter.write_frame()
 
@@ -231,7 +240,7 @@ plotter.write_frame()
 for n in range(num_steps):
     t += dt
     progress = int(n/num_steps * 100)
-    time_text.SetText(2, f"{str(progress)}\t/100 %")
+    # time_text.SetText(2, f"{str(progress)}\t/100 %")
     
     try:
         with b.localForm() as loc_b:
@@ -254,7 +263,7 @@ for n in range(num_steps):
     u_n.x.array[:] = uh.x.array
     v_n.x.array[:] = vh.x.array
     
-    if n % 16 == 0:
+    if n % WRITE_EVERY == 0:
         print(progress)
         new_warped = grid_b.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
@@ -263,9 +272,17 @@ for n in range(num_steps):
         new_warped = grid.warp_by_scalar("vh", factor=warpfactor)
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
-
+        
         plotter.write_frame()
-
+        
+    if n == 1:
+        start = time.monotonic()
+    if n > 1 and n % WRITE_EVERY == 0:
+        os.system("clear")
+        print(f"ETA: {timedelta(seconds=round((time.monotonic() - start) / (n - 1) * num_steps - time.monotonic() + start))}")
+    
 plotter.close()
 
 #endregion
+
+# box 61
