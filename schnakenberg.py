@@ -22,11 +22,11 @@ FPS = 10
 m = 2
 n = 1
 
-Du = 1.0    # Diffusion coef for u
-Dv = 10.0   # Diffusion coef for v
+Du = 1.0    # 1.0 Diffusion coef for u
+Dv = 10.0   # 10.0 Diffusion coef for v
 Pu = 0.1    # Production coef for u
 Pv = 0.9    # Production coef for v
-gamma = 128.0**2 # Reaction scaling
+gamma = 128**2 # 128**2Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -45,12 +45,12 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 2048
+num_steps = 8192
 dt = T / num_steps
 
 WRITE_EVERY = 32
 
-nx, ny = 256, 256
+nx, ny = 128, 128
 
 domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD,
@@ -96,7 +96,7 @@ a = u * phi * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
-    + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
+    + (v_n + dt * gamma * (Pv - 0.1 * v_n - u_n * u_n * v_n)) * psi * ufl.dx
 
 #endregion
 
