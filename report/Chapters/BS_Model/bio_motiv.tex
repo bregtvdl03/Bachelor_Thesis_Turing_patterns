@@ -60,9 +60,9 @@ The ligands can move freely through the extracellular space. This can modelled b
 
 When a ligand binds to a free receptor, the concentration of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. The rate of this reaction is proportional to $u^2 v$\todo{or $uv$}. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new one again. The concentration of bounded receptors decrease, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is proportional to the concentration of bounded receptors $u_b$.
 
-The last two things that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter or model through the cell membrane. We assume this production happens at a constant rate. The free and bounded receptors also decay after some time, proportional to their respective concentrations.
+The last two things that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter or model through the cell membrane. We assume this production mainly happens at a constant rate, but is also upregulated by the concentration of bounded receptors. The ligands and receptors decay at a rate proportional to their respective concentrations.
 
-We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $k_\text{on}, k_\text{off} > 0$, respectively, the production constants by $p_u, p_v > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
+We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $k_\text{on}, k_\text{off} > 0$, respectively, the production constants by $p_u, p_v > 0$, the upregulation coefficient by $\alpha > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
 
 \begin{equation*}
     f(u, u_b, v) := k_\text{on} u^2 v - k_\text{off} u_b,
@@ -72,7 +72,7 @@ We can describe this behaviour with a system of coupled differential equations. 
 and the production and decay of $u, u_b$ and $v$ are described by
 
 \begin{equation*}
-    p(u) := p_u - d_u u,    \quad\quad   q(u_b) := - d_{u_b} u_b    \quad\quad      \text{and}      \quad\quad      r(v) := p_v,
+    p(u, u_b) := p_u + \alpha u_b - d_u u,    \quad\quad   q(u_b) := - d_{u_b} u_b    \quad\quad      \text{and}      \quad\quad      r := p_v,
 \end{equation*}
 
 \noindent
@@ -81,7 +81,7 @@ respectively. The concentrations of receptors can then be described by the syste
 \begin{equation}
     \label{sys:ODEs}
     \begin{aligned}
-        u_t         &= - f(u, u_b, v) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
+        u_t         &= - 2 f(u, u_b, v) + p(u, u_b)    & \text{on }& (0, T) \times \Gamma, \\
         u_{b,t}     &= f(u, u_b, v) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
     \end{aligned}
 \end{equation}
@@ -94,7 +94,7 @@ Since the dynamics of the ligands include diffusion, they can be described by th
 \begin{equation}
     \label{sys:PDEs}
     \begin{aligned}
-        v_t                 &= D \Delta v               & \text{in }& (0, T) \times \Omega, \\
+        v_t                 &= D \Delta v - d_v v       & \text{in }& (0, T) \times \Omega, \\
         D \pderiv[v]{\nu}   &= - f(u, u_b, v) + r(v)    & \text{on }& [0, T) \times \Gamma, \\
         D \pderiv[v]{\nu}   &= 0                        & \text{on }& [0, T) \times \Gamma_e. \\
     \end{aligned}
@@ -114,6 +114,6 @@ That is, they should satisfy
 \end{equation}
 
 \noindent
-for some $u_0, u_{b,0}: \Gamma \to \R$ and $v_0: \Omega \to \R$.
+for some given $u_0, u_{b,0}: \Gamma \to \R$ and $v_0: \Omega \to \R$.
 
 The remainder of this chapter will be dedicated to studying the system of \cref{sys:ODEs,sys:PDEs,sys:Init}.

@@ -1,40 +1,20 @@
 Before we start proving the existence of solutions to this model, we must discuss what kind of solutions we are looking for. Specifically, we will derive the weak formulations of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss the function spaces that are involved.
 
-We first consider the ODEs. We want to use \cref{thm:caratheodory} for the existence of solutions to this system, i.e. we will be looking for solutions of the ODEs in the extended sense on $[0, T]$, satisfying the initial conditions. This weakened problem only depends on time, so we fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
-
-\begin{equation}\label{eq:weak_ode}
-    w'(t) = F(w(t), t),
-\end{equation}
-
-\noindent
-where $F: \R \times \R^2 \to \R^2$ is given by
-
-\begin{equation}\label{eq:ode_system_function}
-    F(t, (u, u_b)) = \begin{pmatrix}
-        \begin{aligned}
-            -f(u, u_b, v(t, x)) &+ p(u) \\
-            f(u, u_b, v(t, x))  &+ q(u_b)
-        \end{aligned}
-    \end{pmatrix} .
-\end{equation}
-
-\noindent
-Since we are only considering the ODE in this particular case, we can assume the function $v$ is given. This will be explained in greater detail in the next section. Additionally, we assumed $x$ to be fixed. This is the reason that we can define $F$ without giving $v$ or $x$ as arguments.
-
-Unlike the ODEs, the PDE is not defined separately for every $x$. Instead, we have to work on the entire domain simultaneously. To state the weak formulation, we assume, $\widetilde{u}$, $\widetilde{u_b}$ and $\widetilde{v}$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} and note that we can also interpret them as the corresponding functions $u \in \odespace$, $u_b \in \odespace$ and $v \in \pdespace$ given by
+We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $\widetilde{u}$, $\widetilde{u_b}$ and $\widetilde{v}$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} and note that we can also interpret them as the corresponding functions $u \in \odespace$, $u_b \in \odespace$ and $v \in \pdespace$ given by
 
 \begin{equation*}
-    u(t) = \widetilde{u}(t, \cdot), \quad\quad u_b(t) = \widetilde{u_b}(t, \cdot) \quad\quad \text{and} \quad\quad v(t) = \widetilde{v}(t, \cdot),
+    u(t) = \widetilde{u}(t, \cdot), \quad\quad u_b(t) = \widetilde{u_b}(t, \cdot) \quad\quad \text{and} \quad\quad v(t) = \widetilde{v}(t, \cdot).
 \end{equation*}
 
 \noindent
-and denote the weak time derivative of $v$ by $v'$. By multiplying $v'$ by a test function $\phi \in C^\infty_c(\Omega)$ and integrating on $\Omega$ for fixed $t$, we get
+We denote the weak time derivative of $v$ by $v'$, multiply it by a test function $\phi \in C^\infty_c(\Omega)$ and integrate on $\Omega$ for fixed $t$, giving
 
 \begin{equation*}
     \begin{aligned}
-        \int_\Omega v'(t) \phi = D \int_\Omega \Delta v(t) \phi &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\partial \Omega} \pderiv[v(t)]{\nu} \phi \ dS \\
-                                                                                  &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\Gamma} \pderiv[v(t)]{\nu} \phi \ dS                 + D \int_{\Gamma_e} \pderiv[v(t)]{\nu} \phi \ dS \\
-                                                                                  &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi - \int_{\Gamma} f(u(t), u_b(t), v(t)) \phi \ dS    + \int_{\Gamma} r(v(t)) \phi \ dS, \\
+        \int_\Omega v'(t) \phi &= D \int_\Omega \Delta v(t) \phi - d_v \int_{\Omega} v(t) \phi \\
+                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\partial \Omega} \pderiv[v(t)]{\nu} \phi \ dS - d_v \int_{\Omega} v(t) \phi \\
+                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\Gamma} \pderiv[v(t)]{\nu} \phi \ dS                 + D \int_{\Gamma_e} \pderiv[v(t)]{\nu} \phi \ dS - d_v \int_{\Omega} v(t) \phi \\
+                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi - \int_{\Gamma} f(u(t), u_b(t), v(t)) \phi \ dS    + \int_{\Gamma} r(v(t)) \phi \ dS - d_v \int_{\Omega} v(t) \phi, \\
     \end{aligned}
 \end{equation*}
 
@@ -42,20 +22,46 @@ and denote the weak time derivative of $v$ by $v'$. By multiplying $v'$ by a tes
 which we can write using inner product notation as
 
 \begin{equation}\label{eq:weak_pde}
-    \inner{v'(t), \phi}_{L^2(\Omega)} = - D \inner{\nabla v(t), \nabla \phi}_{L^2(\Omega; \R^d)} - \inner{f(u(t), u_b(t), v(t)), \phi}_{L^2(\Gamma)} + \inner{r(v(t)), \phi}_{L^2(\Gamma)}.
+    \inner{v'(t), \phi}_{\Omega} + d_v \inner{v(t), \phi}_{\Omega} = - D \inner{\nabla v(t), \nabla \phi}_{\Omega} - \inner{f(u(t), u_b(t), v(t)), \phi}_{\Gamma} + \inner{r(v(t)), \phi}_{\Gamma}.
 \end{equation}
 
 \noindent
-Since we have used integration with respect to space in this computation, this expression only depends on time. A weak solution of \cref{sys:PDEs} is therefore required to satisfy \cref{eq:weak_pde} at almost every $t \in [0, T]$. We can now combine these two formulations and start discussing existence and uniqueness properties.
+Since we have used integration with respect to space in this computation, this expression only depends on time. A weak solution of \cref{sys:PDEs} is therefore required to satisfy \cref{eq:weak_pde} at almost every $t \in [0, T]$. 
+
+For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. This weakened problem only depends on time, so we fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
+
+\begin{equation}\label{eq:weak_ode}
+    w'(t) = F(w(t), t)
+\end{equation}
+
+\noindent
+almost everywhere, where $F: \R \times \R^2 \to \R^2$ is given by
+
+\begin{equation}\label{eq:ode_system_function}
+    F(t, (u, u_b)) = \begin{pmatrix}
+        \begin{aligned}
+            -2 f(u, u_b, \gamma v(t, x)) &+ p(u) \\
+            f(u, u_b, \gamma v(t, x))  &+ q(u_b)
+        \end{aligned}
+    \end{pmatrix} = \begin{pmatrix}
+        -2 k_{on} u^2 \gamma v(t, x) + 2 k_\text{off} u_b + p_u + \alpha u_b - d_u u \\
+        k_{on} u^2 \gamma v(t, x) - k_\text{off} u_b - d_{u_b} u_b
+    \end{pmatrix} ,
+\end{equation}
+
+\noindent
+where $\gamma v$ denotes the trace of $v$ as discussed in \cref{sec:weak_derivatives}. Note that this definition of $F$ does not take into account that originally, the existence of $v$ is problem we need to solve simultaneously. We will justify this in the next section, when we separate the problems for the ODEs and the PDE and see that we can assume $v$ to be given. Also note that this definition depends on the fact that $x$ is assumed to be fixed. Thus for any $x \in \Gamma$, this defines a different problem.
+
+We can now combine these two formulations and start discussing existence and uniqueness properties.
 \todo{define $\odespace$ and $\pdespace$}
 
 \begin{definition}{}{}
-    The functions $u, u_b \in \odespace$ and $v \in \pdespace$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if
+    The functions $u, u_b \in \odespace$ and $v \in \pdespace$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if $v$ satisfies \cref{eq:weak_pde} for almost every $t \in [0, T]$ and 
     
     \begin{equation*}
         w(t) = (u(t, x), u_b(t, x))
     \end{equation*}
     
-    satisfies \cref{eq:weak_ode} for almost every $t \in [0, T]$ and $x \in \Omega$, and \cref{eq:weak_pde} for almost every $t \in [0, T]$.
+    satisfies \cref{eq:weak_ode} for almost every $t \in [0, T]$ and $x \in \Gamma$.
 \end{definition}
 \todo{correct?}

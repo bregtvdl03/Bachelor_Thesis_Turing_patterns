@@ -71,7 +71,7 @@ An important fact that should be noted is that every function that is square-int
         x'(t) = f(t, x(t))
     \end{equation}
 
-    \emph{in the extended sense on $I$} if $x$ is absolutely continuous, $(t, x(t)) \in S$ for every $t \in I$ and \cref{eq:standard_ode} is satisfied for almost every $t \in I$.
+    \emph{in the sense of Carath\'eodory on $I$} if $x$ is absolutely continuous, $(t, x(t)) \in S$ for every $t \in I$ and \cref{eq:standard_ode} is satisfied for almost every $t \in I$.
 \end{definition}
 
 \begin{theorem}{Carath\'eodory's existence theorem}{caratheodory}
@@ -84,7 +84,7 @@ An important fact that should be noted is that every function that is square-int
     and let $f: R \to \R^n$ be continuous in $x$ for every fixed $t$, measurable in $t$ for every fixed $x$ and bounded by some time-dependent integrable function $m$,
     
     \begin{equation*}
-        |f(t, x)| \leq m(t)
+        \norm{f(t, x)} \leq m(t)
     \end{equation*}
 
     for all $(t, x) \in R$. Then the differential equation
@@ -93,10 +93,24 @@ An important fact that should be noted is that every function that is square-int
         x'(t) = f(t, x(t))
     \end{equation*}
 
-    has a solution in the extended sense on the interval $|t - t_0| \leq \beta$ for some $\beta > 0$, satisfying $x(0) = x_0$.
+    has a solution in the sense of Carath\'eodory on the interval $|t - t_0| \leq \beta$ for some $\beta > 0$, satisfying $x(0) = x_0$.
 \end{theorem}
 
 \begin{theorem}{Nagumo's invariance theorem}{nagumo}
-    blub
+    Let $M \subseteq \R^n$ be closed and $J = [a, b]$ some real interval. Assume that $f: D \subseteq J \times M \to \R^n$ satisfies the tangent condition
+
+    \begin{equation*}
+        \inner{\nu(x), f(t, x)} \leq 0 \quad\quad \text{for } t \in [\xi, \xi + a] \text{ and } x \in \partial M,
+    \end{equation*}
+
+    \noindent
+    where $\nu(x)$ is the outward normal vector to $M$ at $x$, as well as a condition of Lipschitz type
+    
+    \begin{equation*}
+        \inner{x_1 - x_2, f(t, x_1) - f(t, x_2)} \leq L \norm{x_1 - x_2}^2.
+    \end{equation*}
+
+    \noindent
+    Then $M$ is flow-invariant with respect to the differential equation $x' = f(t, x)$.
 \end{theorem}
-\todo{which}
+\todo{more regularity assumptions for $f$?}

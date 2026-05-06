@@ -11,62 +11,42 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
         u_t         &= - f(u, u_b, \gamma v^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
     \end{aligned}
 \end{equation}
 \todo{weak form?}
 
 \noindent
-where $\gamma v^*$ denotes the trace of $v^*$ as discussed in \cref{sec:weak_derivatives}. These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system, without simultaneously having to worry about $v$ satisfying the PDE.
+These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system without simultaneously having to worry about $v$ satisfying the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
     Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
-    Fix $x$ and define $w$ and $F$ as in \cref{eq:weak_ode,eq:ode_system_function}, except using $\gamma v^*$ instead of $v$. We will first show that $F$ satisfies the requirements for \cref{thm:caratheodory}. We can then apply this theorem to get a local solution, and prove that we can extend it to the entirety $[0, T]$. We will see that this solution satisfies the non-negativity and boundedness requirement, that the solution $w$ is unique, and that its components $u$ and $u_b$ have the desired regularity in both space and time.
+    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $\gamma v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
-    Set $t_0 = 0$ and $x_0 = (u_0(x), u_{b, 0}(x))$. For every fixed $t$, $F$ is continuous in $w$, and since $\gamma v^*$ is measurable in time and $F$ depends continuously on $\gamma v^*$, $F$ is measurable in $t$ for every fixed $w$. The continuity of $F$ in $w$ also implies that $F$ is bounded in $w$ in any rectangle $R$ we choose, so we only need $\gamma v^*$ to be of sufficient time-regularity such that we have a time-dependent measurable function $m$ that bounds $|F|$ in $R$. \todo{time-regularity of $\gamma v^*$}
-
-    Now we can use \cref{thm:caratheodory} to get a local solution $\widetilde{w}_1: [0, \beta_1] \to \R^2$ in the extended sense for some $\beta_1 > 0$, satisfying $\widetilde{w}_1(0) = (u_0(x), u_{b, 0}(x))$. We can now set $t_0$ to be $\beta_1$ and $x_0$ to be $\widetilde{w}_1(\beta_1)$ and apply \cref{thm:caratheodory} a second time to get a new solution $\widetilde{w}_2$ in the extended sense on the interval $|t - \beta_1| < \beta_2$ for some $b_2 > 0$. This $\widetilde{w}_2$ now satisfies $\widetilde{w}_2(\beta_1) = \widetilde{w}_1(\beta_1)$, so we can \emph{glue} these solutions together and define
+    We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$\todo{right?}, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. Again, $F$ is polynomial in $w$ and measurable in time, so it satisfies a Lipschitz-type condition
 
     \begin{equation*}
-        w_2(t) := \begin{cases}
-            \widetilde{w}_1(t) & \text{ if } t \in [0, \beta_1), \\
-            \widetilde{w}_2(t) & \text{ if } t \in [\beta_1, \beta_1 + \beta_2], \\
-        \end{cases}
+        \norm{F(t, \overline{w}) - F(t, \widetilde{w})} \leq L_K(t) \norm{\overline{w} - \widetilde{w}}
     \end{equation*}
 
     \noindent
-    for $t \in [0, \beta_1 + \beta_2]$. We can keep defining new extensions iteratively. At iteration $i$, we have a definition of $w_i$ on $[0, \beta_1 + \dots + \beta_i]$, so we set
-    
-    \begin{equation*}
-        t_0 = \beta_1 + \dots + \beta_i \quad\quad \text{and}  \quad\quad x_0 = w_i(t_0) = \widetilde{w}_i(\beta_1 + \dots + \beta_i)
-    \end{equation*}
-    
-    \noindent
-    and apply \cref{thm:caratheodory} to get a new local extension $\widetilde{w}_{i + 1}$ on the interval $|t - t_0| < \beta_{i + 1}$ for some $\beta_{i + 1} > 0$. This allows us to define a new function $w_{i + 1}$ by
+    for all $t \in [0, \beta]$ and $\overline{w}, \widetilde{w} \in K$, where $L_K: [0, \beta] \to \R$ is an integrable function. Now the distance between the two solutions satisfies
 
     \begin{equation*}
-        w_{i + 1}(t) := \begin{cases}
-            \widetilde{w}_1(t) & \text{ if } t \in [0, \beta_1), \\
-            \widetilde{w}_2(t) & \text{ if } t \in [\beta_1, \beta_1 + \beta_2), \\
-            \quad\vdots \\
-            \widetilde{w}_{i + 1}(t) & \text{ if } t \in [\beta_1 + \dots + \beta_i, \beta_1 + \dots + \beta_{i + 1}], \\
-        \end{cases}
+        \begin{aligned}
+            \norm{w_1(t) - w_2(t)} &= \norm{(u_0, u_{b,0}) + \int_{0}^{t} f(t, w_1(t))\ dt - (u_0, u_{b,0}) - \int_{0}^{t} f(t, w_2(t))\ dt} \\
+            &\leq \int_{0}^{t} \norm{f(t, w_1(t)) - f(t, w_2(t))}\ dt \\
+            &\leq \int_{0}^{t} L_K(t) \norm{w_1(t) - w_2(t)}\ dt .
+        \end{aligned}
     \end{equation*}
 
     \noindent
-    This process creates a sequence of partial sums
+    for every $t \in [0, \beta]$. Using Gronwall's inequality, we see that this implies that $\norm{w_1(t) - w_2(t)} = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
 
-    \begin{equation*}
-        \left( T_i \right)_{i \geq 1} := \left( \beta_1 + \dots + \beta_i \right)_{i \geq 1}
-    \end{equation*}
-
-    \noindent
-    and a sequence of functions $\left( w_i \right)_{i \geq 1}$, where $w_i$ is defined on the interval $[0, T_i]$. Since $\left( T_i \right)_{i \geq 1}$ is strictly increasing, it either diverges to infinity, converges to a value greater than or equal to $T$, or it converges to a value $\widetilde{T} \in (0, T)$. In the first two cases, this means that we now have a solution (possibly after passing some limit\todo{show that this limit is absolutely continuous}) on $[0, T]$. In the last case, we can further extend the solution until we have a solution on $[0, T]$.\todo{Zorn?}
-
-    To show that this solution is non-negative, we can use \cref{thm:nagumo}\todo{Nagumo for caratheodory ode?}.
+    To show that the components $u$ and $u_b$ of this solution $w$ are non-negative, we use \cref{thm:nagumo}. \todo{Lipschitz condition?}
 \end{proof}
 
 Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v^* \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
