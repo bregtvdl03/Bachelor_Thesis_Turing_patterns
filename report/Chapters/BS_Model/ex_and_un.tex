@@ -68,7 +68,18 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 \end{lemma}
 
 \begin{proof}
-    \todo{proof}
+    \todo{Existence and Uniqueness}
+    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $\min(0, v)$ respectively, such that $v = v_{+} + v_{-}$. Then we also have $\pderiv[v]{t} v_{-} = \pderiv[v_{-}]{t} v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = \norm{\nabla v_{-}}^2$, so
+
+    \begin{equation*}
+        \begin{aligned}
+            \frac{d}{dt} \norm{v_{-}(t)}_{L^2(\Omega)}^2 &= \frac{d}{dt} \int_{\Omega} v_{-}^2(t) \\
+            &= 2 \int_{\Omega} \pderiv[v_{-}]{t}(t) v_{-}(t) \\
+            &= 2 \int_{\Omega} \pderiv[v]{t}(t) v_{-}(t) \\
+            &= - 2 D \inner{\nabla v(t), \nabla v_{-}(t)}_{\Omega} - 2 \inner{f(u(t), u_b(t), v(t)), v_{-}(t)}_{\Gamma} + \inner{r(v(t)), v_{-}(t)}_{\Gamma} - d_v \inner{v(t), v_{-}(t)}_{\Omega}, \\
+            &= - 2 D \norm{\nabla v_{-}(t)}_{L^2(\Omega)}^2 - 2 \inner{f(u(t), u_b(t), v(t)), v_{-}(t)}_{\Gamma} + \inner{r(v(t)), v_{-}(t)}_{\Gamma} - d_v \norm{v_{-}(t)}_{L^2(\Omega)}^2 , \\
+        \end{aligned}
+    \end{equation*}
 \end{proof}
 
 This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u^*, u_b^*) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
