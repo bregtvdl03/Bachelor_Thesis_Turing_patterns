@@ -12,6 +12,12 @@ from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, a
 import dolfinx.io.gmsh as gmshio
 import gmsh
 
+from steady_states import get_steady_states
+from datetime import timedelta
+import time
+import os
+
+
 OUT_FILE = "out_cells/2d_squares_complex.gif"
 FPS = 10
 
@@ -23,30 +29,44 @@ MEMBRANE_TAG    = 10
 m = 2
 n = 1
 
-Du      = 1.0       # Diffusion coef for u
-Dv      = 40.0      # Diffusion coef for v
-Pu      = 0.125     # Production coef for u
-Pv      = 0.420     # Production coef for v
-k1      = 2       # k_on
-k2      = 2       # k_off
-gamma   = 64.0      # Reaction scaling
+Du = 1.0        # Diffusion coef for u
+Dv = 10.0       # Diffusion coef for v
+Pu = 0.1        # Production coef for u
+Pv = 0.9        # Production coef for v
+gamma = 64 # Reaction scaling
+kappa = 1       # Additional scaling for w
 
-uniform_steady_state_u = Pu + Pv
-uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
+Dw      = 1.0   # Diffusion coef for w
+delta_u = 1.0
+delta_w = 1.0
+delta_v = 0.1
+k_on    = 2.0
+k_off   = k_on * delta_w - delta_w
+alpha   = (m + n) * delta_w
+
+steady_states = get_steady_states(Pu, Pv, delta_u, delta_v, delta_w, k_on, k_off, alpha)
+
+uss_u = steady_states[0]
+uss_v = steady_states[1]
+uss_w = steady_states[2]
+
+print(uss_u)
+print(uss_w)
+print(uss_v)
 
 perturbation_strength = 0.1
 
 def initial_condition_u(x):
-    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return [uniform_steady_state_u] * x.shape[1]
+    return uss_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uss_u] * x.shape[1]
 
 def initial_condition_v(x):
-    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return [uniform_steady_state_v] * x.shape[1]
+    return uss_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return [uss_v] * x.shape[1]
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 1024
+num_steps = 4096
 dt = T / num_steps
 
 #endregion
@@ -159,18 +179,16 @@ a = u * phi * ds(MEMBRANE_TAG) \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ds(MEMBRANE_TAG) \
     + dt * Du * ufl.dot(ufl.grad(w), ufl.grad(chi)) * ds(MEMBRANE_TAG) \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * dx \
-    + dt * gamma * (u - k2 * w) * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * k2 * w * chi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k2 * w * psi * ds(MEMBRANE_TAG) \
+    + dt * gamma * u * phi * ds(MEMBRANE_TAG) \
+    + dt * kappa * gamma * delta_w * w * chi * ds(MEMBRANE_TAG) \
+    + dt * gamma * delta_v * v * psi * ufl.dx \
 
 L = u_n * phi * ds(MEMBRANE_TAG) \
     + w_n * chi * ds(MEMBRANE_TAG) \
     + v_n * psi * dx \
-    + dt * gamma * Pu * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * Pv * psi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k1 * (u_n * u_n * v_n) * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * k1 * (u_n * u_n * v_n) * chi * ds(MEMBRANE_TAG) \
-    - dt * gamma * k1 * (u_n * u_n * v_n) * psi * ds(MEMBRANE_TAG) \
+    + dt * gamma * (Pu + alpha * w_n - 2 * k_on * u_n * u_n * v_n + 2 * k_off * w_n) * phi * ds(MEMBRANE_TAG) \
+    + dt * gamma * (Pv - k_on * u_n * u_n * v_n + k_off * w_n) * psi * ds(MEMBRANE_TAG) \
+    + dt * kappa * gamma * (k_on * u_n * u_n * v_n - k_off * w_n) * chi * ds(MEMBRANE_TAG) \
 
 #endregion
 
@@ -230,7 +248,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=blues,
-    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
+    clim=[uss_u - perturbation_strength, uss_u + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -243,7 +261,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
+    clim=[uss_u - perturbation_strength, uss_u + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -257,7 +275,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap=ylorrd,
-    clim=[uniform_steady_state_v - perturbation_strength, uniform_steady_state_v + perturbation_strength],
+    clim=[uss_v - perturbation_strength, uss_v + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -284,11 +302,12 @@ plotter.write_frame()
 
 #region ========== SOLVING ITERATIVELY ==========
 
+start = time.monotonic()
+
 for n in range(num_steps):
     t += dt
     progress = int(n/num_steps * 100)
     time_text.SetText(2, f"{str(progress)}\t/100 %")
-    print(progress)
     
     try:
         with b.localForm() as loc_b:
@@ -312,7 +331,7 @@ for n in range(num_steps):
     w_n.x.array[:] = wh.x.array
     v_n.x.array[:] = vh.x.array
     
-    if n % 16 == 0:
+    if n % 32 == 0:
         new_warped = grid_u.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
         u_graph.point_data["uh"][:] = uh.x.array
@@ -324,10 +343,14 @@ for n in range(num_steps):
         new_warped = grid_v.warp_by_scalar("vh", factor=warpfactor)
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
+                
+        os.system("clear")
+        eta = timedelta(seconds=round((time.monotonic() - start) / (n + 1) * num_steps - time.monotonic() + start))
+        print(f"ETA: {eta}")
         
-        print(f"u: {np.linalg.norm(uh.x.array, ord=np.inf)}")
-        print(f"w: {np.linalg.norm(wh.x.array, ord=np.inf)}")
-        print(f"v: {np.linalg.norm(vh.x.array, ord=np.inf)}")
+        print(f"u_n: {min(u_n.x.array)} - {max(u_n.x.array)}")
+        print(f"w_n: {min(w_n.x.array)} - {max(w_n.x.array)}")
+        print(f"v_n: {min(v_n.x.array)} - {max(v_n.x.array)}")
 
         plotter.write_frame()
 
