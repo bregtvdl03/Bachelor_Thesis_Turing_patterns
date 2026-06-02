@@ -1,0 +1,28 @@
+Now that we are working with simulations, we can make our model slightly more complex by dropping one of our assumptions. Let $\Omega$ and $\Gamma$ be constructed as in \cref{sec:bio_motiv}. In this chapter, we restrict our study to the dimensions of $d = 2$ and $d = 3$, since these are the most relevant to the biological applications of this model. Recall that in \cref{sec:bio_motiv}, we assumed the receptors, both free and bounded, to be fixed in place on the cell membrane. This resulted in a system of one PDE and two ODEs, the latter being both defined separately for every point on the cell membrane. We now drop this assumption by adding diffusion terms to both of these equations, forming a new system of reaction diffusion PDEs given by
+
+\begin{equation}
+\label{eq:expanded_pdes}
+\begin{aligned}
+    u_t &= D_u \Delta u + P_u + \alpha u_b - \delta_u u - 2 k_\text{on} u^2 v + 2 k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
+    u_{b,t} &= D_{u_b} \Delta u_b - \delta_{u_b} u_b + k_\text{on} u^2 v - k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
+    v_t &= D_v \Delta v - \delta_v v & \text{in } &(0, T) \times \Omega, \\
+    D_v \pderiv[v]{\nu} &= P_v - k_\text{on} u^2 v + k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
+    D_v \pderiv[v]{\nu} &= 0 & \text{on } &(0, T) \times \Gamma, \\
+\end{aligned}
+\end{equation}
+
+\noindent
+where $D_u$ and $D_{u_b}$ are both new positive real coefficients. We also have some corresponding initial conditions
+
+\begin{equation*}
+\begin{aligned}
+    u(0, x) = u_0(x), \qquad u_b(0, x) = u_{b,0}(x) \qquad \text{and} \qquad v(0, y) = v_0(y)
+\end{aligned}
+\end{equation*}
+
+\noindent
+for all $x \in \Gamma$ and $y \in \overline{\Omega}$.
+
+There are multiple things to note about these new equations. Since $\Gamma$ has an empty interior, it is impossible to define spatial derivatives for functions living exclusively on this set. This means we would not be able to use the Laplace operator to include diffusion of the receptors as we do in \cref{eq:expanded_pdes}. This issue is solved by using something called the Laplace-Beltrami operator instead, which is a generalisation of the Laplace operator to Riemannian manifolds. Since we assumed $\Gamma$ to be a $C^1$ boundary, it forms such a manifold. The Laplace-Beltrami operator is further discussed in \cite{jost2017riemannian}, but we will not go into detail here. For our purposes, it is sufficient to note that it behaves in a similarly to the classical Laplace operator and admits analogous computational identities such as partial integration. It is sometimes denoted by $\Delta_\Gamma$, but for the sake of simplicity, we will omit this notation and use $\Delta$ for both the Laplace and Laplace-Beltrami operators.
+
+The space variable is now more involved in the equations for $u$ and $u_b$, possibly making it seem necessary to define some boundary conditions. However, recalling our exact construction of the domain, we can see that the set $\Gamma$ representing the cell membranes, when viewed as a separate $(d - 1)$-dimensional manifold, does not have a boundary. Since the equations for $u$ and $u_b$ strictly live on this manifold, boundary conditions are not required.

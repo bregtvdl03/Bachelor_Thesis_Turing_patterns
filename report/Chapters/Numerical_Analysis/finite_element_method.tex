@@ -1,0 +1,142 @@
+In any course on elementary numerical methods, the simulation of ODEs will inevitably be discussed. The vast majority of these simulations include defining a small time step using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space step $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. This is called the finite \emph{difference} method, and it is very successful in a number of applications. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model lives on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
+
+The finite \emph{element} method is another means to approximate solutions to a PDE. It is mainly used for discretising the space variable, so let us focus on an example that does not include time. We consider the standard Poisson equation
+
+\begin{equation}
+    \label{eq:fem_ex_poisson}
+    \Delta u = f \qquad \text{in } \Omega
+\end{equation}
+
+\noindent
+with Neumann boundary conditions
+
+\begin{equation}
+    \label{eq:fem_ex_neumann_pois}
+    \pderiv[u]{\nu} = g \qquad \text{on } \partial \Omega.
+\end{equation}
+
+\noindent
+Here, $\Omega \subseteq \R^d$ is an open and bounded set with $C^1$ boundary and $f$ and $g$ are known functions on $\Omega$ and $\partial \Omega$, respectively. To discretise this spatial domain, we use the same approach as in \cite{dziuk_elliott_2013} to define a \emph{mesh}. We choose a finite number of points $\{ x_i \}_{i = 1}^{m}$ in $\Omega$ and use them as endpoints of $d$-simplices\footnote{An $n$-simplex is the $n$-dimensional equivalent of a triangle. The most important instances are the 0-simplex, which is a point, the 1-simplex, a line segment, the 2-simplex, a triangle, and the 3-simplex, a tetrahedron. Every $n$-simplex is enclosed by $n + 1$ $(n-1)$-simplices, which in turn are enclosed by $(n-2)$-simplices, etc. All of these are referred to as its subsimplices.}, which we collect in a set $\mathcal{T}_h$. These points are called \emph{nodes}, and the $d$-simplices they enclose are referred to as \emph{elements}. To have a well-behaved discretisation, for any two $d$-simplices $T, T' \in \mathcal{T}_h$ we require $T \cap T'$ to either be empty or form a common subsimplex of dimension $k < d$.
+
+This leaves us with an approximation of $\Omega$, denoted by
+
+\begin{equation*}
+    \Omega_h := \bigcup_{T \in \mathcal{T}_h} T.
+\end{equation*}
+
+\noindent
+The subscript $h$ derives from the idea that this still represents the fineness of our discretisation, just as in the finite difference method. If we define
+
+\begin{equation*}
+    h := \max_{T \in \mathcal{T}_h} \diam(T),
+\end{equation*}
+
+\todo{ugly??}
+\noindent
+we want $\Omega_h$ to approximate $\Omega$ increasingly well as $h$ approaches $0$. \todo{example}
+
+Additionally, we want a discretised function space, from which we look for approximate solutions to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}, called the \emph{trial space}. To this end, for every node $x_i$, we define a basis function $\phi_i: \Omega_h \to \R$ such that $\phi_i(x_i) = 1$, $\phi_i(x_j) = 0$ for all $j \neq i$ and $\phi_i$ is linearly interpolated on each element. \todo{example} Now the function space we consider for our trial functions is the space of linear combinations of these basis functions,
+
+\begin{equation*}
+    \mathcal{V}_h := \linspan \{ \phi_1, \dots, \phi_m \}.
+\end{equation*}
+
+\noindent
+This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many more kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements.
+
+We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate on $\Omega_h$ and use partial integration to get
+
+\begin{equation*}
+    \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \Delta u_h \phi_i = \int_{\partial \Omega_h} \pderiv[u_h]{\nu} \phi_i \ dS - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i = \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i .
+\end{equation*}
+
+\noindent
+Rearranging terms and writing $u_h$ as its linear decomposition with coefficients $U_1, \dots, U_m \in \R$, we derive
+
+\begin{equation*}
+    \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \nabla \left( \sum_{j = 1}^{N} U_j \phi_j \right) \cdot \nabla \phi_i = \sum_{j = 1}^{m} U_j \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i .
+\end{equation*}
+
+\noindent
+If we define
+
+\begin{equation*}
+    F_i :=  \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} f \phi_i \qquad \text{and} \qquad K_{ij} := \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i
+\end{equation*}
+
+\noindent
+for every $i, j \in \{1, \dots, m\}$, this is equivalent to the linear system
+
+\begin{equation}
+    KU = F.
+\end{equation}
+
+\noindent
+Here, $K$ is typically referred to as the \emph{stiffness matrix}. We have now transformed the PDE into a linear system of equations, which we can solve using a wide variety of algorithms.
+
+Before deriving the linear system for \cref{eq:expanded_pdes}, we should quickly illustrate how time discretisation ties into this approach. Consider, therefore, the heat equation
+
+\begin{equation}
+    \label{eq:fem_ex_heat}
+    u_t = \Delta u + f \qquad \text{in } (0, T) \times \Omega
+\end{equation}
+
+\noindent
+with Neumann boundary conditions
+
+\begin{equation}
+    \label{eq:fem_ex_neumann_heat}
+    \pderiv[u]{\nu} = g \qquad \text{on } [0, T) \times \partial \Omega,
+\end{equation}
+
+\noindent
+where $T > 0$ is some final time and now $f$ and $g$ are functions on $(0, T) \times \Omega$ and $[0, T) \times \partial \Omega$, respectively. Of course, we also need initial conditions
+
+\begin{equation}
+    \label{eq:fem_ex_initial}
+    u(0, x) = u_0(x).
+\end{equation}
+
+\noindent
+Similarly to the numerical study of ODEs, we choose a number of steps $N \in \N$ and let $\tau := T/N$. For every $n \in \{0, \dots, N\}$, we seek to approximate the time step
+
+\begin{equation*}
+    u_n(x) := u(n\tau, x).
+\end{equation*}
+
+\noindent
+To this end, we use a difference quotient in time to derive
+
+\begin{equation*}
+    \frac{u_{n + 1}(x) - u_{n}(x)}{\tau} \approx \Delta u_{n + 1} (x) + f(n\tau, x),
+\end{equation*}
+
+\noindent
+where we have used implicit diffusion and explicit forcing. This is a widely used scheme, commonly referred to as IMEX. Other schemes can be used with varying results in numerical stability and accuracy. In this thesis, we will not go too far into this choice.
+
+After rearranging terms, this leads to the time-independent problem
+
+\begin{equation*}
+    u_{n + 1}(x) \approx \tau \Delta u_{n + 1}(x) + u_n(x) + \tau f(n \tau, x).
+\end{equation*}
+
+\noindent
+We can now use the same approach as before, transforming this problem into a linear system of equations
+
+\begin{equation*}
+    (M + \tau K) U^{n + 1} = M U^n + \tau F^n,
+\end{equation*}
+
+\noindent
+where $U^n \in \R^m$ contains the coefficients for the linear decomposition of $u_n$ into $\phi_1, \dots, \phi_m$, and $F^n$ and $M$ are defined by
+
+\begin{equation*}
+    F^n_i := \int_{\partial \Omega_h} g(n\tau, x) \phi_i(x) \ dS(x) + \int_{\Omega_h} f(n\tau, x) \phi_i(x)\ dx \qquad \text{and} \qquad M_{ij} := \int_{\Omega_h} \phi_j \phi_i
+\end{equation*}
+
+\noindent
+for $i, j \in \{1, \dots, m\}$. $M$ is often called the \emph{mass matrix}. When calculating a new iteration $U^{n + 1}$, we can assume the previous iterations are known, starting off with the initial conditions
+
+\begin{equation*}
+    U^0_i := u_0(x_i), \qquad i = 0, \dots, m.
+\end{equation*}

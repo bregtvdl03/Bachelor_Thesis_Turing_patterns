@@ -1,6 +1,6 @@
 \todo{actual biological terms}
 
-Consider an open and bounded set $U \subseteq \R^d$ with Lipschitz boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with Lipschitz boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained by $U$, i.e. no cells should cross the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and place on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands.\todo{figure}
+Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with $C^1$ boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained by $U$, i.e. no cells should cross the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and place on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands.\todo{figure}
 
 \begin{figure}[!t]
     \centering
@@ -72,7 +72,7 @@ We can describe this behaviour with a system of coupled differential equations. 
 and the production and decay of $u, u_b$ and $v$ are described by
 
 \begin{equation*}
-    p(u, u_b) := p_u + \alpha u_b - d_u u,    \quad\quad   q(u_b) := - d_{u_b} u_b    \quad\quad      \text{and}      \quad\quad      r := p_v,
+    p(u, u_b) := p_u + \alpha u_b - d_u u,    \qquad   q(u_b) := - d_{u_b} u_b    \qquad      \text{and}      \qquad      r := p_v,
 \end{equation*}
 
 \noindent
