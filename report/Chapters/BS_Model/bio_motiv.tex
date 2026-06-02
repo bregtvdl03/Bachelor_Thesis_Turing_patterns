@@ -62,10 +62,10 @@ When a ligand binds to a free receptor, the concentration of free receptors and 
 
 The last two things that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter or model through the cell membrane. We assume this production mainly happens at a constant rate, but is also upregulated by the concentration of bounded receptors. The ligands and receptors decay at a rate proportional to their respective concentrations.
 
-We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $k_\text{on}, k_\text{off} > 0$, respectively, the production constants by $p_u, p_v > 0$, the upregulation coefficient by $\alpha > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
+We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $\kon, \koff > 0$, respectively, the production constants by $p_u, p_v > 0$, the upregulation coefficient by $\alpha > 0$, the decay coefficients by $d_u, d_{u_b} > 0$ and the diffusion coefficient by $D > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
 
 \begin{equation*}
-    f(u, u_b, v) := k_\text{on} u^2 v - k_\text{off} u_b,
+    f(u, u_b, v) := \kon u^2 v - \koff u_b,
 \end{equation*}
 
 \noindent

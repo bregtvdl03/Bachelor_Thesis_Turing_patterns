@@ -4,7 +4,7 @@ Consider an open and bounded domain $\Omega \subseteq \R^{d}$. Then for any cont
 
 \begin{equation}
     \label{random}
-    \int_{\Omega} u_{x_i} \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi\ dS - \int_{\Omega} u \phi_{x_i} = - \int_{\Omega} u \phi_{x_i} ,
+    \int_{\Omega} u_{x_i} \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi \d S - \int_{\Omega} u \phi_{x_i} = - \int_{\Omega} u \phi_{x_i} ,
 \end{equation}
 
 \noindent
@@ -76,7 +76,7 @@ With this new notion of weak differentiability, we can define new spaces of regu
     Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$, but for $p = 2$ it also forms a Hilbert space. We can say this for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
 
     \begin{equation*}
-        \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{L^2(\Omega)} ,
+        \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{\Ltwo{\Omega}} ,
     \end{equation*}
 
     forming a Hilbert space.
@@ -88,7 +88,8 @@ With this new notion of weak differentiability, we can define new spaces of regu
     Lastly, we define and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$, and denote the pairing between these two spaces as $\pair{\cdot, \cdot}$, i.e. $\pair{f, u} := f(u)$.
 \end{definition}
 
-When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can describe $H_0^1(\Omega)$ as the subset of $H^1(\Omega)$ containing all functions that vanish on the boundary. This interpretation has an important caveat. By definition, $H^1(\Omega)$ is a subset of $L^2(\Omega)$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary $\partial \Omega$ is a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
+\todo{Evans calculus for time derivatives}
+When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can describe $H_0^1(\Omega)$ as the subset of $H^1(\Omega)$ containing all functions that vanish on the boundary. This interpretation has an important caveat. By definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary $\partial \Omega$ is a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
 
 \begin{proposition}{Approximation by smooth functions}{approx_by_smooth}
     If the boundary $\partial \Omega$ is Lipschitz and $ 1 \leq p < \infty$, the set of all smooth functions $C^\infty(\overline{\Omega})$ is dense in $W^{k,p}(\Omega)$.
@@ -103,15 +104,15 @@ More precisely, for any function $u \in W^{k,p}(\Omega)$, there is a sequence of
 \noindent
 This allows us to extend our knowledge of functions defined on the boundary to functions in $W^{k,p}(\Omega)$ in general.
 
-\begin{theorem}{Trace Theorem}{}
+\begin{theorem}{Trace Theorem}{trace}
     If the boundary $\partial \Omega$ is Lipschitz, there is a bounded linear operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ such that
     
     \begin{enumerate}[label=(\roman*)]
         \item $\gamma u = u \vert_{\partial \Omega}$ for any $u \in W^{1,p}(\Omega) \cap C(\overline{\Omega})$ and
-        \item \label{item:trace_property_2} $\norm{\gamma u}_{L^2(\partial \Omega)} \leq C \norm{u}_{W^{1,p}(\Omega)}$,
+        \item \label{item:trace_property_2} $\norm{\gamma u}_{\Ltwo{\partial \Omega}} \leq C_\gamma \norm{u}_{W^{1,p}(\Omega)}$,
     \end{enumerate}
     
-    where the constant $C > 0$ only depends on $p$ and $\Omega$.
+    where the constant $C_\gamma > 0$ only depends on $p$ and $\Omega$.
 \end{theorem}
 
 A full proof of this theorem can be found in \cite{evans2010partial}, but we will describe the general outline here. 
@@ -122,11 +123,11 @@ A full proof of this theorem can be found in \cite{evans2010partial}, but we wil
     For the general case of $u \in W^{1,p}(\Omega)$, we can use \cref{prop:approx_by_smooth} to get an approximation for $u$ of smooth functions $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$. The first part of the proof then implies that
 
     \begin{equation*}
-        \norm{\gamma u_n - \gamma u_m}_{L^2(\partial \Omega)} = \norm{\gamma \left( u_n - u_m \right)}_{L^2(\partial \Omega)} \leq C \norm{u_n - u_m}_{W^{k,p}(\Omega)},
+        \norm{\gamma u_n - \gamma u_m}_{\Ltwo{\partial \Omega}} = \norm{\gamma \left( u_n - u_m \right)}_{\Ltwo{\partial \Omega}} \leq C \norm{u_n - u_m}_{W^{k,p}(\Omega)},
     \end{equation*}
 
     \noindent
-    which means that $(\gamma u_n)_{n \in \N}$ is a Cauchy sequence. We have used that $\gamma$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $L^2(\partial \Omega)$ is a Hilbert space, we can define
+    which means that $(\gamma u_n)_{n \in \N}$ is a Cauchy sequence. We have used that $\gamma$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $\Ltwo{\partial \Omega}$ is a Hilbert space, we can define
 
     \begin{equation*}
         \gamma u := \lim_{n \to \infty} \gamma u_n = \lim_{n \to \infty} u_n \vert_{\partial \Omega},

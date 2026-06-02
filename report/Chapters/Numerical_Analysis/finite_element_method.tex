@@ -47,21 +47,21 @@ This is called the space of \emph{first-order Lagrange elements}, derived from t
 We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate on $\Omega_h$ and use partial integration to get
 
 \begin{equation*}
-    \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \Delta u_h \phi_i = \int_{\partial \Omega_h} \pderiv[u_h]{\nu} \phi_i \ dS - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i = \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i .
+    \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \Delta u_h \phi_i = \int_{\partial \Omega_h} \pderiv[u_h]{\nu} \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i = \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i .
 \end{equation*}
 
 \noindent
 Rearranging terms and writing $u_h$ as its linear decomposition with coefficients $U_1, \dots, U_m \in \R$, we derive
 
 \begin{equation*}
-    \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \nabla \left( \sum_{j = 1}^{N} U_j \phi_j \right) \cdot \nabla \phi_i = \sum_{j = 1}^{m} U_j \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i .
+    \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \nabla \left( \sum_{j = 1}^{N} U_j \phi_j \right) \cdot \nabla \phi_i = \sum_{j = 1}^{m} U_j \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i .
 \end{equation*}
 
 \noindent
 If we define
 
 \begin{equation*}
-    F_i :=  \int_{\partial \Omega_h} g \phi_i \ dS - \int_{\Omega_h} f \phi_i \qquad \text{and} \qquad K_{ij} := \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i
+    F_i :=  \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} f \phi_i \qquad \text{and} \qquad K_{ij} := \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i
 \end{equation*}
 
 \noindent
@@ -131,7 +131,7 @@ We can now use the same approach as before, transforming this problem into a lin
 where $U^n \in \R^m$ contains the coefficients for the linear decomposition of $u_n$ into $\phi_1, \dots, \phi_m$, and $F^n$ and $M$ are defined by
 
 \begin{equation*}
-    F^n_i := \int_{\partial \Omega_h} g(n\tau, x) \phi_i(x) \ dS(x) + \int_{\Omega_h} f(n\tau, x) \phi_i(x)\ dx \qquad \text{and} \qquad M_{ij} := \int_{\Omega_h} \phi_j \phi_i
+    F^n_i := \int_{\partial \Omega_h} g(n\tau, x) \phi_i(x)  \d S(x) + \int_{\Omega_h} f(n\tau, x) \phi_i(x) \d x \qquad \text{and} \qquad M_{ij} := \int_{\Omega_h} \phi_j \phi_i
 \end{equation*}
 
 \noindent

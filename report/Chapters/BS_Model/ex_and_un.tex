@@ -1,7 +1,7 @@
 Our goal in this section is to prove the following theorem.
 
 \begin{theorem}{Existence and uniqueness of weak solutions}{eq_and_un}
-    Let $u_0, u_{b, 0} \in L^2(\partial \Omega)$ and $v_0 \in L^2(\Omega)$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
+    Let $u_0, u_{b, 0} \in \Ltwo{\partial \Omega}$ and $v_0 \in \Ltwo{\Omega}$ be non-negative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
 \end{theorem}
 
 As previously mentioned, the proof will be based on an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
@@ -20,9 +20,9 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system without simultaneously having to worry about $v$ satisfying the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
-    Let $u_0, u_{b,0} \in L^2(\partial \Omega)$ be non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
+    Let $u_0, u_{b,0} \in \Ltwo{\Gamma}$ be essentially bounded and non-negative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
-
+\todo{correct addition to be ess bounded?}
 \begin{proof}
     Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $\gamma v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
@@ -37,9 +37,9 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 
     \begin{equation*}
         \begin{aligned}
-            \norm{w_1(t) - w_2(t)} &= \norm{(u_0, u_{b,0}) + \int_{0}^{t} f(t, w_1(t))\ dt - (u_0, u_{b,0}) - \int_{0}^{t} f(t, w_2(t))\ dt} \\
-            &\leq \int_{0}^{t} \norm{f(t, w_1(t)) - f(t, w_2(t))}\ dt \\
-            &\leq \int_{0}^{t} L_K(t) \norm{w_1(t) - w_2(t)}\ dt .
+            \norm{w_1(t) - w_2(t)} &= \norm{(u_0, u_{b,0}) + \int_{0}^{t} f(t, w_1(t)) \d t - (u_0, u_{b,0}) - \int_{0}^{t} f(t, w_2(t)) \d t} \\
+            &\leq \int_{0}^{t} \norm{f(t, w_1(t)) - f(t, w_2(t))} \d t \\
+            &\leq \int_{0}^{t} L_K(t) \norm{w_1(t) - w_2(t)} \d t .
         \end{aligned}
     \end{equation*}
 
@@ -47,16 +47,42 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     for every $t \in [0, \beta]$. Using Gronwall's inequality, we see that this implies that $\norm{w_1(t) - w_2(t)} = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
 
     To show that the components $u$ and $u_b$ of this solution $w$ are non-negative, we use \cref{thm:nagumo}. \todo{Lipschitz condition?}
+
+    We now let $x$ vary and show that $u$ and $u_b$ have $L^2$ regularity in both space and time. \todo{regularity}
+
+    We can use this non-negativity to show that $u$ and $u_b$ are bounded. Define $r := u + 2 u_b$ and note that
+
+    \begin{equation*}
+        r_t = u_t + 2 u_{b, t} = P_u - d_u u + (\alpha - 2 d_{u_b}) u_b \leq P_u + m r,
+    \end{equation*}
+
+    \noindent
+    where $m := \max\left(d_u, \frac{1}{2}(\alpha - 2 d_{u_b})\right)$. Then Gronwall's inequality gives
+
+    \begin{equation*}
+        r(t) \leq r(0)e^{mt} + \frac{P_u}{m} \left(e^{mt} - 1\right).
+    \end{equation*}
+
+    \noindent
+    Now the non-negativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ let us bound the solutions independently by
+
+    \begin{equation*}
+    \begin{alignedat}{2}
+        u &\leq Me^{mT} + \frac{P_u}{m} \left(e^{mT} - 1\right) &&=: M_u(T) \qquad \text{and} \\
+        u_b &\leq \frac{1}{2} M_u(T) &&=: M_{u_b}(T),
+    \end{alignedat}
+    \end{equation*}
+
+    \noindent
+    where $M = \esssup(u_0 + 2 u_{b, 0})$, for almost every $x \in \Gamma$ and $t \in [0, T]$.
 \end{proof}
 
-Using \cref{lem:exun_frozen_odes}, we define an operator $\mathcal{T}_1: \pdespace \to \odespace^2$ that maps any function $v^* \in \pdespace$ to a tuple $(u, u_b) \in \odespace^2$ of solutions to \cref{eq:frozen_odes}.
-
-We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
+We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by \todo{rewrite}
 
 \begin{equation}\label{eq:frozen_pde}
     \begin{aligned}
-        \inner{v_t, \phi}_{L^2(\Omega)} &= - \inner{f(u^*, u_b^*, v), \phi}_{L^2(\Gamma)} + \inner{r(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)} \\
-        &= \inner{g(v), \phi}_{L^2(\Gamma)} - D \inner{\nabla v, \nabla \phi}_{L^2(\Omega; \R^d)}, \\
+        \inner{v_t, \phi}_{\Ltwo{\Omega}} &= - \inner{f(u^*, u_b^*, v), \phi}_{\Ltwo{\Gamma}} + \inner{r(v), \phi}_{\Ltwo{\Gamma}} - D \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} \\
+        &= \inner{g(v), \phi}_{\Ltwo{\Gamma}} - D \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}}, \\
     \end{aligned}
 \end{equation}
 
@@ -64,25 +90,103 @@ We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \i
 where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this definition because $u^*$ and $u_b^*$ are fixed. We have now decoupled the PDE from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
 
 \begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
-    Let $v_0 \in L^2(\Omega)$ be non-negative initial conditions and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative and bounded by a constant depending on $T$.
+    Let $v_0 \in \Ltwo{\Omega}$ be non-negative initial conditions and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
     \todo{Existence and Uniqueness}
-    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $\min(0, v)$ respectively, such that $v = v_{+} + v_{-}$. Then we also have $\pderiv[v]{t} v_{-} = \pderiv[v_{-}]{t} v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = \norm{\nabla v_{-}}^2$, so
+    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \norm{\nabla v_{-}}^2$, so \todo{formally say "for all $t$"} for all almost every $t$, we have,
 
     \begin{equation*}
-        \begin{aligned}
-            \frac{d}{dt} \norm{v_{-}(t)}_{L^2(\Omega)}^2 &= \frac{d}{dt} \int_{\Omega} v_{-}^2(t) \\
-            &= 2 \int_{\Omega} \pderiv[v_{-}]{t}(t) v_{-}(t) \\
-            &= 2 \int_{\Omega} \pderiv[v]{t}(t) v_{-}(t) \\
-            &= - 2 D \inner{\nabla v(t), \nabla v_{-}(t)}_{\Omega} - 2 \inner{f(u(t), u_b(t), v(t)), v_{-}(t)}_{\Gamma} + \inner{r(v(t)), v_{-}(t)}_{\Gamma} - d_v \inner{v(t), v_{-}(t)}_{\Omega}, \\
-            &= - 2 D \norm{\nabla v_{-}(t)}_{L^2(\Omega)}^2 - 2 \inner{f(u(t), u_b(t), v(t)), v_{-}(t)}_{\Gamma} + \inner{r(v(t)), v_{-}(t)}_{\Gamma} - d_v \norm{v_{-}(t)}_{L^2(\Omega)}^2 , \\
-        \end{aligned}
+        \frac{d}{dt} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = \frac{d}{dt} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
     \end{equation*}
+
+    \noindent
+    due to the \todo{reference}. When we view $v_-$ as a test function and use that $v$ is a solution to the PDE, we get
+    
+    \begin{equation*}
+        \begin{aligned}
+        \frac{d}{dt} &\frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = - \int_{\Omega} v_t v_{-} = D_v \int_{\Omega} \nabla v \cdot \nabla v_- + d_v \int_{\Omega} v v_- - \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v_-  \d S \\
+        &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - d_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S + \kon \int_{\Gamma} u^2 v v_-  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
+        &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - d_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S - \kon \int_{\Gamma} u^2 (v_-)^2  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
+        &\leq 0,
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    where we used the non-negativity of $v_-$ and $u_b$ in the last step. By \todo{reference}, we know that the map $t \mapsto \norm{v_{-}(t)}_{\Ltwo{\Omega}}^2$ should be continuous. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
+
+    \begin{equation*}
+        \norm{v_{-}}_{\Ltwo{\Omega}}^2 = 0
+    \end{equation*}
+
+    \noindent
+    for almost every $t$, and thus $v$ being non-negative.
+
+    To show that the map $t \mapsto \norm{v}^2_{\Ltwo{\Omega}}$ is essentially bounded, we use $v$ itself as a test function to get
+
+    \begin{equation*}
+    \begin{aligned}
+        \frac{d}{dt} \frac12 &\norm{v}^2_{\Ltwo{\Omega}} = \int_{\Omega} v_t v = \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v \d S - D_v \int_{\Omega} \nabla v \cdot \nabla v - d_v \int_{\Omega} v v \\
+        &= P_v \int_{\Gamma} v \d S - \kon \int_{\Gamma} u^2 v^2 \d S + \koff \int_{\Gamma} u_b v \d S  - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} - d_v \norm{v}^2_{\Ltwo{\Omega}} \\
+        &\leq P_v \int_{\Gamma} v \d S + \koff \int_{\Gamma} u_b v \d S - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} . \\
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    Now we apply Young's equality with $\varepsilon$ to the first two integrals in this last expression to derive   
+
+    \begin{equation*}
+    \begin{alignedat}{2}
+        P_v \int_{\Gamma} v \d S &\leq \int_{\Gamma} \left(\varepsilon v^2 + \frac{1}{4 \varepsilon} P_v^2 \right) \d S = \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{4\varepsilon} P_v^2 | \Gamma | &&=: \varepsilon \norm{v}^2_{\Ltwo{\Omega}} + \frac{1}{2}B_\varepsilon ,\\
+        \koff \int_\Gamma u_b v &\leq \int_\Gamma \left(\varepsilon + \frac{1}{4 \varepsilon} \koff^2 u_b^2 \right) \d S = \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{4\varepsilon} \koff^2 \norm{w}^2_{\Ltwo{\Gamma}} &&=: \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} ,
+    \end{alignedat}
+    \end{equation*}
+
+    \noindent
+    which, when plugged into the original estimation, gives
+
+    \begin{equation*}
+        \frac{d}{dt} \frac12 \norm{v}^2_{\Ltwo{\Omega}} \leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} .
+    \end{equation*}
+
+    \noindent
+    To convert the $\Ltwo{\Gamma}$-norm of $v$ on the right-hand side into an $\Ltwo{\Omega}$-norm, we employ the trace inequality from \cref{thm:trace} and get
+
+    \begin{equation*}
+    \begin{aligned}
+        \frac{d}{dt} \frac12 \norm{v}^2_{\Ltwo{\Omega}} &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{H^1(\Omega)} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
+        &= \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} + 2 \varepsilon C_\gamma^2 \norm{\nabla v}^2_{\Ltwo{\Omega}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
+        &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} \\
+        &=: \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + \frac{1}{2} A_\varepsilon \norm{v}^2_{\Ltwo{\Omega}}
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    for small enough $\varepsilon > 0$ and almost all $t$. We are now ready to use Gronwall's inequality to get the final estimate
+
+    \begin{equation*}
+    \begin{aligned}
+        \norm{v}^2_{\Ltwo{\Omega}} &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \int_{0}^{t} \left(B_\varepsilon + D_\varepsilon \norm{w(s)}^2_{\Ltwo{\Gamma}}\right) e^{A_\varepsilon (t - s)} \d s \\
+        &= \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + D_\varepsilon \int_{0}^{t} \norm{w(s)}^2_{\Ltwo{\Gamma}} e^{A_\varepsilon (t - s)} \d s \\
+        &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) \\
+        &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon T} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) \\
+        &=: M_v(T)
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    for almost every $t$.
 \end{proof}
 
-This result allows us to define another operator $\mathcal{T}_2: \odespace^2 \to \pdespace$ sending a tuple $(u^*, u_b^*) \in \odespace^2$ to a solution $v \in \pdespace$ of \cref{eq:frozen_pde}. By combining this step with the previous one, we can use $\mathcal{T} := \mathcal{T}_2 \circ \mathcal{T}_1: \pdespace \to \pdespace$ to iteratively get new solutions. At each step, we modify \cref{eq:frozen_odes} using the input from $\pdespace$ to get a new pair $(u, u_b) \in \odespace^2$, with which we proceed to update \cref{eq:frozen_pde} to get a new $v \in \pdespace$.
+Using these two lemmas, we can define two operators between $\pdespace$ and $\odespace^2$. One takes an arbitrary function $v^* \in \pdespace$ and maps it to the unique solution $(u, u_b) \in \odespace^2$ of \cref{eq:frozen_odes}. Let us refer to this operator as $\mathcal{T}_1: \pdespace \to \odespace^2$. The other, $\mathcal{T}_2: \odespace^2 \to \pdespace$, takes two functions $(u^*, u_b^*) \in \odespace^2$ and defines $\mathcal{T}_2(u^*, u_b^*)$ as the unique solution $v \in \pdespace$ to \cref{eq:frozen_pde}. Combining these two operators, we define
+
+\begin{equation*}
+    \mathcal{T} = \mathcal{T}_1 \circ \mathcal{T}_2 : \odespace^2 \to \odespace^2.
+\end{equation*}
+
+\noindent
+We consider what it means for this operator to have a fixed point. That is, suppose we have functions $(u, u_b) \in \odespace^2$ such that $\mathcal{T}(u, u_b) = (u, u_b)$, and let $v \in \pdespace$ denote the intermediate value $v = \mathcal{T}_2(u, u_b)$.
 
 \begin{lemma}{}{contraction}
     For $\widetilde{T} > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that
@@ -141,8 +245,8 @@ We have now gathered enough results to prove the main statement of this section.
 
 % \begin{equation*}
 %     \begin{aligned}
-%         \mathcal{X} &:= \left\{ v \in L^2(0, T; \Omega) \cap C([0, T]; L^2(\Omega)) \mid v \geq 0 \text{ and } v \vert_{\partial C}(\ \cdot\ , x) \in C([0, T]) \text{ for every } x \in \partial C \right\} \\
-%         \mathcal{Y} &:= \left\{ u \in L^2(0, T; H^1(\Omega)) \mid u \geq 0 \text{ and } u' \in L^2(0, T; H^{-1}(\Omega)) \right\}
+%         \mathcal{X} &:= \left\{ v \in \Ltwo{0, T; \Omega} \cap C([0, T]; \Ltwo{\Omega}) \mid v \geq 0 \text{ and } v \vert_{\partial C}(\ \cdot\ , x) \in C([0, T]) \text{ for every } x \in \partial C \right\} \\
+%         \mathcal{Y} &:= \left\{ u \in \Ltwo{0, T; H^1(\Omega)} \mid u \geq 0 \text{ and } u' \in \Ltwo{0, T; H^{-1}(\Omega)} \right\}
 %     \end{aligned}
 % \end{equation*}
 

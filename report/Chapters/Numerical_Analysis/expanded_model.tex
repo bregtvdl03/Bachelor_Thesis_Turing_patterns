@@ -3,10 +3,10 @@ Now that we are working with simulations, we can make our model slightly more co
 \begin{equation}
 \label{eq:expanded_pdes}
 \begin{aligned}
-    u_t &= D_u \Delta u + P_u + \alpha u_b - \delta_u u - 2 k_\text{on} u^2 v + 2 k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
-    u_{b,t} &= D_{u_b} \Delta u_b - \delta_{u_b} u_b + k_\text{on} u^2 v - k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
+    u_t &= D_u \Delta u + P_u + \alpha u_b - \delta_u u - 2 \kon u^2 v + 2 \koff u_b & \text{on } &(0, T) \times \Gamma, \\
+    u_{b,t} &= D_{u_b} \Delta u_b - \delta_{u_b} u_b + \kon u^2 v - \koff u_b & \text{on } &(0, T) \times \Gamma, \\
     v_t &= D_v \Delta v - \delta_v v & \text{in } &(0, T) \times \Omega, \\
-    D_v \pderiv[v]{\nu} &= P_v - k_\text{on} u^2 v + k_\text{off} u_b & \text{on } &(0, T) \times \Gamma, \\
+    D_v \pderiv[v]{\nu} &= P_v - \kon u^2 v + \koff u_b & \text{on } &(0, T) \times \Gamma, \\
     D_v \pderiv[v]{\nu} &= 0 & \text{on } &(0, T) \times \Gamma, \\
 \end{aligned}
 \end{equation}
