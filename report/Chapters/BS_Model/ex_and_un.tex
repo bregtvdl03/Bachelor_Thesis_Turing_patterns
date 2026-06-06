@@ -98,7 +98,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \norm{\nabla v_{-}}^2$, so \todo{formally say "for all $t$"} for all almost every $t$, we have,
 
     \begin{equation*}
-        \frac{d}{dt} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = \frac{d}{dt} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
+         \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 =  \frac{\d}{\d t} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
     \end{equation*}
 
     \noindent
@@ -106,7 +106,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     
     \begin{equation*}
         \begin{aligned}
-        \frac{d}{dt} &\frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = - \int_{\Omega} v_t v_{-} = D_v \int_{\Omega} \nabla v \cdot \nabla v_- + d_v \int_{\Omega} v v_- - \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v_-  \d S \\
+         \frac{\d}{\d t} &\frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = - \int_{\Omega} v_t v_{-} = D_v \int_{\Omega} \nabla v \cdot \nabla v_- + d_v \int_{\Omega} v v_- - \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v_-  \d S \\
         &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - d_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S + \kon \int_{\Gamma} u^2 v v_-  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
         &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - d_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S - \kon \int_{\Gamma} u^2 (v_-)^2  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
         &\leq 0,
@@ -127,7 +127,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 
     \begin{equation*}
     \begin{aligned}
-        \frac{d}{dt} \frac12 &\norm{v}^2_{\Ltwo{\Omega}} = \int_{\Omega} v_t v = \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v \d S - D_v \int_{\Omega} \nabla v \cdot \nabla v - d_v \int_{\Omega} v v \\
+         \frac{\d}{\d t} \frac12 &\norm{v}^2_{\Ltwo{\Omega}} = \int_{\Omega} v_t v = \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v \d S - D_v \int_{\Omega} \nabla v \cdot \nabla v - d_v \int_{\Omega} v v \\
         &= P_v \int_{\Gamma} v \d S - \kon \int_{\Gamma} u^2 v^2 \d S + \koff \int_{\Gamma} u_b v \d S  - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} - d_v \norm{v}^2_{\Ltwo{\Omega}} \\
         &\leq P_v \int_{\Gamma} v \d S + \koff \int_{\Gamma} u_b v \d S - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} . \\
     \end{aligned}
@@ -147,7 +147,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     which, when plugged into the original estimation, gives
 
     \begin{equation*}
-        \frac{d}{dt} \frac12 \norm{v}^2_{\Ltwo{\Omega}} \leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} .
+         \frac{\d}{\d t} \frac12 \norm{v}^2_{\Ltwo{\Omega}} \leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} .
     \end{equation*}
 
     \noindent
@@ -155,7 +155,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 
     \begin{equation*}
     \begin{aligned}
-        \frac{d}{dt} \frac12 \norm{v}^2_{\Ltwo{\Omega}} &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{H^1(\Omega)} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
+         \frac{\d}{\d t} \frac12 \norm{v}^2_{\Ltwo{\Omega}} &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{H^1(\Omega)} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
         &= \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} + 2 \varepsilon C_\gamma^2 \norm{\nabla v}^2_{\Ltwo{\Omega}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
         &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} \\
         &=: \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + \frac{1}{2} A_\varepsilon \norm{v}^2_{\Ltwo{\Omega}}
@@ -163,11 +163,11 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     \end{equation*}
 
     \noindent
-    for small enough $\varepsilon > 0$ and almost all $t$. We are now ready to use Gronwall's inequality to get the final estimate
+    for small enough $\varepsilon > 0$ and almost every $t$. We are now ready to use Gronwall's inequality to get the final estimate
 
     \begin{equation*}
     \begin{aligned}
-        \norm{v}^2_{\Ltwo{\Omega}} &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \int_{0}^{t} \left(B_\varepsilon + D_\varepsilon \norm{w(s)}^2_{\Ltwo{\Gamma}}\right) e^{A_\varepsilon (t - s)} \d s \\
+        \norm{v(t)}^2_{\Ltwo{\Omega}} &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \int_{0}^{t} \left(B_\varepsilon + D_\varepsilon \norm{w(s)}^2_{\Ltwo{\Gamma}}\right) e^{A_\varepsilon (t - s)} \d s \\
         &= \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + D_\varepsilon \int_{0}^{t} \norm{w(s)}^2_{\Ltwo{\Gamma}} e^{A_\varepsilon (t - s)} \d s \\
         &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) \\
         &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon T} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) \\
@@ -186,21 +186,145 @@ Using these two lemmas, we can define two operators between $\pdespace$ and $\od
 \end{equation*}
 
 \noindent
-We consider what it means for this operator to have a fixed point. That is, suppose we have functions $(u, u_b) \in \odespace^2$ such that $\mathcal{T}(u, u_b) = (u, u_b)$, and let $v \in \pdespace$ denote the intermediate value $v = \mathcal{T}_2(u, u_b)$. 
+We consider what it means for this operator to have a fixed point. That is, suppose we have functions $(u, u_b) \in \odespace^2$ such that $\mathcal{T}(u, u_b) = (u, u_b)$, and let $v \in \pdespace$ denote the intermediate value $v = \mathcal{T}_2(u, u_b)$. Given that then $\mathcal{T}_1(v) = (u, u_b)$, by definition this means that $v$ solves \cref{eq:weak_pde} for almost every $t \in (0, T)$, and $w = (u, u_b)$ solves \cref{eq:weak_ode} for almost every $t \in (0, T)$ and $x \in \Gamma$, meaning that $v$, $u$ and $u_b$ are weak solutions of our model. Conversely, if $v$, $u$ and $u_b$ are some weak solutions to the model, then by the uniqueness properties of \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we must have that $\mathcal{T}_1(v) = (u, u_b)$ and $\mathcal{T}_2(u, u_b) = v$, and thus $\mathcal{T}(u, u_b) = (u, u_b)$.
+
+It should be clear now why we are looking to apply the Banach fixed point theorem. If we prove that $\mathcal{T}$ is a contraction, we can guarantee the existence of a fixed point and therefore a weak solution. Since every weak solution of the model is also a fixed point, the theorem also grants us uniqueness of such solutions. To prove that $\mathcal{T}$ is a contraction, we first show this for $\mathcal{T}_1$ and $\mathcal{T}_2$ separately, after which we can easily combine the results.
+
+\begingroup
+\newcommand{\vb}{\overline{v}}
+\newcommand{\vt}{\widetilde{v}}
+\newcommand{\ub}{\overline{u}}
+\newcommand{\ut}{\widetilde{u}}
+\newcommand{\ubb}{\overline{u}_b}
+\newcommand{\ubt}{\widetilde{u}_b}
 
 \begin{lemma}{}{contraction}
-    For $\widetilde{T} > 0$ small enough, $\mathcal{T}: \pdespace \to \pdespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that
+    For $T > 0$ small enough, $\mathcal{T}_1: \pdespace \to \odespace^2$ is a contraction. That is, there is a $q \in [0, 1)$ such that
     
     \begin{equation*}
-        \norm{\mathcal{T} v}_\pdespace \leq q \norm{v}_\pdespace
+        \norm{\mathcal{T}_1 (\vb) - \mathcal{T}_1 (\vt)}_{\odespace^2}^2 \leq q \norm{\vb - \vt}_\pdespace^2
     \end{equation*}
 
-    for every $v \in \pdespace$.
+    for every $\vb, \vt \in \pdespace$.
 \end{lemma}
 
 \begin{proof}
-    \todo{proof}
+    Let $\vb, \vt \in \pdespace$ and define $\ub, \ubb, \ut$ and $\ubt$ by $(\ub, \ubb) := \mathcal{T}_1(\vb)$ and $(\ut, \ubt) := \mathcal{T}_1(\vt)$. We now denote their differences by
+
+    \begin{equation*}
+        v := \vb - \vt, \qquad u := \ub - \ut \qquad \text{and} \qquad u_b := \ubb - \ubt,
+    \end{equation*}
+
+    \noindent
+    such that
+
+    \begin{equation*}
+        \norm{\mathcal{T}_1 (\vb) - \mathcal{T}_1 (\vt)}_{\odespace^2}^2 = \norm{(\ub, \ubt) - (\ut, \ubt)}_{\odespace^2}^2 = \norm{(u, u_b)}_{\odespace^2}^2 = \norm{u}_{\odespace}^2 + \norm{u_b}_{\odespace}^2.
+    \end{equation*}
+
+    \noindent
+    We therefore seek to estimate these separate differences $u$ and $u_b$ in terms of $v$. Starting off with $u$, we see that it satisfies
+    \todo{first step?}
+    \begin{equation*}
+    \begin{aligned}
+        \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &= 2 \int_\Gamma u_t u \d S \\
+        &= 2 \int_\Gamma (\ub_t - \ut_t) u \d S \\
+        &= 2 \int_\Gamma \left( \alpha (\ubb - \ubt) - d_u (\ub - \ut) - 2 \kon (\ub^2 \vb - \ut^2 \vt) + 2 \koff (\ubb - \ubt) \right) u \d S \\
+        &= 2 (\alpha + 2 \koff) \int_\Gamma u u_b \d S - 2 d_u \int_\Gamma u^2 \d S - 4 \kon \int_\Gamma (\ub^2 \vb - \ut^2 \vt) u \d S
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    for almost every $t$, at which point we use the identity
+
+    \begin{equation} \label{eq:contraction_identity_1}
+        \ub^2 \vb - \ut^2 \vt = \ub^2 \vb - \ut^2 \vb + \ut^2 \vb - \ut^2 \vt = (\ub^2 - \ut^2) \vb + \ut^2 v = (\ub + \ut) \vb u + \ut^2 v
+    \end{equation}
+
+    \noindent
+    to further derive
+    \todo{overflow}
+
+    \begin{equation*}
+    \begin{aligned}
+        \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &= 2 (\alpha + 2 \koff) \int_\Gamma u u_b \d S - 2 d_u \int_\Gamma u^2 \d S - 4 \kon \int_\Gamma (\ub + \ut) \vb u^2 \d S - 4 \kon \int_\Gamma \ut^2 v u \d S \\
+        &\leq 2 (\alpha + 2 \koff) \int_\Gamma u u_b \d S - 2 d_u \int_\Gamma u^2 \d S + 4 \kon \int_\Gamma \left| (\ub + \ut) \vb \right| u^2 \d S + 4 \kon \int_\Gamma \ut^2 \left| v u \right| \d S \\
+        &\leq 2(\alpha + 2 \koff) \int_\Gamma u u_b \d S + \left(8 \kon M_u (T) M_v (T) - 2 d_u\right) \norm{u}_{\Ltwo{\Gamma}}^2 + 4 \kon M_u (T)^2 \int_\Gamma | v u | \d S . \\
+    \end{aligned}
+    \end{equation*}
+    
+    \noindent
+    To further separate the mixed terms, we use Young's inequality twice and estimate
+
+    \begin{equation*}
+    \begin{aligned}
+        \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &\leq A_1(T) \norm{u}_{\Ltwo{\Gamma}}^2 + A_2 \norm{u_b}_{\Ltwo{\Gamma}}^2 + B_1(T) \norm{v}_{\Ltwo{\Gamma}}^2 , \\
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    where $A_1(T)$, $A_2$ and $B_1(T)$ are defined as
+
+    \begin{equation*}
+        A_1(T) := 8 \kon M_u (T) M_v (T) - 2 d_u + \alpha + 2 \koff + 2 \kon M_u (T)^2
+    \end{equation*}
+    \begin{equation*}
+        A_2 := \alpha + 2 \koff \qquad \text{and} \qquad B_1(T) := 2 \kon M_u (T)^2.
+    \end{equation*}
+
+    \noindent
+    Using the same arguments, we get a similar estimate for $\frac{\d}{\d t} \norm{u_b}_{\Ltwo{\Gamma}}^2$, namely
+
+    \begin{equation*}
+    \begin{aligned}
+        \frac{\d}{\d t} \norm{u_b}_{\Ltwo{\Gamma}}^2 &= 2 \int_\Gamma \left(\left(\ubb\right)_t - \left(\ubt\right)_t\right) u_b \d S \\
+        &= - 2 \left(d_{u_b} + \koff\right) \int_\Gamma u_b^2 \d S + 2 \kon \int_\Gamma \left(\ub^2 \vb - \ut^2 \vt\right) u_b \d S \\
+        &= - 2 \left(d_{u_b} + \koff\right) \int_\Gamma u_b^2 \d S + 2 \kon \int_\Gamma \left(\ub + \ut\right) \vt u u_b \d S + 2 \kon \int_\Gamma \ut^2 v u_b \d S \\
+        &\leq - 2 \left(d_{u_b} + \koff\right) \int_\Gamma u_b^2 \d S + 2 \kon \int_\Gamma \left(\ub + \ut\right) \vt \left| u u_b \right| \d S + 2 \kon \int_\Gamma \ut^2 \left| v u_b \right| \d S \\
+        &\leq - 2 \left(d_{u_b} + \koff\right) \int_\Gamma u_b^2 \d S + 4 \kon M_u(T) M_v(T) \int_\Gamma \left| u u_b \right| \d S + 2 \kon M_u(T)^2 \int_\Gamma \left| v u_b \right| \d S \\
+        &\leq A_3(T) \norm{u_b}_{\Ltwo{\Gamma}}^2 + A_4(T) \norm{u}_{\Ltwo{\Gamma}}^2 + B_2(T) \norm{v}_{\Ltwo{\Gamma}}^2 ,\\
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    where $A_3(T)$, $A_4(T)$ and $B_2(T)$ are given by
+
+    \begin{equation*}
+        A_3(T) := 2 \kon M_u(T) M_v(T) + \kon M_u(T)^2 - 2 d_{u_b} - 2 \koff ,
+    \end{equation*}
+    \begin{equation*}
+        A_4(T) := 2 \kon M_u(T) M_v(T) \qquad \text{and} \qquad B_2(T) := \kon M_u(T)^2 .
+    \end{equation*}
+
+    \noindent
+    To merge these estimates, we let $A(T) := 2 \max \left(A_1(T), A_2, A_3(T), A_4(T)\right)$ and $B(T) := 2 \max \left(B_1(T), B_2(T)\right)$ and sum to get \todo{overflow}
+
+    \begin{equation*}
+        \frac{\d}{\d t} \left(\norm{u}_{\Ltwo{\Gamma}}^2 + \norm{u_b}_{\Ltwo{\Gamma}}^2\right) \leq A(T) \left(\norm{u}_{\Ltwo{\Gamma}}^2 + \norm{u_b}_{\Ltwo{\Gamma}}^2\right) + B(T) \norm{v}_{L^2(\Gamma)}^2
+    \end{equation*}
+
+    \noindent
+    for almost all $t$. An application of Gronwall's inequality gives \todo{Trace inequality?}
+
+    \begin{equation*}
+    \begin{aligned}
+        \norm{u(t)}_{\Ltwo{\Gamma}}^2 + \norm{u_b(t)}_{\Ltwo{\Gamma}}^2 &\leq \norm{u(0)}_{\Ltwo{\Gamma}}^2 + \norm{u_b(0)}_{\Ltwo{\Gamma}}^2 + B(T) \int_{0}^{t} \norm{v(s)}_{\Ltwo{\Gamma}}^2 e^{(t - s) A(T)} \d s \\
+        &\leq B(T) e^{T A(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 , \\
+    \end{aligned}
+    \end{equation*}
+
+    \noindent
+    since the initial conditions of $\ub$ and $\ut$ are the same, and therefore $u(0) = 0$ for every $x \in \Gamma$. Naturally, the same holds for $u_b(0)$. After integrating from 0 to $T$, we can conclude that
+
+    \begin{equation*}
+        \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 \leq T B(T) e^{T A(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 .
+    \end{equation*}
+
+    \noindent
+    
 \end{proof}
+
+\endgroup
 
 We have now gathered enough results to prove the main statement of this section.
 
