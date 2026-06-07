@@ -1,4 +1,73 @@
-We begin by recalling and defining some general tools that play an important role throughout this thesis. The first few concepts are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
+We begin by recalling and defining some general tools that play an important role throughout this thesis. The first are a few inequalities that are mainly used in the estimates of our existence and uniqueness proof.
+
+\begin{lemma}{Young's inequality}{}
+    For every $a, b \in \R$, we have
+
+    \begin{equation*}
+        ab \leq \frac{1}{2} \left(a^2 + b^2\right) .
+    \end{equation*}
+
+    \noindent
+    More generally, for every $\varepsilon > 0$, we have
+
+    \begin{equation*}
+        ab \leq \varepsilon a^2 + \frac{1}{4 \varepsilon} b^2 .
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Let $a, b \in \R$ and $\varepsilon > 0$. Then
+
+    \begin{equation*}
+        0 \leq \left(\sqrt{\varepsilon} a - \frac{1}{2 \sqrt{\varepsilon}} b\right)^2 = \varepsilon a^2 - ab + \frac{1}{4 \varepsilon} b^2 .
+    \end{equation*}
+
+    \noindent
+    This proves the second inequality. The first inequality is a special case of the second, with $\varepsilon$ set to $\frac{1}{2}$.
+\end{proof}
+
+The following is a much more complex inequality, which is used very often in the study of differential equations.
+
+\begin{lemma}{Gronwall's inequality}{gronwall}
+    Let $I$ be a real interval with starting point $a \in \R$ and $u, \alpha, \beta: I \to \R$ be continuous functions, where $\alpha$ and $\beta$ are nonnegative. If $u$ is differentiable in $I^\circ$ and satisfies
+    
+    \begin{equation*}
+        u'(t) = \alpha(t) + \beta(t) u(t)
+    \end{equation*}
+    
+    \noindent
+    for every $t \in I^\circ$, then it also satisfies
+
+    \begin{equation*}
+        u(t) \leq u(a)e^{\int_{a}^{t} \beta(s) \d s} + \int_{a}^{t} \alpha(s) e^{\int_{s}^{t} \beta(r) \d r} \d s .
+    \end{equation*}
+
+    \noindent
+    If $\beta$ is a constant, this simplifies to
+
+    \begin{equation*}
+        u(t) \leq u(a)e^{\beta(t - a)} + \int_{a}^{t} \alpha(s) e^{\beta(t - s)} \d s .
+    \end{equation*}
+
+    \noindent
+    This is known as the \emph{differential form} of Gronwall's inequality. We also have an \emph{integral form}, which is especially useful when dealing with non-differentiable functions. If $u, \alpha, \beta: I \to \R$ are integrable functions, $\alpha$ and $\beta$ are nonnegative and $u$ satisfies
+
+    \begin{equation*}
+        u(t) \leq \alpha(t) + \int_{a}^{t} \beta(s) u(s) \d s
+    \end{equation*}
+
+    \noindent
+    for all $t \in I$, then
+
+    \begin{equation*}
+        u(t) \leq \alpha(t) + \int_{a}^{t} \alpha(s) \beta(s) e^{\int_{s}^{t} \beta(r) \d r} \d s
+    \end{equation*}
+
+    \noindent
+    for all $t \in I$.
+\end{lemma}
+
+We now continue with some concepts that are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
 
 Let $X$ be a topological space. A function $\phi: X \to \R$ is said to have \emph{compact support} if the set
 

@@ -11,10 +11,10 @@ We denote the weak time derivative of $v$ by $v'$, multiply it by a test functio
 
 \begin{equation*}
     \begin{aligned}
-        \int_\Omega v'(t) \phi &= D \int_\Omega \Delta v(t) \phi - d_v \int_{\Omega} v(t) \phi \\
-                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\partial \Omega} \pderiv[v(t)]{\nu} \phi  \d S - d_v \int_{\Omega} v(t) \phi \\
-                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi + D \int_{\Gamma} \pderiv[v(t)]{\nu} \phi  \d S                 + D \int_{\Gamma_e} \pderiv[v(t)]{\nu} \phi  \d S - d_v \int_{\Omega} v(t) \phi \\
-                               &= - D \int_\Omega \nabla v(t) \cdot \nabla \phi - \int_{\Gamma} f(u(t), u_b(t), v(t)) \phi  \d S    + \int_{\Gamma} r(v(t)) \phi  \d S - d_v \int_{\Omega} v(t) \phi, \\
+        \int_\Omega v'(t) \phi &= D_v \int_\Omega \Delta v(t) \phi - \delta_v \int_{\Omega} v(t) \phi \\
+                               &= - D_v \int_\Omega \nabla v(t) \cdot \nabla \phi + D_v \int_{\partial \Omega} \pderiv[v(t)]{\nu} \phi  \d S - \delta_v \int_{\Omega} v(t) \phi \\
+                               &= - D_v \int_\Omega \nabla v(t) \cdot \nabla \phi + D_v \int_{\Gamma} \pderiv[v(t)]{\nu} \phi  \d S                 + D_v \int_{\Gamma_e} \pderiv[v(t)]{\nu} \phi  \d S - \delta_v \int_{\Omega} v(t) \phi \\
+                               &= - D_v \int_\Omega \nabla v(t) \cdot \nabla \phi - \int_{\Gamma} f(u(t), u_b(t), v(t)) \phi  \d S    + \int_{\Gamma} r(v(t)) \phi  \d S - \delta_v \int_{\Omega} v(t) \phi, \\
     \end{aligned}
 \end{equation*}
 
@@ -22,7 +22,7 @@ We denote the weak time derivative of $v$ by $v'$, multiply it by a test functio
 which we can write using inner product notation as
 
 \begin{equation}\label{eq:weak_pde}
-    \inner{v'(t), \phi}_{\Omega} + d_v \inner{v(t), \phi}_{\Omega} = - D \inner{\nabla v(t), \nabla \phi}_{\Omega} - \inner{f(u(t), u_b(t), v(t)), \phi}_{\Gamma} + \inner{r(v(t)), \phi}_{\Gamma}.
+    \inner{v'(t), \phi}_{\Omega} = - D_v \inner{\nabla v(t), \nabla \phi}_{\Omega} - \delta_v \inner{v(t), \phi}_{\Omega} - \inner{f(u(t), u_b(t), v(t)), \phi}_{\Gamma} + \inner{r(v(t)), \phi}_{\Gamma}.
 \end{equation}
 
 \noindent
@@ -44,8 +44,8 @@ almost everywhere, where $F: \R \times \R^2 \to \R^2$ is given by
             f(u, u_b, \gamma v(t, x))  &+ q(u_b)
         \end{aligned}
     \end{pmatrix} = \begin{pmatrix}
-        -2 k_{on} u^2 \gamma v(t, x) + 2 \koff u_b + p_u + \alpha u_b - d_u u \\
-        k_{on} u^2 \gamma v(t, x) - \koff u_b - d_{u_b} u_b
+        -2 k_{on} u^2 \gamma v(t, x) + 2 \koff u_b + P_u + \alpha u_b - \delta_u u \\
+        k_{on} u^2 \gamma v(t, x) - \koff u_b - \delta_{u_b} u_b
     \end{pmatrix} ,
 \end{equation}
 
