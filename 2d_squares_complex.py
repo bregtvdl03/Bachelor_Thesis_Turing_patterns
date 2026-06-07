@@ -20,6 +20,7 @@ import os
 
 OUT_FILE = "out_cells/2d_squares_complex.gif"
 FPS = 10
+WRITE_EVERY = 5000
 
 DOMAIN_TAG      = 100
 MEMBRANE_TAG    = 10
@@ -33,14 +34,14 @@ Du = 1.0        # Diffusion coef for u
 Dv = 10.0       # Diffusion coef for v
 Pu = 0.1        # Production coef for u
 Pv = 0.9        # Production coef for v
-gamma = 64 # Reaction scaling
-kappa = 1       # Additional scaling for w
+gamma = 32**2 # Reaction scaling
+kappa = 50       # Additional scaling for w
 
 Dw      = 1.0   # Diffusion coef for w
 delta_u = 1.0
 delta_w = 1.0
 delta_v = 0.1
-k_on    = 2.0
+k_on    = 20.0
 k_off   = k_on * delta_w - delta_w
 alpha   = (m + n) * delta_w
 
@@ -66,7 +67,7 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 4096
+num_steps = 1000000
 dt = T / num_steps
 
 #endregion
@@ -81,25 +82,28 @@ half_L = L / 2
 cell_size = 8
 half_cell = cell_size / 2
 
+centers = list(itertools.product([-L/4, L/4], repeat=dim))
+
 gmsh.model.add("square_with_holes")
 
-outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
+# outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
 
-holes = []
-centers = list(itertools.product([-L/4, L/4], repeat=dim))
-for (cx, cy) in centers:
-    holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
+# holes = []
+# for (cx, cy) in centers:
+#     holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
 
-main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
+# main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
 
-gmsh.model.occ.synchronize()
+# gmsh.model.occ.synchronize()
 
-gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=DOMAIN_TAG)
-gmsh.model.setPhysicalName(dim, DOMAIN_TAG, "main_domain")
+# gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=DOMAIN_TAG)
+# gmsh.model.setPhysicalName(dim, DOMAIN_TAG, "main_domain")
 
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.12)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.04)
-gmsh.model.mesh.generate(dim)
+# gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.12)
+# gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.04)
+# gmsh.model.mesh.generate(dim)
+
+gmsh.open("meshes/2d_squares.msh")
 
 model_data = gmshio.model_to_mesh(gmsh.model, MPI.COMM_WORLD, rank=0, gdim=dim)
 
@@ -240,14 +244,11 @@ plotter.show_grid(
     ztitle = "z"
 )
 
-blues = mpl.colormaps.get_cmap("Blues").resampled(32)
-ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(32)
-
 plotter.add_mesh(
     u_graph,
     show_edges=False,
     lighting=False,
-    cmap=blues,
+    cmap="Blues",
     clim=[uss_u - perturbation_strength, uss_u + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
@@ -260,7 +261,7 @@ plotter.add_mesh(
     w_graph,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
+    cmap="Reds",
     clim=[uss_u - perturbation_strength, uss_u + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
@@ -274,7 +275,7 @@ plotter.add_mesh(
     opacity=0.8,
     show_edges=False,
     lighting=False,
-    cmap=ylorrd,
+    cmap="Greens",
     clim=[uss_v - perturbation_strength, uss_v + perturbation_strength],
     scalar_bar_args={
         "font_family": "times",
@@ -301,8 +302,6 @@ plotter.write_frame()
 #endregion
 
 #region ========== SOLVING ITERATIVELY ==========
-
-start = time.monotonic()
 
 for n in range(num_steps):
     t += dt
@@ -331,7 +330,7 @@ for n in range(num_steps):
     w_n.x.array[:] = wh.x.array
     v_n.x.array[:] = vh.x.array
     
-    if n % 32 == 0:
+    if n % WRITE_EVERY == 0:
         new_warped = grid_u.warp_by_scalar("uh", factor=warpfactor)
         u_graph.points[:, :] = new_warped.points
         u_graph.point_data["uh"][:] = uh.x.array
@@ -343,17 +342,20 @@ for n in range(num_steps):
         new_warped = grid_v.warp_by_scalar("vh", factor=warpfactor)
         v_graph.points[:, :] = new_warped.points
         v_graph.point_data["vh"][:] = vh.x.array
-                
+
+        plotter.write_frame()
+        
+    if n == WRITE_EVERY - 1:
+        start = time.monotonic()
+    if n >= WRITE_EVERY and n % WRITE_EVERY == 0:
         os.system("clear")
-        eta = timedelta(seconds=round((time.monotonic() - start) / (n + 1) * num_steps - time.monotonic() + start))
+        eta = timedelta(seconds=round((time.monotonic() - start) / (n - WRITE_EVERY + 1) * num_steps - time.monotonic() + start))
         print(f"ETA: {eta}")
         
         print(f"u_n: {min(u_n.x.array)} - {max(u_n.x.array)}")
         print(f"w_n: {min(w_n.x.array)} - {max(w_n.x.array)}")
         print(f"v_n: {min(v_n.x.array)} - {max(v_n.x.array)}")
-
-        plotter.write_frame()
-
+          
 plotter.close()
 
 #endregion

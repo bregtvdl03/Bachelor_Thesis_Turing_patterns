@@ -26,7 +26,7 @@ Du = 1.0    # 1.0 Diffusion coef for u
 Dv = 10.0   # 10.0 Diffusion coef for v
 Pu = 0.1    # Production coef for u
 Pv = 0.9    # Production coef for v
-gamma = 128**2 # 128**2Reaction scaling
+gamma = 128**2 # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)

@@ -91,8 +91,8 @@ gmsh.model.occ.synchronize()
 gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=DOMAIN_TAG)
 gmsh.model.setPhysicalName(dim, DOMAIN_TAG, "main_domain")
 
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.12)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.04)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.04)
+gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.24)
 gmsh.model.mesh.generate(dim)
 
 gmsh.write("meshes/2d_squares.msh")
