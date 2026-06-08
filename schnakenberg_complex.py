@@ -28,7 +28,7 @@ Dv = 10.0       # Diffusion coef for v
 Pu = 0.1        # Production coef for u
 Pv = 0.9        # Production coef for v
 gamma = 32.0**2 # Reaction scaling
-kappa = 50       # Additional scaling for w
+kappa = 50      # Additional scaling for w
 
 Dw      = 1.0   # Diffusion coef for w
 delta_u = 1.0

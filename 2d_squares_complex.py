@@ -20,7 +20,7 @@ import os
 
 OUT_FILE = "out_cells/2d_squares_complex.gif"
 FPS = 10
-WRITE_EVERY = 5000
+WRITE_EVERY = 500
 
 DOMAIN_TAG      = 100
 MEMBRANE_TAG    = 10
@@ -30,14 +30,14 @@ MEMBRANE_TAG    = 10
 m = 2
 n = 1
 
-Du = 1.0        # Diffusion coef for u
-Dv = 10.0       # Diffusion coef for v
+Du = 10.0        # Diffusion coef for u
+Dv = 200.0       # Diffusion coef for v
 Pu = 0.1        # Production coef for u
 Pv = 0.9        # Production coef for v
-gamma = 32**2 # Reaction scaling
-kappa = 50       # Additional scaling for w
+gamma = 64   # Reaction scaling
+kappa = 50      # Additional scaling for w
 
-Dw      = 1.0   # Diffusion coef for w
+Dw      = 10.0   # Diffusion coef for w
 delta_u = 1.0
 delta_w = 1.0
 delta_v = 0.1
@@ -55,7 +55,7 @@ print(uss_u)
 print(uss_w)
 print(uss_v)
 
-perturbation_strength = 0.1
+perturbation_strength = 1.0
 
 def initial_condition_u(x):
     return uss_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
@@ -67,7 +67,7 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 1000000
+num_steps = 100000
 dt = T / num_steps
 
 #endregion
@@ -85,23 +85,6 @@ half_cell = cell_size / 2
 centers = list(itertools.product([-L/4, L/4], repeat=dim))
 
 gmsh.model.add("square_with_holes")
-
-# outer = gmsh.model.occ.addRectangle(-half_L, -half_L, 0, L, L)
-
-# holes = []
-# for (cx, cy) in centers:
-#     holes.append(gmsh.model.occ.addRectangle(cx - half_cell, cy - half_cell, 0, cell_size, cell_size))
-
-# main_domain, _ = gmsh.model.occ.cut([(dim, outer)], [(dim, h) for h in holes])
-
-# gmsh.model.occ.synchronize()
-
-# gmsh.model.addPhysicalGroup(dim, [main_domain[0][1]], tag=DOMAIN_TAG)
-# gmsh.model.setPhysicalName(dim, DOMAIN_TAG, "main_domain")
-
-# gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.12)
-# gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.04)
-# gmsh.model.mesh.generate(dim)
 
 gmsh.open("meshes/2d_squares.msh")
 
@@ -181,18 +164,24 @@ a = u * phi * ds(MEMBRANE_TAG) \
     + w * chi * ds(MEMBRANE_TAG) \
     + v * psi * dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ds(MEMBRANE_TAG) \
-    + dt * Du * ufl.dot(ufl.grad(w), ufl.grad(chi)) * ds(MEMBRANE_TAG) \
+    + dt * Dw * ufl.dot(ufl.grad(w), ufl.grad(chi)) * ds(MEMBRANE_TAG) \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * dx \
-    + dt * gamma * u * phi * ds(MEMBRANE_TAG) \
-    + dt * kappa * gamma * delta_w * w * chi * ds(MEMBRANE_TAG) \
-    + dt * gamma * delta_v * v * psi * ufl.dx \
+    + dt * gamma * (delta_u * u - (alpha + 2 * k_off) * w) * phi * ds(MEMBRANE_TAG) \
+    + dt * kappa * gamma * (delta_w + k_off) * w * chi * ds(MEMBRANE_TAG) \
+    - dt * gamma * k_off * w * psi * ds(MEMBRANE_TAG) \
+    # + dt * gamma * u * phi * ds(MEMBRANE_TAG) \
+    # + dt * kappa * gamma * delta_w * w * chi * ds(MEMBRANE_TAG) \
+    # + dt * gamma * delta_v * v * psi * ufl.dx \
 
 L = u_n * phi * ds(MEMBRANE_TAG) \
     + w_n * chi * ds(MEMBRANE_TAG) \
     + v_n * psi * dx \
-    + dt * gamma * (Pu + alpha * w_n - 2 * k_on * u_n * u_n * v_n + 2 * k_off * w_n) * phi * ds(MEMBRANE_TAG) \
-    + dt * gamma * (Pv - k_on * u_n * u_n * v_n + k_off * w_n) * psi * ds(MEMBRANE_TAG) \
-    + dt * kappa * gamma * (k_on * u_n * u_n * v_n - k_off * w_n) * chi * ds(MEMBRANE_TAG) \
+    + dt * gamma * (Pu - 2 * k_on * u_n * u_n * v_n) * phi * ds(MEMBRANE_TAG) \
+    + dt * gamma * (Pv - k_on * u_n * u_n * v_n) * psi * ds(MEMBRANE_TAG) \
+    + dt * kappa * gamma * (k_on * u_n * u_n * v_n) * chi * ds(MEMBRANE_TAG) \
+    # + dt * gamma * (Pu + alpha * w_n - 2 * k_on * u_n * u_n * v_n + 2 * k_off * w_n) * phi * ds(MEMBRANE_TAG) \
+    # + dt * gamma * (Pv - k_on * u_n * u_n * v_n + k_off * w_n) * psi * ds(MEMBRANE_TAG) \
+    # + dt * kappa * gamma * (k_on * u_n * u_n * v_n - k_off * w_n) * chi * ds(MEMBRANE_TAG) \
 
 #endregion
 
@@ -232,7 +221,6 @@ v_graph = grid_v.warp_by_scalar("vh", factor=warpfactor)
 
 plotter = pyvista.Plotter()
 plotter.open_gif(OUT_FILE, fps=FPS)
-plotter.show_grid()
 plotter.enable_parallel_projection()
 # plotter.isometric_view()
 # plotter.view_xy()
