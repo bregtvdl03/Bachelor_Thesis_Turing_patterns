@@ -65,14 +65,14 @@ The last two things that happen constantly are production and decay. To keep int
 We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $\kon, \koff > 0$, respectively, the production constants by $P_u, P_v > 0$, the upregulation coefficient by $\alpha > 0$, the decay coefficients by $\delta_u, \delta_{u_b}, \delta_v > 0$ and the diffusion coefficient by $D_v > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
 
 \begin{equation*}
-    f(u, u_b, v) := \kon u^2 v - \koff u_b,
+    \kon u^2 v - \koff u_b,
 \end{equation*}
 
 \noindent
 and the production and decay of $u, u_b$ and $v$ are described by
 
 \begin{equation*}
-    p(u, u_b) := P_u + \alpha u_b - \delta_u u,    \qquad   q(u_b) := - \delta_{u_b} u_b    \qquad      \text{and}      \qquad      r := P_v,
+    P_u + \alpha u_b - \delta_u u, \qquad - \delta_{u_b} u_b, \qquad P_v \qquad \text{and} \qquad - \delta_v v,
 \end{equation*}
 
 \noindent
@@ -81,8 +81,8 @@ respectively. The concentrations of receptors can then be described by the syste
 \begin{equation}
     \label{sys:ODEs}
     \begin{aligned}
-        u_t         &= - 2 f(u, u_b, v) + p(u, u_b)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, v) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
+        u_t         &= P_u + \alpha u_b - \delta_u u - 2 \kon u^2 v + 2 \koff u_b   & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= -\delta_{u_b} u_b + \kon u^2 v - \koff u_b                   & \text{on }& (0, T) \times \Gamma. \\
     \end{aligned}
 \end{equation}
 
@@ -94,9 +94,9 @@ Since the dynamics of the ligands include diffusion, they can be described by th
 \begin{equation}
     \label{sys:PDEs}
     \begin{aligned}
-        v_t                   &= D_v \Delta v - \delta_v v       & \text{in }& (0, T) \times \Omega, \\
-        D_v \pderiv[v]{\nu}   &= - f(u, u_b, v) + r(v)      & \text{on }& [0, T) \times \Gamma, \\
-        D_v \pderiv[v]{\nu}   &= 0                          & \text{on }& [0, T) \times \Gamma_e. \\
+        v_t                   &= D_v \Delta v - \delta_v v      & \text{in }& (0, T) \times \Omega, \\
+        D_v \pderiv[v]{\nu}   &= P_v - \kon u^2 v + \koff u_b   & \text{on }& [0, T) \times \Gamma, \\
+        D_v \pderiv[v]{\nu}   &= 0                              & \text{on }& [0, T) \times \Gamma_e. \\
     \end{aligned}
 \end{equation}
 

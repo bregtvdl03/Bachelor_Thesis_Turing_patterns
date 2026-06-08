@@ -10,8 +10,8 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
-        u_t         &= - f(u, u_b, \gamma v^*) + p(u)    & \text{on }& (0, T) \times \Gamma, \\
-        u_{b,t}     &= f(u, u_b, \gamma v^*) + q(u_b)    & \text{on }& (0, T) \times \Gamma. \\
+        u_t         &= P_u + \alpha u_b - \delta_u u - 2 \kon u^2 v^* + 2 \koff u_b   & \text{on }& (0, T) \times \Gamma, \\
+        u_{b,t}     &= - \delta_{u_b} u_b + \kon u^2 v^* - \koff u_b                  & \text{on }& (0, T) \times \Gamma. \\
     \end{aligned}
 \end{equation}
 \todo{weak form?}
@@ -31,7 +31,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 \newcommand{\ubb}{\overline{u}_b}
 \newcommand{\ubt}{\widetilde{u}_b}
 \begin{proof}
-    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $\gamma v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
+    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
     We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$\todo{right?}, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
 
@@ -61,13 +61,13 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     where $L_K(t)$ is defined as
 
     \begin{equation*}
-        L_K(t) := \left[ \max \left\{ 2 \left| \begin{pmatrix}
+        L_K(t) := \sqrt{2} \max \left\{ \left| \begin{pmatrix}
             4 \kon \diam(K) v^*(t, x) + \delta_u \\
             2 \kon \diam(K) v^*(t, x)
-        \end{pmatrix} \right|^2 ,\quad 2 \left| \begin{pmatrix}
+        \end{pmatrix} \right| ,\quad \left| \begin{pmatrix}
             2 \koff + \alpha \\
             \koff + \delta_{u_b}
-        \end{pmatrix} \right|^2 \right\} \right]^{\frac{1}{2}} ,
+        \end{pmatrix} \right| \right\} ,
     \end{equation*}
 
     \noindent
@@ -117,17 +117,17 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 
 \endgroup
 
-We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by \todo{rewrite}
+We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
 
 \begin{equation}\label{eq:frozen_pde}
-    \begin{aligned}
-        \inner{v_t, \phi}_{\Ltwo{\Omega}} &= - \inner{f(u^*, u_b^*, v), \phi}_{\Ltwo{\Gamma}} + \inner{r(v), \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} \\
-        &= \inner{g(v), \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}}, \\
-    \end{aligned}
+\begin{split}
+    \inner{v_t, \phi}_{\Ltwo{\Omega}} = P_v \int_{\Gamma} \phi \d S - \kon \inner{\left(u^*\right)^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b^*, \phi}_{\Ltwo{\Gamma}} \\
+    - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} - \delta_v \inner{v, \phi}_{\Ltwo{\Omega}}.
+\end{split}
 \end{equation}
 
 \noindent
-where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this definition because $u^*$ and $u_b^*$ are fixed. We have now decoupled the PDE from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
+This PDE is now decoupled from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
 
 \begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
     Let $v_0 \in \Ltwo{\Omega}$ be essentially bounded and nonnegative initial conditions and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also nonnegative and bounded by a constant depending on $T$.
@@ -135,20 +135,20 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 
 \begin{proof}
     \todo{Existence and Uniqueness}
-    Now let $v$ be such a local solution. To show that $v$ is nonnegative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \norm{\nabla v_{-}}^2$, so \todo{formally say "for all $t$"} for all almost every $t$, we have,
+    Now let $v$ be such a local solution. To show that $v$ is nonnegative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
 
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 =  \frac{\d}{\d t} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
     \end{equation*}
 
     \noindent
-    due to the \todo{reference}. When we view $v_-$ as a test function and use that $v$ is a solution to the PDE, we get
+    due to the \todo{reference}. We use $v_-$ as a test function and the employ the fact that $v$ is a solution to the PDE, which gives
     
     \begin{equation*}
         \begin{aligned}
          \frac{\d}{\d t} &\frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = - \int_{\Omega} v_t v_{-} = D_v \int_{\Omega} \nabla v \cdot \nabla v_- + \delta_v \int_{\Omega} v v_- - \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v_-  \d S \\
-        &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - \delta_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S + \kon \int_{\Gamma} u^2 v v_-  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
-        &= - D_v \norm{\nabla v_-}^2_{\Ltwo{\Omega}} - \delta_v \norm{v_-}^2_{\Ltwo{\Omega}} - P_v \int_{\Gamma} v_- \d S - \kon \int_{\Gamma} u^2 (v_-)^2  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
+        &= - D_v \norm{\nabla v_-}_{\Ltwo{\Omega; \R^d}}^2 - \delta_v \norm{v_-}_{\Ltwo{\Omega}}^2 - P_v \int_{\Gamma} v_- \d S + \kon \int_{\Gamma} u^2 v v_-  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
+        &= - D_v \norm{\nabla v_-}_{\Ltwo{\Omega; \R^d}}^2 - \delta_v \norm{v_-}_{\Ltwo{\Omega}}^2 - P_v \int_{\Gamma} v_- \d S - \kon \int_{\Gamma} u^2 (v_-)^2  \d S - \koff \int_{\Gamma} u_b v_-  \d S \\
         &\leq 0,
     \end{aligned}
     \end{equation*}
@@ -163,23 +163,23 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     \noindent
     for almost every $t$, and thus $v$ being nonnegative.
 
-    To show that the map $t \mapsto \norm{v}^2_{\Ltwo{\Omega}}$ is essentially bounded, we use $v$ itself as a test function to get
+    To show that the map $t \mapsto \norm{v}_{\Ltwo{\Omega}}^2$ is essentially bounded, we use $v$ itself as a test function to get
 
     \begin{equation*}
     \begin{aligned}
-         \frac{\d}{\d t} \frac12 &\norm{v}^2_{\Ltwo{\Omega}} = \int_{\Omega} v_t v = \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v \d S - D_v \int_{\Omega} \nabla v \cdot \nabla v - \delta_v \int_{\Omega} v v \\
-        &= P_v \int_{\Gamma} v \d S - \kon \int_{\Gamma} u^2 v^2 \d S + \koff \int_{\Gamma} u_b v \d S  - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} - \delta_v \norm{v}^2_{\Ltwo{\Omega}} \\
-        &\leq P_v \int_{\Gamma} v \d S + \koff \int_{\Gamma} u_b v \d S - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} . \\
+         \frac{\d}{\d t} \frac12 &\norm{v}_{\Ltwo{\Omega}}^2 = \int_{\Omega} v_t v = \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v \d S - D_v \int_{\Omega} \nabla v \cdot \nabla v - \delta_v \int_{\Omega} v v \\
+        &= P_v \int_{\Gamma} v \d S - \kon \int_{\Gamma} u^2 v^2 \d S + \koff \int_{\Gamma} u_b v \d S  - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 - \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
+        &\leq P_v \int_{\Gamma} v \d S + \koff \int_{\Gamma} u_b v \d S - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 . \\
     \end{aligned}
     \end{equation*}
 
     \noindent
-    Now we apply Young's equality with $\varepsilon$ to the first two integrals in this last expression to derive   
+    Now we apply Young's equality with $\eps$ to the first two integrals in this last expression to derive   
 
     \begin{equation*}
     \begin{alignedat}{2}
-        P_v \int_{\Gamma} v \d S &\leq \int_{\Gamma} \left(\varepsilon v^2 + \frac{1}{4 \varepsilon} P_v^2 \right) \d S = \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{4\varepsilon} P_v^2 | \Gamma | &&=: \varepsilon \norm{v}^2_{\Ltwo{\Omega}} + \frac{1}{2}B_\varepsilon ,\\
-        \koff \int_\Gamma u_b v &\leq \int_\Gamma \left(\varepsilon + \frac{1}{4 \varepsilon} \koff^2 u_b^2 \right) \d S = \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{4\varepsilon} \koff^2 \norm{w}^2_{\Ltwo{\Gamma}} &&=: \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} ,
+        P_v \int_{\Gamma} v \d S &\leq \int_{\Gamma} \left(\eps v^2 + \frac{1}{4 \eps} P_v^2 \right) \d S = \eps \norm{v}_{\Ltwo{\Gamma}}^2 + \frac{1}{4\eps} P_v^2 | \Gamma | &&=: \eps \norm{v}_{\Ltwo{\Omega}}^2 + \frac{1}{2}B_\eps ,\\
+        \koff \int_\Gamma u_b v &\leq \int_\Gamma \left(\eps + \frac{1}{4 \eps} \koff^2 u_b^2 \right) \d S = \eps \norm{v}_{\Ltwo{\Gamma}}^2 + \frac{1}{4\eps} \koff^2 \norm{w}_{\Ltwo{\Gamma}}^2 &&=: \eps \norm{v}_{\Ltwo{\Gamma}}^2 + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 ,
     \end{alignedat}
     \end{equation*}
 
@@ -187,7 +187,7 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
     which, when plugged into the original estimation, gives
 
     \begin{equation*}
-         \frac{\d}{\d t} \frac12 \norm{v}^2_{\Ltwo{\Omega}} \leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon \norm{v}^2_{\Ltwo{\Gamma}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} .
+         \frac{\d}{\d t} \frac12 \norm{v}_{\Ltwo{\Omega}}^2 \leq \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + 2 \eps \norm{v}_{\Ltwo{\Gamma}}^2 - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 .
     \end{equation*}
 
     \noindent
@@ -195,22 +195,22 @@ where $g(v) := - f(u^*, u_b^*, v) + r(v)$. Note that we can only make this defin
 
     \begin{equation*}
     \begin{aligned}
-         \frac{\d}{\d t} \frac12 \norm{v}^2_{\Ltwo{\Omega}} &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{H^1(\Omega)} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
-        &= \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} + 2 \varepsilon C_\gamma^2 \norm{\nabla v}^2_{\Ltwo{\Omega}} - D_v \norm{\nabla v}^2_{\Ltwo{\Omega}} \\
-        &\leq \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + 2 \varepsilon C_\gamma^2 \norm{v}^2_{\Ltwo{\Omega}} \\
-        &=: \frac{1}{2} B_\varepsilon + \frac{1}{2} D_\varepsilon \norm{w}^2_{\Ltwo{\Gamma}} + \frac{1}{2} A_\varepsilon \norm{v}^2_{\Ltwo{\Omega}}
+         \frac{\d}{\d t} \frac12 \norm{v}_{\Ltwo{\Omega}}^2 &\leq \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + 2 \eps C_\gamma^2 \norm{v}_{H^1(\Omega)}^2 - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 \\
+        &= \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + 2 \eps C_\gamma^2 \norm{v}_{\Ltwo{\Omega}}^2 + 2 \eps C_\gamma^2 \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 \\
+        &\leq \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + 2 \eps C_\gamma^2 \norm{v}_{\Ltwo{\Omega}}^2 \\
+        &=: \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + \frac{1}{2} A_\eps \norm{v}_{\Ltwo{\Omega}}^2
     \end{aligned}
     \end{equation*}
 
     \noindent
-    for small enough $\varepsilon > 0$ and almost every $t$. We are now ready to use Gronwall's inequality to get the final estimate
+    for small enough $\eps > 0$ and almost every $t$. We are now ready to use Gronwall's inequality to get the final estimate
 
     \begin{equation*}
     \begin{aligned}
-        \norm{v(t)}^2_{\Ltwo{\Omega}} &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \int_{0}^{t} \left(B_\varepsilon + D_\varepsilon \norm{w(s)}^2_{\Ltwo{\Gamma}}\right) e^{A_\varepsilon (t - s)} \d s \\
-        &= \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + D_\varepsilon \int_{0}^{t} \norm{w(s)}^2_{\Ltwo{\Gamma}} e^{A_\varepsilon (t - s)} \d s \\
-        &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon t} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon t} - 1\right) \\
-        &\leq \norm{v_0}^2_{\Ltwo{\Omega}} e^{A_\varepsilon T} + \frac{B_\varepsilon}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) + \frac{D_\varepsilon M_{u_b}(T)^2 |\Gamma|}{A_\varepsilon} \left(e^{A_\varepsilon T} - 1\right) \\
+        \norm{v(t)}_{\Ltwo{\Omega}}^2 &\leq \norm{v_0}_{\Ltwo{\Omega}}^2 e^{A_\eps t} + \int_{0}^{t} \left(B_\eps + D_\eps \norm{w(s)}_{\Ltwo{\Gamma}}^2\right) e^{A_\eps (t - s)} \d s \\
+        &= \norm{v_0}_{\Ltwo{\Omega}}^2 e^{A_\eps t} + \frac{B_\eps}{A_\eps} \left(e^{A_\eps t} - 1\right) + D_\eps \int_{0}^{t} \norm{w(s)}_{\Ltwo{\Gamma}}^2 e^{A_\eps (t - s)} \d s \\
+        &\leq \norm{v_0}_{\Ltwo{\Omega}}^2 e^{A_\eps t} + \frac{B_\eps}{A_\eps} \left(e^{A_\eps t} - 1\right) + \frac{D_\eps M_{u_b}(T)^2 |\Gamma|}{A_\eps} \left(e^{A_\eps t} - 1\right) \\
+        &\leq \norm{v_0}_{\Ltwo{\Omega}}^2 e^{A_\eps T} + \frac{B_\eps}{A_\eps} \left(e^{A_\eps T} - 1\right) + \frac{D_\eps M_{u_b}(T)^2 |\Gamma|}{A_\eps} \left(e^{A_\eps T} - 1\right) \\
         &=: M_v(T)
     \end{aligned}
     \end{equation*}
@@ -276,7 +276,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
 
     \begin{equation*}
     \begin{aligned}
-        \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 &= - \kon \int_\Gamma \left(\ub^2 \vb - \ut^2 \vt\right)v \d S + \koff \int_\Gamma u_b v \d S
+        \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 &= - \kon \int_\Gamma \left(\ub^2 \vb - \ut^2 \vt\right)v \d S + \koff \int_\Gamma u_b v \d S
     \end{aligned}
     \end{equation*}
 
@@ -292,7 +292,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
 
     \begin{equation*}
     \begin{aligned}
-        \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + &D_v \norm{\nabla v}_{\Ltwo{\Omega}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
+        \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + &D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
         &= - \kon \int_\Gamma \left(\ub + \ut\right) \vb u v \d S - \kon \int_\Gamma \ut^2 v^2 \d S + \koff \int_\Gamma u_b v \d S \\
         &\leq \kon \int_\Gamma \left|(\ub + \ut) \vb u v\right| \d S + \koff \int_\Gamma u_b v \d S \\
         &\leq 2 \kon M_{u}(T) M_v(T) \int_\Gamma \left|u v\right| \d S + \koff \int_\Gamma u_b v \d S .\\
@@ -305,10 +305,10 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \begingroup
     \allowdisplaybreaks
     \begin{align*}
-        \frac{\d}{\d t} \frac{1}{2} &\norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
-        &\leq 2 \kon M_{u}(T) M_v(T) \left(A_{\varepsilon} \norm{u}_{\Ltwo{\Gamma}}^2 + \varepsilon \norm{v}_{\Ltwo{\Gamma}}^2\right) + \koff \left(A_{\varepsilon} \norm{u_b}_{\Ltwo{\Gamma}}^2 + \varepsilon \norm{v}_{\Ltwo{\Gamma}}^2\right) \\
-        &\leq B_\varepsilon(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\varepsilon} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\varepsilon \varepsilon \norm{v}_{\Ltwo{\Gamma}}^2 \\
-        &\leq B_\varepsilon(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\varepsilon} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\gamma C_\varepsilon \varepsilon \norm{v}_{H^1(\Omega)}^2\\
+        \frac{\d}{\d t} \frac{1}{2} &\norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
+        &\leq 2 \kon M_{u}(T) M_v(T) \left(A_{\eps} \norm{u}_{\Ltwo{\Gamma}}^2 + \eps \norm{v}_{\Ltwo{\Gamma}}^2\right) + \koff \left(A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + \eps \norm{v}_{\Ltwo{\Gamma}}^2\right) \\
+        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\eps \eps \norm{v}_{\Ltwo{\Gamma}}^2 \\
+        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\gamma C_\eps \eps \norm{v}_{H^1(\Omega)}^2\\
     \end{align*}
     \endgroup
 
@@ -317,16 +317,16 @@ It should be clear now why we are looking to apply the Banach fixed point theore
 
     \begin{equation*}
     \begin{aligned}
-        \frac{1}{2} &\norm{v(t)}_{\Ltwo{\Omega}}^2 + (\delta - C_\gamma C_\varepsilon \varepsilon) \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq B_\varepsilon(T) \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \koff A_{\varepsilon} \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 .
+        \frac{1}{2} &\norm{v(t)}_{\Ltwo{\Omega}}^2 + (\delta - C_\gamma C_\eps \eps) \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq B_\eps(T) \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 .
     \end{aligned}
     \end{equation*}
 
     \noindent
-    for almost all $t$. If we now choose $\varepsilon < \frac{\delta}{C_\gamma C_\varepsilon}$, we can estimate both the $\Ltwo{0, T; H^1(\Omega)}$-norm and the $\Ltwo{0, T; \Ltwo{\Omega}}$-norm of $v$. The first will only be helpful later, but the latter concludes this proof. First, since $\delta - C_\gamma C_\varepsilon \varepsilon > 0$, we have
+    for almost all $t$. If we now choose $\eps < \frac{\delta}{C_\gamma C_\eps}$, we can estimate both the $\Ltwo{0, T; H^1(\Omega)}$-norm and the $\Ltwo{0, T; \Ltwo{\Omega}}$-norm of $v$. The first will only be helpful later, but the latter concludes this proof. First, since $\delta - C_\gamma C_\eps \eps > 0$, we have
 
     \begin{equation}\label{eq:extra_estimate}
     \begin{aligned}
-        \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq D_\varepsilon(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right) .
+        \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq D_\eps(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right) .
     \end{aligned}
     \end{equation}
 
@@ -334,11 +334,11 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     Second, we can integrate from 0 to $T$ once more to get
 
     \begin{equation*}
-        \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2 \leq T M_\varepsilon(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right).
+        \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2 \leq T M_\eps(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right).
     \end{equation*}
 
     \noindent
-    If we trace back the definitions of this constant $M_\varepsilon(T)$, we see that it is continuous in $T$ with a finite value at $T = 0$. This means that for small enough $T$, we will have that $T M_\varepsilon(T) < 1$, finishing this proof.
+    If we trace back the definitions of this constant $M_\eps(T)$, we see that it is continuous in $T$ with a finite value at $T = 0$. This means that for small enough $T$, we will have that $T M_\eps(T) < 1$, finishing this proof.
 \end{proof}
 
 \begin{lemma}{}{contraction_odes}
@@ -463,7 +463,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
 
     \begin{multline}
         \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 \\
-        \leq T B(T) e^{T A(T)} D_\varepsilon(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right) + \overbrace{T B(T) e^{T A(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2}^{\geq 0},
+        \leq T B(T) e^{T A(T)} D_\eps(T) \left(\norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2\right) + \overbrace{T B(T) e^{T A(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2}^{\geq 0},
     \end{multline}
 
     \noindent
@@ -471,7 +471,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
 
     \begin{equation*}
     \begin{aligned}
-        \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 \leq \frac{T B(T) e^{T A(T)}}{1 - T B(T) e^{T A(T)} D_\varepsilon(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2.
+        \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 \leq \frac{T B(T) e^{T A(T)}}{1 - T B(T) e^{T A(T)} D_\eps(T)} \norm{v}_{\Ltwo{0, T; \Ltwo{\Omega}}}^2.
     \end{aligned}
     \end{equation*}
 

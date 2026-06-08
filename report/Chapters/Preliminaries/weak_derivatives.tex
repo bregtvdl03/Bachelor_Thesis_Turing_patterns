@@ -70,26 +70,23 @@ With this new notion of weak differentiability, we can define new spaces of regu
         \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L^p(\Omega)}^p \right)^{1/p} ,
     \end{equation*}
 
-    the space becomes complete, and thus forms a Banach space.
-
-    \bigskip
-    Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$, but for $p = 2$ it also forms a Hilbert space. We can say this for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
+    the space becomes complete, and thus forms a Banach space. Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$ and additionally forms a Hilbert space for $p = 2$. This holds for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
 
     \begin{equation*}
         \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{\Ltwo{\Omega}} ,
     \end{equation*}
 
-    forming a Hilbert space.
-    
-    \bigskip
-    A useful subset of $W^{k,p}(\Omega)$ is $W^{k,p}_0(\Omega)$, which is defined as the closure of $C^\infty_c(\Omega)$ as a subset of $W^{k,p}(\Omega)$. For the case of $k = 2$, we write  $H^k_0(\Omega) := W^{k,2}_0(\Omega)$. 
-    
-    \bigskip
-    Lastly, we define and $H^{-1}(\Omega)$ as the dual space of $H^{1}_{0}(\Omega)$, and denote the pairing between these two spaces as $\pair{\cdot, \cdot}$, i.e. $\pair{f, u} := f(u)$.
+    forming a Hilbert space. We write $H^k(\Omega)^*$ for its dual space and $\pair{u, v}$ for the pairing between $H^k(\Omega)^*$ and $H^{k}(\Omega)$, i.e.
+
+    \begin{equation*}
+        \pair{u, v} := u(v)
+    \end{equation*}
+
+    for all $u \in H^k(\Omega)^*$ and $v \in H^k(\Omega)$.
 \end{definition}
 
 \todo{Evans calculus for time derivatives}
-When $\partial \Omega$ is sufficiently smooth, we have a more intuitive way to interpret the space $H^1 (\Omega)$. In fact, we can describe $H_0^1(\Omega)$ as the subset of $H^1(\Omega)$ containing all functions that vanish on the boundary. This interpretation has an important caveat. By definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary $\partial \Omega$ is a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
+In this thesis, we will be studying a bulk-surface model. This means that a function $v$ living on $\Omega$ will be reacting with some functions living on a subset of the boundary $\partial \Omega$. These reactions will depend on the values of $v$ on this boundary, but by definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary \emph{is} a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
 
 \begin{proposition}{Approximation by smooth functions}{approx_by_smooth}
     If the boundary $\partial \Omega$ is Lipschitz and $ 1 \leq p < \infty$, the set of all smooth functions $C^\infty(\overline{\Omega})$ is dense in $W^{k,p}(\Omega)$.
@@ -109,7 +106,7 @@ This allows us to extend our knowledge of functions defined on the boundary to f
     
     \begin{enumerate}[label=(\roman*)]
         \item $\gamma u = u \vert_{\partial \Omega}$ for any $u \in W^{1,p}(\Omega) \cap C(\overline{\Omega})$ and
-        \item \label{item:trace_property_2} $\norm{\gamma u}_{\Ltwo{\partial \Omega}} \leq C_\gamma \norm{u}_{W^{1,p}(\Omega)}$,
+        \item \label{item:trace_property_2} $\norm{\gamma u}_{L^p{\partial \Omega}} \leq C_\gamma \norm{u}_{W^{1,p}(\Omega)}$,
     \end{enumerate}
     
     where the constant $C_\gamma > 0$ only depends on $p$ and $\Omega$.
@@ -140,5 +137,5 @@ A full proof of this theorem can be found in \cite{evans2010partial}, but we wil
 \end{proof}
 
 \begin{definition}{}{}
-    This operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ is referred to as the \emph{trace operator}. Then $\gamma u$ is called the \emph{trace} of $u$, and is sometimes denoted by $u \vert_{\partial \Omega}$.
+    This operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ is referred to as the \emph{trace operator}. $\gamma u$ is called the \emph{trace} of $u$, and is sometimes denoted by $u \vert_{\partial \Omega}$ or just $u$.
 \end{definition}

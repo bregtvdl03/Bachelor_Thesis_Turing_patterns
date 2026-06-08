@@ -1,5 +1,4 @@
-We begin by recalling and defining some general tools that play an important role throughout this thesis. The first are a few inequalities that are mainly used in the estimates of our existence and uniqueness proof.
-
+We begin by specifying some notation and recalling and defining some general tools that play an important role throughout this thesis. We will be working with a wide variety of spaces, many of them having their own inner products and norms. First of all, we denote the Euclidean norm on $\R^m$ by $\left|\ \cdot\ \right|$, for all $m \in \N$. For a more general normed space $X$, where $X$ is not equal to $\R^m$ for some $m$, we write $\norm{\ \cdot\ }_X$ for its norm. When this norm is induced by an inner product, we denote this inner product by $\inner{\ \cdot\ , \cdot\ }_X$. The first are a few inequalities that are mainly used in the estimates of our existence and uniqueness proof.
 \begin{lemma}{Young's inequality}{}
     For every $a, b \in \R$, we have
 
@@ -8,22 +7,22 @@ We begin by recalling and defining some general tools that play an important rol
     \end{equation*}
 
     \noindent
-    More generally, for every $\varepsilon > 0$, we have
+    More generally, for every $\eps > 0$, we have
 
     \begin{equation*}
-        ab \leq \varepsilon a^2 + \frac{1}{4 \varepsilon} b^2 .
+        ab \leq \eps a^2 + \frac{1}{4 \eps} b^2 .
     \end{equation*}
 \end{lemma}
 
 \begin{proof}
-    Let $a, b \in \R$ and $\varepsilon > 0$. Then
+    Let $a, b \in \R$ and $\eps > 0$. Then
 
     \begin{equation*}
-        0 \leq \left(\sqrt{\varepsilon} a - \frac{1}{2 \sqrt{\varepsilon}} b\right)^2 = \varepsilon a^2 - ab + \frac{1}{4 \varepsilon} b^2 .
+        0 \leq \left(\sqrt{\eps} a - \frac{1}{2 \sqrt{\eps}} b\right)^2 = \eps a^2 - ab + \frac{1}{4 \eps} b^2 .
     \end{equation*}
 
     \noindent
-    This proves the second inequality. The first inequality is a special case of the second, with $\varepsilon$ set to $\frac{1}{2}$.
+    This proves the second inequality. The first inequality is a special case of the second, with $\eps$ set to $\frac{1}{2}$.
 \end{proof}
 
 The following is a much more complex inequality, which is used very often in the study of differential equations.
@@ -116,10 +115,10 @@ Multiplying with a test function and integrating is sometimes referred to as \em
 An important fact that should be noted is that every function that is square-integrable is also locally integrable. That is, $\Ltwo{\Omega} \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
 
 \begin{definition}{}{}
-    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\varepsilon > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
+    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\eps > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
 
     \begin{equation*}
-        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \varepsilon.
+        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \eps.
     \end{equation*}
 \end{definition}
 
@@ -147,13 +146,13 @@ An important fact that should be noted is that every function that is square-int
     Let $n$ be a positive integer, $a, b > 0$ and $(t_0, x_0) \in \R \times \R^n$. Define
 
     \begin{equation*}
-        R := \{ (t, x) \in \R \times \R^n \mid |t - t_0| \leq a \text{ and } \|x - x_0\| \leq b \}
+        R := \{ (t, x) \in \R \times \R^n \mid |t - t_0| \leq a \text{ and } \left|x - x_0\right| \leq b \}
     \end{equation*}
 
     and let $f: R \to \R^n$ be continuous in $x$ for every fixed $t$, measurable in $t$ for every fixed $x$ and bounded by some time-dependent integrable function $m$,
     
     \begin{equation*}
-        \norm{f(t, x)} \leq m(t)
+        \left|f(t, x)\right| \leq m(t)
     \end{equation*}
 
     for all $(t, x) \in R$. Then the differential equation
