@@ -33,7 +33,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 \begin{proof}
     Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
-    We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$\todo{right?}, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
+    We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
 
     \begin{equation*}
     \begin{aligned}
@@ -142,7 +142,7 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    due to the \todo{reference}. We use $v_-$ as a test function and the employ the fact that $v$ is a solution to the PDE, which gives
+    due to \cref{thm:lionsmagenes}. We use $v_-$ as a test function and the employ the fact that $v$ is a solution to the PDE, which gives
     
     \begin{equation*}
         \begin{aligned}
@@ -154,16 +154,16 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    where we used the nonnegativity of $v_-$ and $u_b$ in the last step. By \todo{reference}, we know that the map $t \mapsto \norm{v_{-}(t)}_{\Ltwo{\Omega}}^2$ should be continuous. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
+    where we used the nonnegativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
 
     \begin{equation*}
-        \norm{v_{-}}_{\Ltwo{\Omega}}^2 = 0
+        \norm{v_{-}}_{\Ltwo{\Omega}} = 0
     \end{equation*}
 
     \noindent
     for almost every $t$, and thus $v$ being nonnegative.
 
-    To show that the map $t \mapsto \norm{v}_{\Ltwo{\Omega}}^2$ is essentially bounded, we use $v$ itself as a test function to get
+    To show that the map $t \mapsto \norm{v(t)}_{\Ltwo{\Omega}}^2$ is essentially bounded, we use $v$ itself as a test function to get
 
     \begin{equation*}
     \begin{aligned}
@@ -263,7 +263,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \end{equation*}
 
     \noindent
-    We can estimate this norm by bounding its time derivative using the weak form of the PDE. We use \todo{reference} to see that
+    We can estimate this norm by bounding its time derivative using the weak form of the PDE. We use \cref{thm:lionsmagenes} to see that
 
     \begin{equation*}
     \begin{aligned}
@@ -489,7 +489,13 @@ We have now gathered enough results to prove the main statement of this section.
     \noindent
     showing that $\mathcal{T}$ is a contraction since $q_2 q_1 \in [0, 1)$.
 
-    We apply the Banach fixed point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$.
+    We apply the Banach fixed point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$. As previously discussed, this corresponds to a unique weak solution on $[0, \widetilde{T}]$. By setting new initial conditions $u_0 = u(T)$, $u_{b,0} = u_b(T)$ and $v_0 = v(T) := \mathcal{T}_1(u, u_b)(T)$ and applying the same process, this solution can be extended to $[0, \overline{T}]$ for some $\overline{T} > \widetilde{T}$. We continue repeating these steps until a maximum interval $I_\text{max}$ is reached, at which point we distinguish three cases.
+
+    \begin{enumerate}
+        \item $[0, T] \subseteq I_{max} \implies $ done
+        \item $I_{max} = [0, \widetilde{T}] \varsubsetneq [0, T] \implies$ extension
+        \item $I_{max} = [0, \widetilde{T}) \varsubsetneq [0, T] \implies$ Lions-Magenes $\implies$ extension
+    \end{enumerate}
 \end{proof}
 
 \endgroup

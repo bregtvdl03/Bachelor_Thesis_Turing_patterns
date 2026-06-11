@@ -1,19 +1,26 @@
-In the field of PDEs, the requirements on time regularity and space regularity are often different. Let for example 
-
-Let $X$ be a Banach space and $T > 0$. A function $f: [0, T] \to X$ is called \emph{strongly measurable} if there is a sequence of simple functions $(f_n)_{n \in \N}$ that converges pointwise to $f$ at almost every $t \in [0, T]$. Now for $p \in [1, \infty]$, the space $L^{p}(0, T; X)$ consists of all strongly measurable functions $u$ such that
+To incorporate time into these new notions of weak differentiability, we first develop the concept of $L^p$-spaces containing functions that are not necessarily real- or complex-valued. Instead, let $X$ be any Banach space and $T > 0$. A function $f: [0, T] \to X$ is then called \emph{strongly measurable} if there is a sequence of simple functions $(f_n)_{n \in \N}$ that converges pointwise to $f$ at almost every $t \in [0, T]$. Now for $p \in [1, \infty]$, the space $L^{p}(0, T; X)$ consists of all strongly measurable functions $u$ such that $\norm{u}_{L^p(0, T; X)} < \infty$, where
 
 \begin{equation*}
-    \norm{u}_{L^p(0, T; X)} := \left( \int_0^T \norm{u(t)}_X \d t \right)^{1/p} < \infty
+    \norm{u}_{L^p(0, T; X)} := \begin{cases}
+        \left( \int_0^T \norm{u(t)}_X^p \d t \right)^{1/p}  & \text{if } p \in (0, \infty), \\
+        \esssup_{t\ \in\ [0, T]} \norm{u(t)}_X              & \text{if } p = \infty. 
+    \end{cases}
 \end{equation*}
 
 \noindent
-for $p \in [1, \infty)$, and
+These spaces are called \emph{Bochner spaces}, and just as with traditional $L^p$-spaces, we can use them to define weak derivatives in time.
 
-\begin{equation*}
-    \norm{u}_{L^\infty(0, T; X)} := \esssup_{t\ \in\ [0, T]} \norm{u(t)}_X < \infty.
-\end{equation*}
+\begin{definition}{}{}
+    We say that $v \in L^1(0, T; X)$ is the \emph{weak time derivative} of $u \in L^1(0, T; X)$, written $v = u'$ or $v = u_t$, when
 
-\noindent
+    \begin{equation*}
+        \int_{0}^{T} u(t) \phi'(t) \d t = - \int_{0}^{T} v(t) \phi(t) \d t
+    \end{equation*}
+
+    \noindent
+    for all $\phi \in C_c^\infty(0, T)$.
+\end{definition}
+
 Lastly, $C([0, T]; X)$ denotes the space of all continuous functions $u: [0, T] \to X$ with
 
 \begin{equation*}
@@ -21,6 +28,22 @@ Lastly, $C([0, T]; X)$ denotes the space of all continuous functions $u: [0, T] 
 \end{equation*}
 
 \noindent
-We can take $X$ to be, for instance, $\Ltwo{\Omega}$. Then formally, $C([0, T]; \Ltwo{\Omega})$ consists of continuous functions $u$ from the interval time [0, T] to $\Ltwo{\Omega}$. For a more intuitive interpretation, you might feel inclined to interpret them as the corresponding functions $\widetilde{u}$ from $[0, T] \times \Omega$ to $\R$, given by $\widetilde{u}(t, x) = u(t)(x)$. We do need to be careful when we use this interpretation, though, as the notation might make it seem like these functions $\widetilde{u}$ are continuous in time, while this is generally not the case. A more accurate way to think about this, is that at every time $t$, the set of points $x \in \Omega$ where $\widetilde{u}$ has a discontinuity in time has measure zero.
+We can take $X$ to be, for instance, $\Ltwo{\Omega}$. Then formally, $C([0, T]; \Ltwo{\Omega})$ consists of continuous functions $u$ from the interval time [0, T] to $\Ltwo{\Omega}$. For a more intuitive interpretation, you might feel inclined to interpret them as the corresponding functions $\widetilde{u}$ from $[0, T] \times \Omega$ to $\R$, given by $\widetilde{u}(t, x) = u(t)(x)$. We do need to be careful when we use this interpretation, though, as the notation might make it seem like these functions $\widetilde{u}$ are continuous in time, while this is generally not the case. Continuity in the $L^2$-norm gives that small changes in time produce small changes in overall spatial profile, but not necessarily at an individual point $x \in \Omega$.
 
-\todo{Caratheodory ?}
+There is an important connection between these two new spaces, which will be very useful in our later arguments for the existence and uniqueness properties of solutions to our model. It is a special case of a result known as the Lions-Magenes lemma, and is presented in \cite{evans2010partial} for a slightly different case.
+
+\begin{theorem}{Lions-Magenes}{lionsmagenes}
+    Suppose that $u \in \Ltwo{0, T; H^1(\Omega)}$ with $u_t \in \Ltwo{0, T; H^1(\Omega)^*}$. Then
+
+    \begin{enumerate}[label=(\roman*)]
+        \item $u \in C([0, T]; \Ltwo{\Omega})$ after possibly being redefined on a set of measure zero,
+        \item the mapping $t \mapsto \norm{u(t)}_{\Ltwo{\Omega}}^2$ is absolutely continuous with derivative \begin{equation*}
+            \frac{\d}{\d t} \norm{u(t)}_{\Ltwo{\Omega}}^2 = 2 \inner{u_t(t), u(t)}_{\Ltwo{\Omega}}
+        \end{equation*}
+        for almost every $t \in [0, T]$, and
+        \item we have the estimate \begin{equation*}
+            \max_{t \in [0, T]} \norm{u(t)}_{\Ltwo{\Omega}} \leq C \left( \norm{u}_{\Ltwo{0, T; H^1(\Omega)}} + \norm{u_t}_{\Ltwo{0, T; H^1(\Omega)^*}} \right) ,
+        \end{equation*}
+        the constant $C$ only depending on $T$.
+    \end{enumerate}
+\end{theorem}
