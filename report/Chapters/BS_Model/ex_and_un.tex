@@ -307,8 +307,8 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \begin{align*}
         \frac{\d}{\d t} \frac{1}{2} &\norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
         &\leq 2 \kon M_{u}(T) M_v(T) \left(A_{\eps} \norm{u}_{\Ltwo{\Gamma}}^2 + \eps \norm{v}_{\Ltwo{\Gamma}}^2\right) + \koff \left(A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + \eps \norm{v}_{\Ltwo{\Gamma}}^2\right) \\
-        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\eps \eps \norm{v}_{\Ltwo{\Gamma}}^2 \\
-        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\gamma C_\eps \eps \norm{v}_{H^1(\Omega)}^2\\
+        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C(T) \eps \norm{v}_{\Ltwo{\Gamma}}^2 \\
+        &\leq B_\eps(T) \norm{u}_{\Ltwo{\Gamma}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{\Gamma}}^2 + C_\gamma^2 C(T) \eps \norm{v}_{H^1(\Omega)}^2\\
     \end{align*}
     \endgroup
 
@@ -316,13 +316,11 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     for almost all $t$. Now let $\delta := \min (\delta_v, D_v)$ and integrate from 0 to $T$ to get
 
     \begin{equation*}
-    \begin{aligned}
-        \frac{1}{2} &\norm{v(t)}_{\Ltwo{\Omega}}^2 + (\delta - C_\gamma C_\eps \eps) \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq B_\eps(T) \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 .
-    \end{aligned}
+        \frac{1}{2} \norm{v(t)}_{\Ltwo{\Omega}}^2 + (\delta - C_\gamma^2 C(T) \eps) \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 \leq B_\eps(T) \norm{u}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2
     \end{equation*}
 
     \noindent
-    for almost all $t$. If we now choose $\eps < \frac{\delta}{C_\gamma C_\eps}$, we can estimate both the $\Ltwo{0, T; H^1(\Omega)}$-norm and the $\Ltwo{0, T; \Ltwo{\Omega}}$-norm of $v$. The first will only be helpful later, but the latter concludes this proof. First, since $\delta - C_\gamma C_\eps \eps > 0$, we have
+    for almost all $t$. If we now choose $\eps < \frac{\delta}{C_\gamma^2 C(T)}$, we can estimate both the $\Ltwo{0, T; H^1(\Omega)}$-norm and the $\Ltwo{0, T; \Ltwo{\Omega}}$-norm of $v$. The first will only be helpful later, but the latter concludes this proof. First, since $\delta - C_\gamma^2 C(T) \eps > 0$, we have
 
     \begin{equation}\label{eq:extra_estimate}
     \begin{aligned}
@@ -405,7 +403,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
         A_1(T) := - 2 \delta_u + \alpha + 2 \koff + 2 \kon M_u (T)^2 , \qquad A_2 := \alpha + 2 \koff
     \end{equation*}
     \begin{equation*}
-        \widetilde{B_1}(T) := 2 \kon M_u (T)^2 \qquad \text{and} \qquad B_1(T) := C_\gamma \widetilde{B_1}(T) .
+        \widetilde{B_1}(T) := 2 \kon M_u (T)^2 \qquad \text{and} \qquad B_1(T) := C_\gamma^2 \widetilde{B_1}(T) .
     \end{equation*}
 
     \noindent
@@ -431,7 +429,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
         A_3(T) := 2 \kon M_u(T) M_v(T) + \kon M_u(T)^2 - 2 \delta_{u_b} - 2 \koff ,
     \end{equation*}
     \begin{equation*}
-        A_4(T) := 2 \kon M_u(T) M_v(T), \qquad \widetilde{B_2}(T) := \kon M_u(T)^2  \qquad \text{and} \qquad B_2(T) := C_\gamma \widetilde{B_2}(T) .
+        A_4(T) := 2 \kon M_u(T) M_v(T), \qquad \widetilde{B_2}(T) := \kon M_u(T)^2  \qquad \text{and} \qquad B_2(T) := C_\gamma^2 \widetilde{B_2}(T) .
     \end{equation*}
 
     \noindent
