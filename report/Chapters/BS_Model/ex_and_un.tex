@@ -489,13 +489,10 @@ We have now gathered enough results to prove the main statement of this section.
     \noindent
     showing that $\mathcal{T}$ is a contraction since $q_2 q_1 \in [0, 1)$.
 
-    We apply the Banach fixed point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$. As previously discussed, this corresponds to a unique weak solution on $[0, \widetilde{T}]$. By setting new initial conditions $u_0 = u(T)$, $u_{b,0} = u_b(T)$ and $v_0 = v(T) := \mathcal{T}_1(u, u_b)(T)$ and applying the same process, this solution can be extended to $[0, \overline{T}]$ for some $\overline{T} > \widetilde{T}$. We continue repeating these steps until a maximum interval $I_\text{max}$ is reached, at which point we distinguish three cases.
+    We apply the Banach fixed point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$. As previously discussed, this corresponds to a unique weak solution on $[0, \widetilde{T}]$. By setting new initial conditions $u_0 = u(T)$, $u_{b,0} = u_b(T)$ and $v_0 = v(T) := \mathcal{T}_1(u, u_b)(T)$ and applying the same process, this solution can be extended to $[0, \overline{T}]$ for some $\overline{T} > \widetilde{T}$. We continue repeating these steps until a maximum interval $I_{\max}$ is reached, at which point we distinguish three cases.
 
-    \begin{enumerate}
-        \item $[0, T] \subseteq I_{max} \implies $ done
-        \item $I_{max} = [0, \widetilde{T}] \varsubsetneq [0, T] \implies$ extension
-        \item $I_{max} = [0, \widetilde{T}) \varsubsetneq [0, T] \implies$ Lions-Magenes $\implies$ extension
-    \end{enumerate}
+    First of all, if $[0, T] \subseteq I_{\max}$, we are immediately done, as we now have a solution on $[0, T]$ with the required properties. If $I_{\max} = [0, T_{\max}]$ for some $T_{\max} < T$, we can set new initial conditions at $u(T_{\max})$, $u_b(T_{\max})$ and $v(T_{\max})$ and extend again, contradicting the fact that $I_{\max}$ is the maximum interval of existence. Lastly, if instead $I_{\max} = [0, T_{\max})$ for some $T_{\max} < T$, we apply \cref{thm:lionsmagenes} to extend $v$ to a continuous function on $[0, T_{\max}]$. This allows us to use the same method again and extend the solution.
+    \todo{flip order}
 \end{proof}
 
 \endgroup

@@ -26,7 +26,7 @@ for all $t \in (0, T)$, which we can write using inner product notation as \todo
 \end{equation}
 
 \noindent
-Using \cref{prop:approx_by_smooth}, we can find the same formula for $\inner{v_t, \phi}_{\Ltwo{\Omega}}$ for more general functions $\phi \in H^1(\Omega)$ . Since we used integration with respect to space in this computation, this expression only depends on time. A weak solution of \cref{sys:PDEs} is therefore required to satisfy \cref{eq:weak_pde} at almost every $t \in (0, T)$ for all $\phi \in H^1(\Omega)$. 
+Note that this also requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $\inner{u^2 v, \phi}_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can find that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this computation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is required to satisfy \cref{eq:weak_pde} at almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
 
 For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. This weakened problem only depends on time, so we fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
 
