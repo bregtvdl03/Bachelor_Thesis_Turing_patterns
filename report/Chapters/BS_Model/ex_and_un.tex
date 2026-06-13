@@ -1,7 +1,7 @@
 Our goal in this section is to prove the following theorem.
 
 \begin{theorem}{Existence and uniqueness of weak solutions}{eq_and_un}
-    Let $u_0, u_{b, 0} \in \Ltwo{\partial \Omega}$ and $v_0 \in \Ltwo{\Omega}$ be essentially bounded and nonnegative initial conditions. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also nonnegative.
+    Let the initial conditions $u_0, u_{b, 0} \in \Ltwo{\partial \Omega}$ and $v_0 \in \Ltwo{\Omega}$ be essentially bounded and non-negative. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
 \end{theorem}
 
 As previously mentioned, the proof will be based on an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
@@ -20,7 +20,7 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system without simultaneously having to worry about $v$ satisfying the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
-    Let $u_0, u_{b,0} \in \Ltwo{\Gamma}$ be essentially bounded and nonnegative initial conditions and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also nonnegative and bounded by a constant depending on $T$.
+    Let the initial conditions $u_0, u_{b,0} \in \Ltwo{\Gamma}$ be essentially bounded and non-negative and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begingroup
@@ -31,7 +31,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 \newcommand{\ubb}{\overline{u}_b}
 \newcommand{\ubt}{\widetilde{u}_b}
 \begin{proof}
-    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proven for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
+    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proved for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
     We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
 
@@ -84,11 +84,11 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     \noindent
     for every $t \in [0, \beta]$. Using Gronwall's inequality and the fact that $w_1(0) = w_2(0)$, we see that this implies that $\left|w_1(t) - w_2(t)\right| = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
 
-    To show that the components $u$ and $u_b$ of this solution $w$ are nonnegative, we use \cref{thm:nagumo}. \todo{Lipschitz condition?}
+    To show that the components $u$ and $u_b$ of this solution $w$ are non-negative, we use \cref{thm:nagumo}. \todo{Lipschitz condition?}
 
     We now let $x$ vary and show that $u$ and $u_b$ have $L^2$ regularity in both space and time. \todo{regularity}
 
-    We can use the nonnegativity to show that $u$ and $u_b$ are bounded. Define $r := u + 2 u_b$ and note that
+    We can use the non-negativity to show that $u$ and $u_b$ are bounded. Define $r := u + 2 u_b$ and note that
 
     \begin{equation*}
         r_t = u_t + 2 u_{b, t} = P_u - \delta_u u + (\alpha - 2 \delta_{u_b}) u_b \leq P_u + m r,
@@ -102,7 +102,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     \end{equation*}
 
     \noindent
-    Now the nonnegativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ let us bound the solutions independently by
+    Now the non-negativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ let us bound the solutions independently by
 
     \begin{equation*}
     \begin{alignedat}{2}
@@ -130,12 +130,12 @@ We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \i
 This PDE is now decoupled from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
 
 \begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
-    Let $v_0 \in \Ltwo{\Omega}$ be essentially bounded and nonnegative initial conditions and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also nonnegative and bounded by a constant depending on $T$.
+    Let the initial condition $v_0 \in \Ltwo{\Omega}$ be essentially bounded and non-negative and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begin{proof}
     \todo{Existence and Uniqueness}
-    Now let $v$ be such a local solution. To show that $v$ is nonnegative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
+    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
 
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 =  \frac{\d}{\d t} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
@@ -154,14 +154,14 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    where we used the nonnegativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
+    where we used the non-negativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
 
     \begin{equation*}
         \norm{v_{-}}_{\Ltwo{\Omega}} = 0
     \end{equation*}
 
     \noindent
-    for almost every $t$, and thus $v$ being nonnegative.
+    for almost every $t$, and thus $v$ being non-negative.
 
     To show that the map $t \mapsto \norm{v(t)}_{\Ltwo{\Omega}}^2$ is essentially bounded, we use $v$ itself as a test function to get
 

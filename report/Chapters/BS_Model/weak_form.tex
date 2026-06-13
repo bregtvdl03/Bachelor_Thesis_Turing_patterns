@@ -1,13 +1,13 @@
-Before we start proving the existence of solutions to this model, we must discuss what kind of solutions we are looking for. Specifically, we will derive the weak formulations of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss the function spaces that are involved.
+Before we start proving the existence of solutions to this model, we must discuss what class of solutions we are considering. Specifically, we will derive the weak formulations of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss which function spaces are suitable.
 
-We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $\widetilde{u}$, $\widetilde{u_b}$ and $\widetilde{v}$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} and note that we can also interpret them as the corresponding functions $u \in \odespace$, $u_b \in \odespace$ and $v \in \pdespace$ given by
+We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $\widetilde{u}$, $\widetilde{u_b}$ and $\widetilde{v}$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} and note that we can also interpret them as the corresponding functions $u \in \odespace$, $u_b \in \odespace$ and $v \in \pdespace$ given by \todo{specify $\odespace$ and $\pdespace$}
 
 \begin{equation*}
     u(t) = \widetilde{u}(t, \cdot\ ), \qquad u_b(t) = \widetilde{u_b}(t, \cdot\ ) \qquad \text{and} \qquad v(t) = \widetilde{v}(t, \cdot\ ).
 \end{equation*}
 
 \noindent
-We denote the weak time derivative of $v$ by $v_t$, multiply it by a test function $\phi \in C^\infty_c(\Omega)$ and integrate on $\Omega$, giving
+We multiply the PDE by a test function $\phi \in C^\infty_c(\Omega)$ and integrate over $\Omega$, giving
 
 \begin{equation*}
     \begin{aligned}
@@ -26,9 +26,9 @@ for all $t \in (0, T)$, which we can write using inner product notation as \todo
 \end{equation}
 
 \noindent
-Note that this also requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $\inner{u^2 v, \phi}_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can find that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this computation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is required to satisfy \cref{eq:weak_pde} at almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
+Note that this also requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $\inner{u^2 v, \phi}_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can show that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this derivation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is a function $v$ in a suitable Sobolev space that satisfies \cref{eq:weak_pde} for almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
 
-For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. This weakened problem only depends on time, so we fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
+For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. To this end, we assume a solution $v \in \pdespace$ of the PDE exists. We fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
 
 \begin{equation}\label{eq:weak_ode}
     w'(t) = F(t, w(t))
@@ -45,7 +45,7 @@ almost everywhere, where $F: \R \times \R^2 \to \R^2$ is given by
 \end{equation}
 
 \noindent
-where $\gamma v$ denotes the trace of $v$ as discussed in \cref{sec:weak_derivatives}. Note that this definition of $F$ does not take into account that originally, the existence of $v$ is problem we need to solve simultaneously. We will justify this in the next section, when we separate the problems for the ODEs and the PDE and see that we can assume $v$ to be given. Also note that this definition depends on the fact that $x$ is assumed to be fixed. Thus for any $x \in \Gamma$, this defines a different problem.
+where $\gamma v$ denotes the trace of $v$ as discussed in \cref{sec:weak_derivatives}. Note that this definition of $F$ takes into account that we assumed the existence of $v$. We will justify this in the next section, when we separate the problems for the ODEs and the PDE. Also note that this definition depends on the fact that $x$ is assumed to be fixed. Thus for any $x \in \Gamma$, this defines a different ODE.
 
 We can now combine these two formulations and start discussing the existence and uniqueness of their solutions.
 \todo{define $\odespace$ and $\pdespace$}

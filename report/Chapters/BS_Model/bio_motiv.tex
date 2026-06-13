@@ -1,6 +1,6 @@
 \todo{actual biological terms}
 
-Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with $C^1$ boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained by $U$, i.e. no cells should cross the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and place on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands.
+Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with $C^1$ boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained in $U$, i.e. no cells should touch the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and location on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands in $\overline{\Omega}$, see \cref{fig:domain}.
 
 \begin{figure}[!t]
     \centering
@@ -54,29 +54,16 @@ Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T >
     
     \end{tikzpicture}
     \caption{A sketch of a possible domain in the case that $d= 2$. The blue background represents $\Omega$ and the two kinds of boundaries are indicated, along with the outward unit normal vector $\nu$.}
+    \label{fig:domain}
 \end{figure}
 
-The ligands can move freely through the extracellular space. This can modelled by the standard diffusion (or heat) equation. For the sake of simplification, we assume the individual receptors will be fixed in their position on the cell membrane.
+The ligands can move freely through the extracellular space. This can be modelled by the standard diffusion (or heat) equation. To simplify the setting\todo{setting?}, we assume the individual receptors will be fixed in their position on the cell membrane.
 
-When a ligand binds to a free receptor, the concentration of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. The rate of this reaction is proportional to $u^2 v$. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new one again. The concentration of bounded receptors decrease, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is proportional to the concentration of bounded receptors $u_b$.
+When a ligand binds to a free receptor, the concentration of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. This reaction is described by $\kon u^2 v$ for some $\kon > 0$. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new ligand again. The concentration of bounded receptors decrease, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is described by $\koff u_b$, where $\koff > 0$.
 
-The last two things that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter or model through the cell membrane. We assume this production mainly happens at a constant rate, but is also upregulated by the concentration of bounded receptors. The ligands and receptors decay at a rate proportional to their respective concentrations.
+Finally, two reactions that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter the domain $\Omega$ through the cell membrane. We assume the production of ligands and free receptors mainly happens at constant rates $P_u > 0$ and $P_v > 0$, but is also upregulated by the concentration of bounded receptors, which is taken into account by $\alpha u_b$ for some upregulation coefficient $\alpha > 0$. The ligands, free receptors and complex receptors decay at constant rates $\delta_v$, $\delta_u$ and $\delta_{u_b}$, respectively.
 
-We can describe this behaviour with a system of coupled differential equations. Denote the association and dissociation coefficients by $\kon, \koff > 0$, respectively, the production constants by $P_u, P_v > 0$, the upregulation coefficient by $\alpha > 0$, the decay coefficients by $\delta_u, \delta_{u_b}, \delta_v > 0$ and the diffusion coefficient by $D_v > 0$. Furthermore, we denote the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the interactions between ligands and receptors are described by 
-
-\begin{equation*}
-    \kon u^2 v - \koff u_b,
-\end{equation*}
-
-\noindent
-and the production and decay of $u, u_b$ and $v$ are described by
-
-\begin{equation*}
-    P_u + \alpha u_b - \delta_u u, \qquad - \delta_{u_b} u_b, \qquad P_v \qquad \text{and} \qquad - \delta_v v,
-\end{equation*}
-
-\noindent
-respectively. The concentrations of receptors can then be described by the system of ODEs given by
+We can describe the dynamics of ligands and receptors by a system of coupled differential equations. Denote the diffusion coefficient by $D_v > 0$ and the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the concentrations of receptors can then be described by the system of ODEs given by
 
 \begin{equation}
     \label{sys:ODEs}
@@ -89,7 +76,7 @@ respectively. The concentrations of receptors can then be described by the syste
 \noindent
 Note that even though they are given by only two equations, this is actually a system of uncountably many ODEs. For every boundary point $x \in \Gamma$, we have one ODE for the function $t \mapsto u(t, x)$ and one for the function $t \mapsto u_b(t, x)$.
 
-Since the dynamics of the ligands include diffusion, they can be described by the PDEs given by
+Since the dynamics of the ligands include diffusion in $\Omega$ and reaction on $\Gamma$, they can be described by the PDE and boundary conditions given by
 
 \begin{equation}
     \label{sys:PDEs}
@@ -101,8 +88,7 @@ Since the dynamics of the ligands include diffusion, they can be described by th
 \end{equation}
 
 \noindent
-Additionally, these concentrations can be required to adhere to some initial conditions.
-That is, they should satisfy
+Additionally, we need to specify initial conditions for the concentration of ligands and receptors. That is, the solutions should satisfy
 
 \begin{equation}
     \label{sys:Init}
@@ -114,6 +100,6 @@ That is, they should satisfy
 \end{equation}
 
 \noindent
-for some given $u_0, u_{b,0}: \Gamma \to \R$ and $v_0: \Omega \to \R$.
+for some given non-negative functions $u_0, u_{b,0}: \Gamma \to \R$ and $v_0: \Omega \to \R$.
 
 The remainder of this chapter will be dedicated to studying the system of \cref{sys:ODEs,sys:PDEs,sys:Init}.

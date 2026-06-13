@@ -1,4 +1,4 @@
-Before we talk about weak solutions to PDEs, we need to define spaces of functions that are potential candidates for solutions. We derive this space by weakening the conditions of differentiable functions.
+Before we talk about weak solutions to PDEs, we need to define spaces of functions that can form potential candidates for solutions. We derive this space by weakening the conditions of differentiable functions.
 
 Consider an open and bounded domain $\Omega \subseteq \R^{d}$. Then for any continuously differentiable function $u \in C^{1}(\Omega)$ and test function $\phi \in C_{c}^{\infty}(\Omega)$, we have
 
@@ -16,7 +16,7 @@ since $\phi$ is 0 on the boundary. Consequentially, for any function $u \in C^k(
 \end{equation}
 
 \noindent
-using the fact that $D^\beta \phi$ has compact support as well, for every $\beta \in \N^d$ with $|\beta| \leq k$. Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. In fact, we can completely remove the hypothesis that $u$ is $k$ times continuously differentiable, and define the \emph{weak derivative} of $u$ as a function that behaves in a similar way as \cref{eq:weak_deriv_expr} when tested against a function $\phi \in C^\infty_c(\Omega)$.
+using the fact that $D^\beta \phi$ has compact support as well, for every $\beta \in \N^d$ with $|\beta| \leq k$. Note that for this last expression to make sense, the function $D^\alpha u$ does not necessarily have to be continuous. In fact, we can completely remove the hypothesis that $u$ is $k$ times continuously differentiable, and define the \emph{weak derivative} of $u$ as a function that satisfies the same integral \cref{eq:weak_deriv_expr} for all test functions $\phi \in C^\infty_c(\Omega)$.
 
 \begin{definition}{}{}
     Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \N^{d}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
@@ -52,44 +52,49 @@ The proof of this proposition is a good example of how the Fundamental Lemma of 
     \end{equation*}
 
     \noindent
-    for every $\phi \in C^{\infty}_{c}(\Omega)$. We can now use the \cref{lem:flcv} to see that $v - w$ is 0 almost everywhere, which means that $v = w$ almost everywhere, completing the proof.
+    for every $\phi \in C^{\infty}_{c}(\Omega)$. We can now use the \cref{lem:flcv} to see that $v - w = 0$ almost everywhere, which means that $v = w$ almost everywhere, completing the proof.
 \end{proof}
 
-With this new notion of weak differentiability, we can define new spaces of regularity. These spaces are fundamental to the analysis of PDEs and will be used a lot in this thesis. 
+With this new notion of weak differentiability, we can define new function spaces. These spaces are fundamental in the analysis of PDEs and will be used a lot in this thesis. 
 
 \begin{definition}{}{}
-    For $k \in \N$ and $p \in [1, \infty]$, the \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which the $\alpha$-th weak derivative exists and is in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
+    For $k \in \N$ and $p \in [1, \infty)$, the \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which the $\alpha$-th weak derivative exists and is in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
 
     \begin{equation*}
         W^{k, p}(\Omega) := \{ u \in L^{p}(\Omega) \mid D^{\alpha} u \in L^{p}(\Omega),\ |\alpha| \leq k \} .
     \end{equation*}
     
-    When equipped with the norm
+    It is equipped with the norm
     
     \begin{equation*}
-        \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L^p(\Omega)}^p \right)^{1/p} ,
+        \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L^p(\Omega)}^p \right)^{1/p} .
     \end{equation*}
 
-    the space becomes complete, and thus forms a Banach space. Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$ and additionally forms a Hilbert space for $p = 2$. This holds for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
+    The space $W^{k, p}(\Omega)$ complete, and thus forms a Banach space.
 
-    \begin{equation*}
-        \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{\Ltwo{\Omega}} ,
-    \end{equation*}
-
-    forming a Hilbert space. We write $H^k(\Omega)^*$ for its dual space and $\pair{u, v}$ for the pairing between $H^k(\Omega)^*$ and $H^{k}(\Omega)$, i.e.
-
-    \begin{equation*}
-        \pair{u, v} := u(v)
-    \end{equation*}
-
-    for all $u \in H^k(\Omega)^*$ and $v \in H^k(\Omega)$.
 \end{definition}
 
+Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$ and additionally forms a Hilbert space for $p = 2$. This holds for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
+
+\begin{equation*}
+    \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{\Ltwo{\Omega}} ,
+\end{equation*}
+
+\noindent
+forming a Hilbert space. We write $H^k(\Omega)^*$ for its dual space and $\pair{u, v}$ for the pairing between $H^k(\Omega)^*$ and $H^{k}(\Omega)$, i.e.
+
+\begin{equation*}
+    \pair{u, v} := u(v)
+\end{equation*}
+
+\noindent
+for all $u \in H^k(\Omega)^*$ and $v \in H^k(\Omega)$.
+
 \todo{Evans calculus for time derivatives}
-In this thesis, we will be studying a bulk-surface model. This means that a function $v$ living on $\Omega$ will be reacting with some functions living on a subset of the boundary $\partial \Omega$. These reactions will depend on the values of $v$ on this boundary, but by definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary \emph{is} a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega)$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega)$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property.
+In this thesis, we will be studying a bulk-surface reaction-diffusion model. This means that a function $v$ defined on $\Omega$ will be reacting with some functions defined on a subset of the boundary $\partial \Omega$. These reactions will depend on the values of $v$ on this boundary, but by definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary \emph{is} a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega) \cap C(\overline{\Omega})$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega) \cap C(\overline{\Omega})$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property, proved in \cite{evans2010partial}.
 
 \begin{proposition}{Approximation by smooth functions}{approx_by_smooth}
-    If the boundary $\partial \Omega$ is Lipschitz and $ 1 \leq p < \infty$, the set of all smooth functions $C^\infty(\overline{\Omega})$ is dense in $W^{k,p}(\Omega)$.
+    If the boundary $\partial \Omega$ is $C^1$ and $1 \leq p < \infty$, the set of all smooth functions $C^\infty(\overline{\Omega})$ is dense in $W^{k,p}(\Omega)$.
 \end{proposition}
 
 More precisely, for any function $u \in W^{k,p}(\Omega)$, there is a sequence of smooth functions defined on the closure of $\Omega$, $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$, such that
@@ -102,11 +107,11 @@ More precisely, for any function $u \in W^{k,p}(\Omega)$, there is a sequence of
 This allows us to extend our knowledge of functions defined on the boundary to functions in $W^{k,p}(\Omega)$ in general.
 
 \begin{theorem}{Trace Theorem}{trace}
-    If the boundary $\partial \Omega$ is Lipschitz, there is a bounded linear operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ such that
+    If the boundary $\partial \Omega$ is $C^1$ and $1 \leq p < \infty$, there is a bounded linear operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ such that
     
     \begin{enumerate}[label=(\roman*)]
         \item $\gamma u = u \vert_{\partial \Omega}$ for any $u \in W^{1,p}(\Omega) \cap C(\overline{\Omega})$ and
-        \item \label{item:trace_property_2} $\norm{\gamma u}_{L^p{\partial \Omega}} \leq C_\gamma \norm{u}_{W^{1,p}(\Omega)}$,
+        \item \label{item:trace_property_2} $\norm{\gamma u}_{L^p(\partial \Omega)} \leq C_\gamma \norm{u}_{W^{1,p}(\Omega)}$,
     \end{enumerate}
     
     where the constant $C_\gamma > 0$ only depends on $p$ and $\Omega$.
@@ -115,7 +120,7 @@ This allows us to extend our knowledge of functions defined on the boundary to f
 A full proof of this theorem can be found in \cite{evans2010partial}, but we will describe the general outline here. 
 
 \begin{proof}
-    As we previously discussed, we can start by defining $\gamma u := u \vert_{\partial \Omega}$ for any $u \in C^1(\overline{\Omega})$. The first step in extending this definition is to use that the boundary is Lipschitz to locally flatten it and prove \cref{item:trace_property_2} for $u \in C^1(\overline{\Omega})$ in a neighbourhood of some point $x \in \partial \Omega$. We can then use the fact that $\Omega$ is bounded to see that $\partial \Omega$ is compact, which allows us to get a finite amount of points $x_1, \dots, x_n \in \partial \Omega$ with corresponding constants $C_1, \dots, C_n$, combining them to conclude \cref{item:trace_property_2} for the entirety of $\partial \Omega$.
+    As we previously discussed, we can start by defining $\gamma u := u \vert_{\partial \Omega}$ for any $u \in C^1(\overline{\Omega})$. The first step in extending this definition is to use that the boundary is Lipschitz to locally flatten it and prove \cref{item:trace_property_2} for $u \in C^1(\overline{\Omega})$ in a neighbourhood of some point $x \in \partial \Omega$. We can then use the fact that $\Omega$ is bounded to see that $\partial \Omega$ is compact, which allows us to get a finite number of points $x_1, \dots, x_n \in \partial \Omega$ with corresponding constants $C_1, \dots, C_n$, their neighourhoods covering $\partial \Omega$. Combining the results for each $x_i$, we can conclude \cref{item:trace_property_2} for the entirety of $\partial \Omega$.
 
     For the general case of $u \in W^{1,p}(\Omega)$, we can use \cref{prop:approx_by_smooth} to get an approximation for $u$ of smooth functions $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$. The first part of the proof then implies that
 
@@ -124,7 +129,7 @@ A full proof of this theorem can be found in \cite{evans2010partial}, but we wil
     \end{equation*}
 
     \noindent
-    which means that $(\gamma u_n)_{n \in \N}$ is a Cauchy sequence. We have used that $\gamma$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $\Ltwo{\partial \Omega}$ is a Hilbert space, we can define
+    which means that $(\gamma u_n)_{n \in \N}$ is a Cauchy sequence in $\Ltwo{\partial \Omega}$. We have used that $\gamma$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $\Ltwo{\partial \Omega}$ is a Hilbert space, we can define
 
     \begin{equation*}
         \gamma u := \lim_{n \to \infty} \gamma u_n = \lim_{n \to \infty} u_n \vert_{\partial \Omega},
@@ -137,5 +142,5 @@ A full proof of this theorem can be found in \cite{evans2010partial}, but we wil
 \end{proof}
 
 \begin{definition}{}{}
-    This operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ is referred to as the \emph{trace operator}. $\gamma u$ is called the \emph{trace} of $u$, and is sometimes denoted by $u \vert_{\partial \Omega}$ or just $u$.
+    This operator $\gamma: W^{1,p}(\Omega) \to L^p(\partial \Omega)$ is referred to as the \emph{trace operator}. Moreover, $\gamma u$ is called the \emph{trace} of $u$, and is sometimes denoted by $u \vert_{\partial \Omega}$ or just $u$.
 \end{definition}

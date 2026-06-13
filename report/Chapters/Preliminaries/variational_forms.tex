@@ -1,17 +1,26 @@
-Using the same method, we can weaken the requirements for solutions to a PDE. Consider, for instance, the heat equation on $\Omega_{T} := (0, T) \times \Omega$ with homogeneous Dirichlet boundary conditions. For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}(\Omega_{T}) \cap C^{0}(\overline{\Omega_{T}})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $\overline{\Omega_{T}}$. We can multiply the heat equation by a test function $\phi \in C_{c}^{\infty}(\Omega)$ and integrate on $\Omega$ to see
-
-\todo{rewrite}
+Using the notion of weak derivatives, we can weaken the requirements for solutions to a PDE. Consider, for instance, the heat equation in $(0, T) \times \Omega$, where $\Omega \subseteq \R^m$ is open and bounded with a smooth boundary, with homogeneous Neumann boundary conditions,
 
 \begin{equation}
-    \int_{\Omega} u_{t} \phi = \int_{\Omega} \Delta u \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi \d S - \int_{\Omega} \nabla u \cdot \nabla \phi = - \int_{\Omega} \nabla u \cdot \nabla \phi .
+\label{eq:strong_heat}
+\begin{aligned}
+    u_t &= \Delta u         & \text{in } &(0, T) \times \Omega,\\
+    \pderiv[u]{\nu} &= 0    & \text{on } &[0, T) \times \partial \Omega.
+\end{aligned}
 \end{equation}
+
+\noindent
+For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}((0, T) \times \Omega) \cap C^{0}([0, T] \times \overline{\Omega})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $[0, T] \times \overline{\Omega}$. We can multiply the heat equation by a smooth \todo{smooth, not test function right?}function $\phi \in C^{\infty}(\Omega)$, integrate over $\Omega$ and integrate by parts to derive
+
+\begin{equation*}
+    \int_{\Omega} u_{t} \phi = \int_{\Omega} \Delta u \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi \d S - \int_{\Omega} \nabla u \cdot \nabla \phi = - \int_{\Omega} \nabla u \cdot \nabla \phi .
+\end{equation*}
 
 \noindent
 We can also write this as 
 
-\begin{equation}
-    \langle u_{t}, \phi \rangle = - \langle \nabla u, \nabla \phi \rangle ,
+\begin{equation}\label{eq:weak_heat}
+    \inner{u_t, \phi}_{\Ltwo{\Omega}} = -\inner{\nabla u, \nabla \phi}_{\Ltwo{\Omega; \R^d}} ,
 \end{equation}
 
 \noindent
-where $\langle \cdot, \cdot \rangle$ denotes the inner product on both $L^{2}(\Omega)$ and $L^{2}(\Omega; \mathbb{R}^{m})$.
+and by \cref{prop:approx_by_smooth}, we can show that this should also hold for every $\phi \in H^1(\Omega)$. Now note that for \cref{eq:weak_heat} to be well-defined, we don't need $u$ to be twice continuously differentiable anymore. In fact, we don't even need $\nabla u$ to be continuous. Instead, square-integrability of both $\nabla u$ and $u_t$ is sufficient. This means we can substantially weaken the requirements for $u$, and instead ask if there exists a function $u \in H^1(0, T; H^1(\Omega))$.

@@ -44,7 +44,7 @@ Additionally, we want a discretised function space, from which we look for appro
 \noindent
 This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many more kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements.
 
-We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate on $\Omega_h$ and use partial integration to get
+We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate over $\Omega_h$ and use partial integration to get
 
 \begin{equation*}
     \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \Delta u_h \phi_i = \int_{\partial \Omega_h} \pderiv[u_h]{\nu} \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i = \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i .
