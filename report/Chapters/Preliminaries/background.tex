@@ -1,0 +1,184 @@
+We begin by specifying some notation and recalling and defining some general tools that play an important role throughout this thesis. We will be working with a wide variety of spaces, many of them having their own inner products and norms. First of all, we denote the Euclidean norm on $\R^m$ by $\left|\ \cdot\ \right|$, for all $m \in \N$. For a more general normed space $X$, where $X$ is different from $\R^m$ for some $m$, we write $\norm{\ \cdot\ }_X$ for its norm. When this norm is induced by an inner product, we denote this inner product by $\inner{\ \cdot\ , \cdot\ }_X$. First we collect a few inequalities that are mainly used in the estimates of our existence and uniqueness proof.
+\begin{lemma}{Young's inequality}{}
+    For every $a, b \in \R$, we have
+
+    \begin{equation*}
+        ab \leq \frac{1}{2} \left(a^2 + b^2\right) .
+    \end{equation*}
+
+    \noindent
+    More generally, for every $\eps > 0$, we have
+
+    \begin{equation*}
+        ab \leq \eps a^2 + \frac{1}{4 \eps} b^2 .
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Let $a, b \in \R$ and $\eps > 0$. Then
+
+    \begin{equation*}
+        0 \leq \left(\sqrt{\eps} a - \frac{1}{2 \sqrt{\eps}} b\right)^2 = \eps a^2 - ab + \frac{1}{4 \eps} b^2 .
+    \end{equation*}
+
+    \noindent
+    This proves the second inequality. The first inequality is a special case of the second, with $\eps$ set to $\frac{1}{2}$.
+\end{proof}
+
+The following is a much more complex inequality, which is used very often in the study of differential equations to derive explicit estimates given an inequality that involves the unknown function.
+
+\begin{lemma}{Gronwall's inequality}{gronwall}
+    Let $I$ be a real interval with starting point $a \in \R$ and $u, \alpha, \beta: I \to \R$ be continuous functions, where $\alpha$ and $\beta$ are nonnegative. If $u$ is differentiable in $I^\circ$ and satisfies
+    
+    \begin{equation*}
+        u'(t) = \alpha(t) + \beta(t) u(t)
+    \end{equation*}
+    
+    \noindent
+    for every $t \in I^\circ$, then it also satisfies
+
+    \begin{equation*}
+        u(t) \leq u(a)e^{\int_{a}^{t} \beta(s) \d s} + \int_{a}^{t} \alpha(s) e^{\int_{s}^{t} \beta(r) \d r} \d s .
+    \end{equation*}
+
+    \noindent
+    If $\beta$ is a constant, this simplifies to
+
+    \begin{equation*}
+        u(t) \leq u(a)e^{\beta(t - a)} + \int_{a}^{t} \alpha(s) e^{\beta(t - s)} \d s .
+    \end{equation*}
+
+    \noindent
+    This is known as the \emph{differential form} of Gronwall's inequality. We also have an \emph{integral form}, which is especially useful when dealing with non-differentiable functions. If $u, \alpha, \beta: I \to \R$ are integrable functions, $\alpha$ and $\beta$ are nonnegative and $u$ satisfies
+
+    \begin{equation*}
+        u(t) \leq \alpha(t) + \int_{a}^{t} \beta(s) u(s) \d s
+    \end{equation*}
+
+    \noindent
+    for all $t \in I$, then
+
+    \begin{equation*}
+        u(t) \leq \alpha(t) + \int_{a}^{t} \alpha(s) \beta(s) e^{\int_{s}^{t} \beta(r) \d r} \d s
+    \end{equation*}
+
+    \noindent
+    for all $t \in I$.
+\end{lemma}
+
+We now continue with some concepts that are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to partial differential equations (PDEs).
+
+Let $X$ be a topological space. A function $\phi: X \to \R$ is said to have \emph{compact support} if the set
+
+\begin{equation*}
+    \text{supp}(\phi) := \overline{\{ x \in X \mid \phi (x) \neq 0 \}}
+\end{equation*}
+
+\noindent
+is a compact subset of $X$. For any open set $\Omega \subseteq \R^d$, the space of all infinitely-times continuously differentiable functions with compact support in $\Omega$ is denoted by $C^\infty_c(\Omega)$.
+
+An important property of these functions is that they must be 0 on the boundary of $\Omega$. In the particular context of PDE analysis, they are often referred to as \emph{test functions}. They are used in a wide range of applications, for instance in the field of the Calculus of Variations. A fundamental tool in this theory is the following result, hence its name.
+
+\begin{lemma}{Fundamental Lemma of the Calculus of Variations}{flcv}
+    Let $\Omega \subseteq \R^{d}$ be open and $f \in L^{1}_\text{loc}(\Omega)$. If
+
+    \begin{equation*}
+        \int_{\Omega} f \phi = 0
+    \end{equation*}
+
+    for all $\phi \in C^{\infty}_{c}(\Omega)$, then $f = 0$ almost everywhere in $\Omega$.
+\end{lemma}
+
+Multiplying a PDE with a test function and integrating is sometimes referred to as \emph{testing against} a test function $\phi \in C^\infty_c(\Omega)$. 
+
+\begin{definition}{}{}
+    When we are differentiating functions in $C^k$ defined in a subset of $\R^d$, we sometimes use the abbreviated notation
+
+    \begin{equation*}
+        D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_d^{\alpha_d}} ,
+    \end{equation*}
+
+    where $\alpha = (\alpha_1, \dots, \alpha_d) \in \N^d$ is called a \emph{multi-index} and $|\alpha| := \alpha_1 + \dots + \alpha_d \leq k$.
+\end{definition}
+
+\begin{definition}{}{}
+    Let $\Omega \subseteq \R^d$ be open. A function $f: \Omega \to \R$ is said to be \emph{locally integrable} if
+
+    \begin{equation*}
+        \int_K |f| < \infty
+    \end{equation*}
+
+    for all compact subsets $K$ of $\Omega$. The space of all locally integrable functions is denoted by $L^1_\text{loc}(\Omega)$, where we identify two functions with each other if they agree almost everywhere in $\Omega$.
+\end{definition}
+\todo{Put this before FLCV}
+
+An important fact that should be noted is that every function that is square-integrable is also locally integrable. That is, $\Ltwo{\Omega} \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
+
+\begin{definition}{}{}
+    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\eps > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
+
+    \begin{equation*}
+        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \eps.
+    \end{equation*}
+\end{definition}
+
+\begin{proposition}{}{}
+    A function $f: [a, b] \to \R$ is absolutely continuous if and only if $f$ has derivative $f'$ almost everywhere, $f'$ is integrable, and
+
+    \begin{equation*}
+        f(x) = f(a) + \int_{a}^{x} f'(t) \d t
+    \end{equation*}
+
+    for every $x \in [a, b]$.
+\end{proposition}
+
+\begin{definition}{}{}
+    Let $n$ be a positive integer, $I$ an interval, $x: I \to \R^n$ and $f: S \to \R^n$ for some set $S \subseteq \R \times \R^n$. Then $x$ is called a \emph{solution of}
+
+    \begin{equation}\label{eq:standard_ode}
+        x'(t) = f(t, x(t))
+    \end{equation}
+
+    \emph{in the sense of Carath\'eodory on $I$} if $x$ is absolutely continuous, $(t, x(t)) \in S$ for every $t \in I$ and \cref{eq:standard_ode} is satisfied for almost every $t \in I$.
+\end{definition}
+
+\begin{theorem}{Carath\'eodory's existence theorem}{caratheodory}
+    Let $n$ be a positive integer, $a, b > 0$ and $(t_0, x_0) \in \R \times \R^n$. Define
+
+    \begin{equation*}
+        R := \{ (t, x) \in \R \times \R^n \mid |t - t_0| \leq a \text{ and } \left|x - x_0\right| \leq b \}
+    \end{equation*}
+
+    and let $f: R \to \R^n$ be continuous in $x$ for every fixed $t$, measurable in $t$ for every fixed $x$ and bounded by some time-dependent integrable function $m$,
+    
+    \begin{equation*}
+        \left|f(t, x)\right| \leq m(t)
+    \end{equation*}
+
+    for all $(t, x) \in R$. Then the differential equation
+
+    \begin{equation*}
+        x'(t) = f(t, x(t))
+    \end{equation*}
+
+    has a solution in the sense of Carath\'eodory on the interval $|t - t_0| \leq \beta$ for some $\beta > 0$, satisfying $x(0) = x_0$.
+\end{theorem}
+
+\begin{theorem}{Nagumo's invariance theorem}{nagumo}
+    Let $M \subseteq \R^n$ be closed and $J = [a, b]$ some real interval. Assume that $f: D \subseteq J \times M \to \R^n$ satisfies the tangent condition
+
+    \begin{equation*}
+        \inner{\nu(x), f(t, x)} \leq 0 \qquad \text{for } t \in [\xi, \xi + a] \text{ and } x \in \partial M,
+    \end{equation*}
+
+    \noindent
+    where $\nu(x)$ is the outward normal vector to $M$ at $x$, as well as a condition of Lipschitz type
+    
+    \begin{equation*}
+        \inner{x_1 - x_2, f(t, x_1) - f(t, x_2)} \leq L \norm{x_1 - x_2}^2.
+    \end{equation*}
+
+    \noindent
+    Then $M$ is flow-invariant with respect to the differential equation $x' = f(t, x)$.
+\end{theorem}
+\todo{more regularity assumptions for $f$?}
