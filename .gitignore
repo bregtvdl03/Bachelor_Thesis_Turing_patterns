@@ -11,5 +11,7 @@
 .vscode
 **/iris.gif
 **/sietse.gif
+**/*.h5
+**/*.xdmf
 expirementy.py
 imageconverter.py
