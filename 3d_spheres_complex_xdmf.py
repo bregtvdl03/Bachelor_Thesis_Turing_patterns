@@ -15,12 +15,12 @@ import time
 import os
 
 
-OUT_FILE_BULK   = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_bulk.xdmf"
-OUT_FILE_SURF   = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_surf.xdmf"
-OUT_FILE_SURF_B = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_surf_b.xdmf"
+OUT_FILE_BULK   = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_bulk_5.xdmf"
+OUT_FILE_SURF   = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_surf_5.xdmf"
+OUT_FILE_SURF_B = "/media/bregt/39874E42025A1FA2/3d_spheres_complex_surf_b_5.xdmf"
 
 FPS = 10
-WRITE_EVERY = 500
+WRITE_EVERY = 150
 
 DOMAIN_TAG      = 100
 MEMBRANE_TAG    = 10
@@ -67,7 +67,7 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 100000
+num_steps = 30000
 dt = T / num_steps
 
 #endregion
@@ -82,7 +82,7 @@ half_cell = cell_size / 2
 
 centers = list(itertools.product([-L/4, L/4], repeat=dim))
 
-model_data = gmshio.read_from_msh("meshes/3d_spheres.msh", MPI.COMM_WORLD, rank=0, gdim=dim)
+model_data = gmshio.read_from_msh("meshes/3d_spheres_blub2.msh", MPI.COMM_WORLD, rank=0, gdim=dim)
 msh = model_data.mesh
 
 def on_holes(x):
@@ -219,10 +219,15 @@ for n in range(num_steps):
     t += dt
     progress = int(n/num_steps * 100)
     
+    if n % 100 == 0 and MPI.COMM_WORLD.rank == 0:
+        print(f"{n} / {num_steps}")
+    
     try:
         with b.localForm() as loc_b:
             loc_b.set(0)
         assemble_vector(b, linear_form)
+        b.ghostUpdate(addv=PETSc.InsertMode.ADD_VALUES, mode=PETSc.ScatterMode.REVERSE)
+        
         x = create_vector([V, Vb, Vb])
         solver.solve(b, x)
         x.ghostUpdate(addv=PETSc.InsertMode.INSERT, mode=PETSc.ScatterMode.FORWARD)

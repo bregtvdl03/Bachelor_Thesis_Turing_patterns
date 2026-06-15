@@ -29,10 +29,10 @@ gmsh.model.occ.synchronize()
 DISTANCE_FIELD_TAG  = 1
 SAMPLING            = 999
 THRESHOLD_FIELD_TAG = 2
-SIZE_MIN            = 0.25
-SIZE_MAX            = 4
+SIZE_MIN            = 0.1
+SIZE_MAX            = 0.5
 DIST_MIN            = 0
-DIST_MAX            = 2
+DIST_MAX            = 3
 
 gmsh.model.mesh.field.add("Distance", DISTANCE_FIELD_TAG)
 gmsh.model.mesh.field.setNumbers(DISTANCE_FIELD_TAG, "SurfacesList", sphere_surfaces)
@@ -58,7 +58,7 @@ gmsh.model.setPhysicalName(dim, 100, "main_domain")
 
 gmsh.model.mesh.generate(dim)
 
-gmsh.write("meshes/3d_spheres_coarse.msh")
+gmsh.write("meshes/3d_spheres_blub2.msh")
 
 gmsh.finalize()
 
