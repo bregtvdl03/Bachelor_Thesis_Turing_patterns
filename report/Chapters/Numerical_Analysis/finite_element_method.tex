@@ -1,6 +1,6 @@
-In any course on elementary numerical methods, the simulation of ODEs will inevitably be discussed. The vast majority of these simulations include defining a small time step using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space step $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. This is called the finite \emph{difference} method, and it is very successful in a number of applications. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model lives on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
+Numerical methods for ODEs typically include defining a small time step and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. This is called the finite \emph{difference} method \todo{Stefanie comment}, and it is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
 
-The finite \emph{element} method is another means to approximate solutions to a PDE. It is mainly used for discretising the space variable, so let us focus on an example that does not include time. We consider the standard Poisson equation
+The finite \emph{element} method is another way to approximate solutions to a PDE. It is mainly used for discretising the space variable, so let us focus on an example that does not include time. We consider the standard Poisson equation
 
 \begin{equation}
     \label{eq:fem_ex_poisson}
@@ -35,14 +35,14 @@ The subscript $h$ derives from the idea that this still represents the fineness 
 \noindent
 we want $\Omega_h$ to approximate $\Omega$ increasingly well as $h$ approaches $0$. \todo{example}
 
-Additionally, we want a discretised function space, from which we look for approximate solutions to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}, called the \emph{trial space}. To this end, for every node $x_i$, we define a basis function $\phi_i: \Omega_h \to \R$ such that $\phi_i(x_i) = 1$, $\phi_i(x_j) = 0$ for all $j \neq i$ and $\phi_i$ is linearly interpolated on each element. \todo{example} Now the function space we consider for our trial functions is the space of linear combinations of these basis functions,
+Additionally, we want a discretised function space that we use to construct approximate solutions to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}, called the \emph{trial space}. To this end, for every node $x_i$, we define a basis function $\phi_i: \Omega_h \to \R$ such that $\phi_i(x_i) = 1$, $\phi_i(x_j) = 0$ for all $j \neq i$ and $\phi_i$ is linearly interpolated on each element. \todo{example} Now the function space we consider for our trial functions is the space of linear combinations of these basis functions,
 
 \begin{equation*}
     \mathcal{V}_h := \linspan \{ \phi_1, \dots, \phi_m \}.
 \end{equation*}
 
 \noindent
-This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many more kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements.
+This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many other kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements. \todo{reference}
 
 We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate over $\Omega_h$ and use partial integration to get
 
@@ -74,7 +74,7 @@ for every $i, j \in \{1, \dots, m\}$, this is equivalent to the linear system
 \noindent
 Here, $K$ is typically referred to as the \emph{stiffness matrix}. We have now transformed the PDE into a linear system of equations, which we can solve using a wide variety of algorithms.
 
-Before deriving the linear system for \cref{eq:expanded_pdes}, we should quickly illustrate how time discretisation ties into this approach. Consider, therefore, the heat equation
+Before deriving the linear system for \cref{eq:threespeciesmodel}, we should quickly illustrate how time discretisation ties into this approach. Consider, therefore, the heat equation
 
 \begin{equation}
     \label{eq:fem_ex_heat}
@@ -94,7 +94,7 @@ where $T > 0$ is some final time and now $f$ and $g$ are functions on $(0, T) \t
 
 \begin{equation}
     \label{eq:fem_ex_initial}
-    u(0, x) = u_0(x).
+    u(0, x) = u_0(x), \qquad x \in \Omega.
 \end{equation}
 
 \noindent
@@ -105,19 +105,19 @@ Similarly to the numerical study of ODEs, we choose a number of steps $N \in \N$
 \end{equation*}
 
 \noindent
-To this end, we use a difference quotient in time to derive
+To this end, we use the difference quotient to approximate the time derivative,
 
 \begin{equation*}
     \frac{u_{n + 1}(x) - u_{n}(x)}{\tau} \approx \Delta u_{n + 1} (x) + f(n\tau, x),
 \end{equation*}
 
 \noindent
-where we have used implicit diffusion and explicit forcing. This is a widely used scheme, commonly referred to as IMEX. Other schemes can be used with varying results in numerical stability and accuracy. In this thesis, we will not go too far into this choice.
+where we have used implicit diffusion and explicit forcing. This is a widely used scheme, commonly referred to as IMEX \cite{ascher97,pareschi01,boscarino25}. Other schemes can be used with varying results in numerical stability and accuracy, depending on what class of PDE it is applied to. In this thesis, we will not go too far into this choice.
 
 After rearranging terms, this leads to the time-independent problem
 
 \begin{equation*}
-    u_{n + 1}(x) \approx \tau \Delta u_{n + 1}(x) + u_n(x) + \tau f(n \tau, x).
+    u_{n + 1}(x) \approx \tau \Delta u_{n + 1}(x) + u_n(x) + \tau f(n \tau, x), \qquad n = 0, \dots, N - 1.
 \end{equation*}
 
 \noindent

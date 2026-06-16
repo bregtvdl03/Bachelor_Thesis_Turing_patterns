@@ -4,9 +4,9 @@ Our goal in this section is to prove the following theorem.
     Let the initial conditions $u_0, u_{b, 0} \in \Ltwo{\partial \Omega}$ and $v_0 \in \Ltwo{\Omega}$ be essentially bounded and non-negative. Then there exist unique weak solutions $u, u_b \in \odespace$ and $v \in \pdespace$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative.
 \end{theorem}
 
-As previously mentioned, the proof will be based on an application of the Banach fixed-point theorem. If you have followed a course on ODE theory, chances are that you have seen the Picard-Lindel\"of Theorem and its proof. The proof for our model follows the same general idea, but requires some extra steps to handle our situation of a coupled system. We ``freeze'' the terms in the ODEs that depend on $v$ so we can use the standard existence and uniqueness properties we know about such systems to get solutions $u$ and $u_b$ to this alternative problem. The PDE gets a similar treatment, producing solutions $v$ of some alternative PDE, after which we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, the Banach fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
+As previously mentioned, the proof will be based on an application of Banach's fixed-point theorem. The proof for our model follows the same general idea as the proof of the Picard-Lindel\"of theorem proving the existence and uniqueness for ODEs, but we need to adjust the arguments to handle our situation of a coupled bulk-surface system. The idea is to ``freeze'' the function $v$ in the ODEs so we can use the standard existence and uniqueness theory for ODEs to get solutions $u$ and $u_b$ to this problem. The PDE we treat similarly, freezing the functions $u$ and $u_b$. Having a solution of this PDE, we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$. If we can then show that this operator is a contraction, Banach's fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be our solution to the PDE.
 
-Let us first concretely demonstrate what we mean by ``freezing'' the terms that depend on $v$. Fix $v^* \in \pdespace$ and consider the modified system of ODEs given by
+Let us first make precise what we mean by ``freezing'' the function $v$ in the ODE system. Fix $v^* \in \pdespace$ and consider the modified system of ODEs given by
 
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
@@ -17,10 +17,10 @@ Let us first concretely demonstrate what we mean by ``freezing'' the terms that 
 \todo{weak form?}
 
 \noindent
-These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about the existence and uniqueness of solutions to this system without simultaneously having to worry about $v$ satisfying the PDE.
+These ODEs are now \emph{decoupled} from the PDE, so we can investigate the existence and uniqueness of solutions to this system without simultaneously having to prove that $v$ is a solution of the PDE.
 
 \begin{lemma}{Existence and uniqueness for the decoupled ODEs}{exun_frozen_odes}
-    Let the initial conditions $u_0, u_{b,0} \in \Ltwo{\Gamma}$ be essentially bounded and non-negative and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} satisfying these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
+    Let the initial conditions $u_0, u_{b,0} \in \Ltwo{\Gamma}$ be essentially bounded and non-negative and fix $v^* \in \pdespace$. Then there exist unique weak solutions $u, u_b \in \odespace$ to \cref{eq:frozen_odes} corresponding to these initial conditions. Moreover, these solutions are also non-negative and bounded by a constant depending on $T$.
 \end{lemma}
 
 \begingroup
@@ -31,7 +31,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 \newcommand{\ubb}{\overline{u}_b}
 \newcommand{\ubt}{\widetilde{u}_b}
 \begin{proof}
-    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, it is certainly continuous in $w$. Additionally, by regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ with some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proved for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and position $(u_0, u_{b,0})$. The hypothesis of \cref{thm:caratheodory} is then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
+    Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, the function $F$ is certainly continuous in $w$. Additionally, by the regularity of $\gamma v^*$\todo{time regularity of trace}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ by some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proved for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and initial data $(u_0, u_{b,0})$. The hypotheses of \cref{thm:caratheodory} are then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
     We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
 
@@ -71,7 +71,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     \end{equation*}
 
     \noindent
-    which is of $L^2$-regularity in $t$ due to the essential boundedness of $v^*$. Now the distance between the two solutions satisfies
+    which is of $L^2$-regularity in $t$ due to the essential boundedness of $v^*$. Now for the difference of the two solutions we obtain
 
     \begin{equation*}
         \begin{aligned}
@@ -82,31 +82,32 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
     \end{equation*}
 
     \noindent
-    for every $t \in [0, \beta]$. Using Gronwall's inequality and the fact that $w_1(0) = w_2(0)$, we see that this implies that $\left|w_1(t) - w_2(t)\right| = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
+    \todo{gronwall application}
+    for every $t \in [0, \beta]$. Using Gronwall's lemma and the fact that $w_1(0) = w_2(0)$, we see that this implies that $\left|w_1(t) - w_2(t)\right| = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
 
     To show that the components $u$ and $u_b$ of this solution $w$ are non-negative, we use \cref{thm:nagumo}. \todo{Lipschitz condition?}
 
     We now let $x$ vary and show that $u$ and $u_b$ have $L^2$ regularity in both space and time. \todo{regularity}
 
-    We can use the non-negativity to show that $u$ and $u_b$ are bounded. Define $r := u + 2 u_b$ and note that
+    We can use the non-negativity of $u$ and $u_b$ to show that these functions are bounded. Define $r := u + 2 u_b$ and note that
 
     \begin{equation*}
         r_t = u_t + 2 u_{b, t} = P_u - \delta_u u + (\alpha - 2 \delta_{u_b}) u_b \leq P_u + m r,
     \end{equation*}
 
     \noindent
-    where $m := \max\left(\delta_u, \frac{1}{2}(\alpha - 2 \delta_{u_b})\right)$. Then Gronwall's inequality gives
+    where $m := \max\left(\delta_u, \frac{1}{2}(\alpha - 2 \delta_{u_b})\right)$. Then Gronwall's lemma gives
 
     \begin{equation*}
-        r(t) \leq r(0)e^{mt} + \frac{P_u}{m} \left(e^{mt} - 1\right).
+        r(t) \leq e^{mt}\left(r(0) + t P_u\right).
     \end{equation*}
 
     \noindent
-    Now the non-negativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ let us bound the solutions independently by
+    Now the non-negativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ allows us to bound the solutions independently by
 
     \begin{equation*}
     \begin{alignedat}{2}
-        u &\leq Me^{mT} + \frac{P_u}{m} \left(e^{mT} - 1\right) &&=: M_u(T) \qquad \text{and} \\
+        u &\leq e^{mT} \left(M + P_u\right) &&=: M_u(T) \qquad \text{and} \\
         u_b &\leq \frac{1}{2} M_u(T) &&=: M_{u_b}(T),
     \end{alignedat}
     \end{equation*}
@@ -117,7 +118,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can freely talk about th
 
 \endgroup
 
-We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
+We can use a similar approach for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace^2$ and consider the modified weak formulation given by
 
 \begin{equation}\label{eq:frozen_pde}
 \begin{split}
@@ -127,7 +128,7 @@ We can use a similar method for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \i
 \end{equation}
 
 \noindent
-This PDE is now decoupled from the ODEs, and we can prove a result that is nearly identical to \cref{lem:exun_frozen_odes}.
+This PDE is now decoupled from the ODEs, and we can prove the existence and uniqueness independently from the ODE system.
 
 \begin{lemma}{Existence and uniqueness for the decoupled PDE}{exun_frozen_pde}
     Let the initial condition $v_0 \in \Ltwo{\Omega}$ be essentially bounded and non-negative and fix $(u^*, u_b^*) \in \odespace^2$. Then there exists a unique weak solution $v \in \pdespace$ to \cref{eq:frozen_pde} satisfying these initial conditions. Moreover, this solution is also non-negative and bounded by a constant depending on $T$.
@@ -135,14 +136,14 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
 
 \begin{proof}
     \todo{Existence and Uniqueness}
-    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then we also have $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
+    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then as discussed in \cite{evans2010partial}, we have $v_{+}, v_{-} \in \Ltwo{0, T; H^1(\Omega)}$ and $\left(v_{+}\right)_t, \left(v_{-}\right)_t \in \Ltwo{0, T; H^1(\Omega)^*}$.\todo{reference?} Furthermore, $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
 
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 =  \frac{\d}{\d t} \frac12 \int_{\Omega} v_{-}^2 = \int_\Omega (v_-)_t v_- = - \int_{\Omega} v_t v_{-}
     \end{equation*}
 
     \noindent
-    due to \cref{thm:lionsmagenes}. We use $v_-$ as a test function and the employ the fact that $v$ is a solution to the PDE, which gives
+    due to \cref{thm:lionsmagenes}. We use $v_-$ as a test function and employ the fact that $v$ is a solution to the PDE, which gives
     
     \begin{equation*}
         \begin{aligned}
@@ -184,7 +185,7 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    which, when plugged into the original estimation, gives
+    which, when plugged into the original estimate, gives
 
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v}_{\Ltwo{\Omega}}^2 \leq \frac{1}{2} B_\eps + \frac{1}{2} D_\eps \norm{w}_{\Ltwo{\Gamma}}^2 + 2 \eps \norm{v}_{\Ltwo{\Gamma}}^2 - D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 .
@@ -203,7 +204,7 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    for small enough $\eps > 0$ and almost every $t$. We are now ready to use Gronwall's inequality to get the final estimate
+    for small enough $\eps > 0$ and almost every $t$. We are now ready to use Gronwall's lemma to get the final estimate \todo{gronwall application}
 
     \begin{equation*}
     \begin{aligned}
@@ -216,19 +217,19 @@ This PDE is now decoupled from the ODEs, and we can prove a result that is nearl
     \end{equation*}
 
     \noindent
-    for almost every $t$.
+    for almost every $t$, where $M_{u_b}(T)$ was defined in the proof of \cref{lem:exun_frozen_odes}.
 \end{proof}
 
-Using these two lemmas, we can define two operators between $\pdespace$ and $\odespace^2$. One takes two arbitrary functions $(u^*, u_b^*) \in \odespace^2$ and maps it to the unique solution $v \in \pdespace$ to \cref{eq:frozen_pde}. Let us refer to this operator as $\mathcal{T}_{1}: \odespace^2 \to \pdespace$. The other, $\mathcal{T}_{2}: \pdespace \to \odespace^2$, takes a function $v^* \in \pdespace$ and defines $\mathcal{T}_{2}(v^*)$ as the unique solution $(u, u_b) \in \odespace^2$ of \cref{eq:frozen_odes}. Combining these two operators, we define
+Using \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we can define two operators between $\pdespace$ and $\odespace^2$. One takes two arbitrary functions $(u^*, u_b^*) \in \odespace^2$ and maps them to the unique solution $v \in \pdespace$ to \cref{eq:frozen_pde}. Let us refer to this operator as $\mathcal{T}_{1}: \odespace^2 \to \pdespace$. The other operator, $\mathcal{T}_{2}: \pdespace \to \odespace^2$, takes a function $v^* \in \pdespace$ and defines $\mathcal{T}_{2}(v^*)$ as the unique solution $(u, u_b) \in \odespace^2$ of \cref{eq:frozen_odes}. Combining these two operators, we define
 
 \begin{equation*}
     \mathcal{T} := \mathcal{T}_{2} \circ \mathcal{T}_{1} : \odespace^2 \to \odespace^2.
 \end{equation*}
 
 \noindent
-We consider what it means for this operator to have a fixed point. That is, suppose we have functions $(u, u_b) \in \odespace^2$ such that $\mathcal{T}(u, u_b) = (u, u_b)$, and let $v \in \pdespace$ denote the intermediate value $v = \mathcal{T}_{1}(u, u_b)$. Given that then $\mathcal{T}_{2}(v) = (u, u_b)$, by definition this means that $v$ solves \cref{eq:weak_pde} for almost every $t \in (0, T)$, and $w = (u, u_b)$ solves \cref{eq:weak_ode} for almost every $t \in (0, T)$ and $x \in \Gamma$, meaning that $v$, $u$ and $u_b$ are weak solutions of our model. Conversely, if $v$, $u$ and $u_b$ are some weak solutions to the model, then by the uniqueness properties of \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we must have that $\mathcal{T}_{2}(v) = (u, u_b)$ and $\mathcal{T}_{1}(u, u_b) = v$, and thus $\mathcal{T}(u, u_b) = (u, u_b)$.
+We want to show that this operator has a unique fixed point. If this is the case, we have functions $(u, u_b) \in \odespace^2$ such that $\mathcal{T}(u, u_b) = (u, u_b)$, and let $v \in \pdespace$ denote $v = \mathcal{T}_{1}(u, u_b)$. Given that then $\mathcal{T}_{2}(v) = (u, u_b)$, by definition this means that $v$ solves \cref{eq:weak_pde} for almost every $t \in (0, T)$, and $w = (u, u_b)$ solves \cref{eq:weak_ode} for almost every $t \in (0, T)$ and $x \in \Gamma$, meaning that $v$, $u$ and $u_b$ are weak solutions of our model. Conversely, if $v$, $u$ and $u_b$ are weak solutions to the model, then by the uniqueness of solutions in \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we must have that $\mathcal{T}_{2}(v) = (u, u_b)$ and $\mathcal{T}_{1}(u, u_b) = v$, and thus $\mathcal{T}(u, u_b) = (u, u_b)$.
 
-It should be clear now why we are looking to apply the Banach fixed point theorem. If we prove that $\mathcal{T}$ is a contraction, we can guarantee the existence of a fixed point and therefore a weak solution. Since every weak solution of the model is also a fixed point, the theorem also grants us uniqueness of such solutions. To prove that $\mathcal{T}$ is a contraction, we first show this for $\mathcal{T}_{2}$ and $\mathcal{T}_{1}$ separately, after which we can easily combine the results.
+It should be clear now how we will apply Banach's fixed-point theorem. If we prove that $\mathcal{T}$ is a contraction, we can guarantee the existence of a fixed point and therefore a weak solution. Since every weak solution of the model is also a fixed point, the theorem also grants us uniqueness of such solutions. To prove that $\mathcal{T}$ is a contraction, we first show this for $\mathcal{T}_{2}$ and $\mathcal{T}_{1}$ separately, after which we can easily combine the results.
 
 \begingroup
 \newcommand{\vb}{\overline{v}}
@@ -263,7 +264,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \end{equation*}
 
     \noindent
-    We can estimate this norm by bounding its time derivative using the weak form of the PDE. We use \cref{thm:lionsmagenes} to see that
+    We can estimate this norm using the weak form of the PDE\todo{stefanie comment}. We use \cref{thm:lionsmagenes} to see that
 
     \begin{equation*}
     \begin{aligned}
@@ -336,7 +337,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \end{equation*}
 
     \noindent
-    If we trace back the definitions of this constant $M_\eps(T)$, we see that it is continuous in $T$ with a finite value at $T = 0$. This means that for small enough $T$, we will have that $T M_\eps(T) < 1$, finishing this proof.
+    If we trace back the definition of this constant $M_\eps(T)$ in the proof of \cref{lem:exun_frozen_odes}, we see that it is continuous in $T$ with a finite value at $T = 0$. This means that for small enough $T$, we will have that $T M_\eps(T) < 1$, finishing this proof. \todo{We don't know $M_v(T)$}
 \end{proof}
 
 \begin{lemma}{}{contraction_odes}
@@ -440,7 +441,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \end{equation*}
 
     \noindent
-    for almost all $t$. An application of Gronwall's inequality gives
+    for almost all $t$. An application of Gronwall's lemma gives \todo{gronwall application}
 
     \begin{equation*}
     \begin{aligned}
@@ -474,7 +475,7 @@ It should be clear now why we are looking to apply the Banach fixed point theore
     \end{equation*}
 
     \noindent
-    As this factor clearly approaches 0 when $T$ goes to 0, we can lower $T$ until it is less than 1 and conclude the proof.
+    As this factor clearly approaches 0 when $T$ goes to 0, we can choose $T$ sufficiently small such that it is less than 1 and conclude the proof.
 \end{proof}
 
 We have now gathered enough results to prove the main statement of this section.
@@ -489,7 +490,7 @@ We have now gathered enough results to prove the main statement of this section.
     \noindent
     showing that $\mathcal{T}$ is a contraction since $q_2 q_1 \in [0, 1)$.
 
-    We apply the Banach fixed point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$. As previously discussed, this corresponds to a unique weak solution on $[0, \widetilde{T}]$. By setting new initial conditions $u_0 = u(T)$, $u_{b,0} = u_b(T)$ and $v_0 = v(T) := \mathcal{T}_1(u, u_b)(T)$ and applying the same process, this solution can be extended to $[0, \overline{T}]$ for some $\overline{T} > \widetilde{T}$. We continue repeating these steps until a maximum interval $I_{\max}$ is reached, at which point we distinguish three cases.
+    We apply Banach's fixed-point theorem to get a unique fixed point $(u, u_b) \in \odespace^2$. As previously discussed, this corresponds to a unique weak solution on $[0, \widetilde{T}]$. By setting new initial conditions $u_0 = u(T)$, $u_{b,0} = u_b(T)$ and $v_0 = v(T) := \mathcal{T}_1(u, u_b)(T)$ and applying the same process, this solution can be extended to $[0, \overline{T}]$ for some $\overline{T} > \widetilde{T}$. We continue repeating these steps until a maximum interval $I_{\max}$ is reached, at which point we distinguish three cases.
 
     First of all, if $[0, T] \subseteq I_{\max}$, we are immediately done, as we now have a solution on $[0, T]$ with the required properties. If $I_{\max} = [0, T_{\max}]$ for some $T_{\max} < T$, we can set new initial conditions at $u(T_{\max})$, $u_b(T_{\max})$ and $v(T_{\max})$ and extend again, contradicting the fact that $I_{\max}$ is the maximum interval of existence. Lastly, if instead $I_{\max} = [0, T_{\max})$ for some $T_{\max} < T$, we apply \cref{thm:lionsmagenes} to extend $v$ to a continuous function on $[0, T_{\max}]$. This allows us to use the same method again and extend the solution.
     \todo{flip order}

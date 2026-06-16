@@ -90,7 +90,6 @@ forming a Hilbert space. We write $H^k(\Omega)^*$ for its dual space and $\pair{
 \noindent
 for all $u \in H^k(\Omega)^*$ and $v \in H^k(\Omega)$.
 
-\todo{Evans calculus for time derivatives}
 In this thesis, we will be studying a bulk-surface reaction-diffusion model. This means that a function $v$ defined on $\Omega$ will be reacting with some functions defined on a subset of the boundary $\partial \Omega$. These reactions will depend on the values of $v$ on this boundary, but by definition, $H^1(\Omega)$ is a subset of $\Ltwo{\Omega}$, so the functions that make up this Sobolev space are only defined up to a set of measure zero. The problem lies in the fact that the boundary \emph{is} a set of measure zero, so we can generally not say anything about the values that are attained on it yet. We can, however, consider the case where we have a continuously differentiable function $u \in C^1(\overline{\Omega})$, for which the values on $\partial \Omega$ are certainly defined. We can also see $u$ as a function in $H^1(\Omega) \cap C(\overline{\Omega})$, and define $v \vert_{\partial \Omega} := u \vert_{\partial \Omega}$ for every $v \in H^1(\Omega) \cap C(\overline{\Omega})$ that is equal to $u$ almost everywhere in $\Omega$. To further develop this idea, we first state the following property, proved in \cite{evans2010partial}.
 
 \begin{proposition}{Approximation by smooth functions}{approx_by_smooth}
