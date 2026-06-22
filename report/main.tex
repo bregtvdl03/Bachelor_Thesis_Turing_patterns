@@ -38,31 +38,10 @@
 \newcommand{\Ltwo}[1]{L^2(#1)}
 \newcommand{\eps}{\varepsilon}
 \renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\renewcommand{\Re}{\operatorname{Re}}
 \DeclareMathOperator*{\esssup}{ess\,sup}
 \DeclareMathOperator*{\diam}{diam}
 \DeclareMathOperator*{\linspan}{span}
-
-% \newtcolorbox[auto counter, number within=chapter]{definition}[1][]{
-%     colback=red!10,
-%     colframe=red!10,
-%     coltitle=black,
-%     fonttitle=\bfseries,
-%     boxrule=0mm,
-%     boxsep=0mm,
-%     toptitle=4mm,
-%     top=2mm,
-%     bottom=4mm,
-%     left=\parindent,
-%     right=\parindent,
-%     width=\linewidth,
-%     center,
-%     sharp corners,
-%     before skip=\baselineskip,
-%     after skip=\baselineskip,
-%     label type=definition,
-%     title={Definition~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi},
-%     breakable,
-% }
 
 \newtcbtheorem[
     number within=chapter,
@@ -167,29 +146,8 @@
     breakable
 }{prop}
 
-% \newtcolorbox[use counter from=definition, number within=chapter]{theorem}[1][]{
-%     colback=yellow!10,
-%     colframe=yellow!10,
-%     coltitle=black,
-%     fonttitle=\bfseries,
-%     boxrule=0mm,
-%     boxsep=0mm,
-%     toptitle=4mm,
-%     top=2mm,
-%     bottom=4mm,
-%     left=\parindent,
-%     right=\parindent,
-%     width=\linewidth,
-%     center,
-%     sharp corners,
-%     before skip=\baselineskip,
-%     after skip=\baselineskip,
-%     label type=theorem,
-%     title={Theorem~\thetcbcounter\if\relax\detokenize{#1}\relax\else\ (#1)\fi}
-% }
-
-% \def\thesistitle{Models for receptor clustering on the cell membrane}
-\def\thesistitle{The Prosciutto Question}
+\def\thesistitle{Bulk-Surface Models for\\ Ligand-Receptor Dynamics}
+% \def\thesistitle{The Prosciutto Question}
 \def\thesissubtitle{}
 \def\thesisauthorfirst{Bregt}
 \def\thesisauthorsecond{van der Lugt}
@@ -255,9 +213,11 @@
 \input{Chapters/Turing_Patterns/Ch_Turing_Patterns.tex}
 
 \chapter{A bulk-surface model}
+\label{ch:Bulk_surface_model}
 \input{Chapters/BS_Model/Ch_BS_Model.tex}
 
-\chapter{Numerical Analysis}
+\chapter{Numerical analysis}
+\label{ch:Numerical_Analysis}
 \input{Chapters/Numerical_Analysis/Ch_Numerical_Analysis.tex}
 
 \bibliographystyle{alpha}
