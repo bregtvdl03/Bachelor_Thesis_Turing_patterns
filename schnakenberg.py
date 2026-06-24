@@ -22,11 +22,11 @@ FPS = 10
 m = 2
 n = 1
 
-Du = 1.0    # 1.0 Diffusion coef for u
-Dv = 10.0   # 10.0 Diffusion coef for v
-Pu = 0.1    # Production coef for u
-Pv = 0.9    # Production coef for v
-gamma = 128**2 # Reaction scaling
+Du = 1.0        # Diffusion coef for u
+Dv = 50.0       # Diffusion coef for v
+Pu = 0.1        # Production coef for u
+Pv = 0.9        # Production coef for v
+gamma = 32**2   # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -34,18 +34,18 @@ uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 perturbation_strength = 0.1
 
 def initial_condition_u(x):
-    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_u
+    # return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_u
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
-    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_v
+    # return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_v
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 8192
+num_steps = 2048
 dt = T / num_steps
 
 WRITE_EVERY = 32
@@ -93,10 +93,11 @@ u_sol, v_sol = uv_sol.split()
 a = u * phi * ufl.dx \
     + v * psi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
-    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx
+    + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx \
+    + dt * gamma * 0.1 * v * psi * ufl.dx
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
-    + (v_n + dt * gamma * (Pv - 0.1 * v_n - u_n * u_n * v_n)) * psi * ufl.dx
+    + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
 
 #endregion
 
@@ -128,19 +129,19 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 
 plotter = pyvista.Plotter()
-# plotter = pyvista.Plotter(shape=(1, 2), window_size=(3072, 768))
+plotter = pyvista.Plotter(shape=(1, 2), window_size=(3072, 768), border=False)
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
 # plotter.view_xy()
 plotter.camera.zoom(0.2)
-plotter.show_grid(
-    font_size = 20,
-    font_family = "times",
-    xtitle = "x",
-    ytitle = "y",
-    ztitle = "z"
-)
+# actor = plotter.show_grid(
+#     font_size = 20,
+#     font_family = "times",
+#     xtitle = "x",
+#     ytitle = "y",
+#     ztitle = "z"
+# )
 
 warp_factor = 0.1
 u_grid.point_data["uh"] = u_n.x.array[mapu]
@@ -148,15 +149,13 @@ v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
 v_graph = v_grid.warp_by_scalar("vh", factor=warp_factor)
 
-# blues = mpl.colormaps.get_cmap("Blues").resampled(64)
-# ylorrd = mpl.colormaps.get_cmap("YlOrRd").resampled(2)
 colorwidth = 0.1
 
-# plotter.subplot(0,1)
-# plotter.enable_parallel_projection()
-# plotter.isometric_view()
+plotter.subplot(0,1)
+plotter.enable_parallel_projection()
+plotter.isometric_view()
 # plotter.view_xy()
-# plotter.camera.zoom(0.2)
+plotter.camera.zoom(0.2)
 
 plotter.add_mesh(
     u_graph,
@@ -164,41 +163,36 @@ plotter.add_mesh(
     lighting=False,
     opacity=1.0,
     cmap="Blues",
-    clim=[0.0, 4.0],
+    clim=[0.0, 5.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.9
+        "position_y": 0.9,
+        "title":" "
     }
 )
 
-# plotter.subplot(0,0)
+plotter.subplot(0,0)
 
 plotter.add_mesh(
     v_graph,
     show_edges=False,
     lighting=False,
     cmap="Reds",
-    clim=[0.0, 2.0],
+    clim=[0.0, 1.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.9
+        "position_y": 0.9,
+        "title":""
     }
 )
 
-time_text = plotter.add_text(
-    f"{str(int(t/T * 100))}\t/100 %",
-    font_size=14,
-    font="times",
-)
-
-plotter.add_text(
-    "d = 40, a = 0.125, b = 0.420",
-    font_size=10,
-    font="times",
-    position=(5, 5)
-)
+# time_text = plotter.add_text(
+#     f"{str(int(t/T * 100))}\t/100 %",
+#     font_size=14,
+#     font="times",
+# )
 
 #endregion
 
@@ -210,7 +204,7 @@ for n in range(num_steps):
     t += dt
     
     progress = int(t/T * 100)
-    time_text.SetText(2, f"{str(progress)}\t/100 %")
+    # time_text.SetText(2, f"{str(progress)}\t/100 %")
     
     with b.localForm() as loc_b:
         loc_b.set(0)

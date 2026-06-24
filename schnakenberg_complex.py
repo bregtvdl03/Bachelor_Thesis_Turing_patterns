@@ -14,7 +14,7 @@ import basix.ufl
 from dolfinx import fem, mesh, plot
 from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector
 
-OUT_FILE = "out_schnakenberg/schakenberg_complex_2.gif"
+OUT_FILE = "out_schnakenberg/presentatieblub.gif"
 OUT_SCREENSHOT = None   # "out_schnakenberg/schnakenberg_profile.jpg"
 FPS = 10
 
@@ -24,7 +24,7 @@ m = 2
 n = 1
 
 Du = 1.0        # Diffusion coef for u
-Dv = 10.0       # Diffusion coef for v
+Dv = 50.0       # Diffusion coef for v
 Pu = 0.1        # Production coef for u
 Pv = 0.9        # Production coef for v
 gamma = 32.0**2 # Reaction scaling
@@ -66,10 +66,10 @@ def initial_condition_v(x):
 
 t = 0.0
 T = 100.0 / gamma
-num_steps = 64000
+num_steps = 200000
 dt = T / num_steps
 
-WRITE_EVERY = 512
+WRITE_EVERY = 4000
 
 nx, ny = 128, 128
 
@@ -161,19 +161,19 @@ u_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V0))
 w_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V1))
 v_grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V2))
 
-plotter = pyvista.Plotter()
+plotter = pyvista.Plotter(shape=(1, 3), window_size=(3072, 768), border=False)
 plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
 # plotter.view_xy()
-# plotter.camera.zoom(0.2)
-plotter.show_grid(
-    font_size = 20,
-    font_family = "times",
-    xtitle = "x",
-    ytitle = "y",
-    ztitle = "z"
-)
+plotter.camera.zoom(0.2)
+# plotter.show_grid(
+#     font_size = 20,
+#     font_family = "times",
+#     xtitle = "x",
+#     ytitle = "y",
+#     ztitle = "z"
+# )
 
 warp_factor = 0.1
 
@@ -192,7 +192,7 @@ plotter.add_mesh(
     lighting=False,
     opacity=1.0,
     cmap="Blues",
-    clim=[uss_u - colorwidth, uss_u + colorwidth],
+    clim=[0.0, 5.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -200,34 +200,47 @@ plotter.add_mesh(
     }
 )
 
+plotter.subplot(0,1)
+plotter.enable_parallel_projection()
+plotter.isometric_view()
+# plotter.view_xy()
+plotter.camera.zoom(0.2)
+
 plotter.add_mesh(
     w_graph,
     show_edges=False,
     lighting=False,
-    cmap="Reds",
-    clim=[uss_w - colorwidth, uss_w + colorwidth],
+    cmap="Greens",
+    clim=[0.0, 5.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.82
+        "position_y": 0.9
     }
 )
+
+plotter.subplot(0,2)
+plotter.enable_parallel_projection()
+plotter.isometric_view()
+# plotter.view_xy()
+plotter.camera.zoom(0.2)
 
 plotter.add_mesh(
     v_graph,
     show_edges=False,
     lighting=False,
-    cmap="Greens",
-    clim=[uss_v - colorwidth, uss_v + colorwidth],
+    cmap="Reds",
+    clim=[0.0, 1.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
-        "position_y": 0.74
+        "position_y": 0.9
     }
 )
 
+plotter.subplot(0,0)
 time_text = plotter.add_text(
-    f"{str(int(t/T * 100))}\t/100 %",
+    f"t = {0}",
     font_size=14,
     font="times",
 )
@@ -242,7 +255,7 @@ for n in range(num_steps):
     t += dt
     
     progress = int(t/T * 100)
-    time_text.SetText(2, f"{str(progress)}\t/100 %")
+    time_text.SetText(2, f"t = {round(t, 2)}")
     
     with b.localForm() as loc_b:
         loc_b.set(0)
