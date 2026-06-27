@@ -1,3 +1,5 @@
+import vtkmodules.vtkRenderingFreeType
+import vtkmodules.vtkRenderingMatplotlib
 import pyvista
 import ufl
 import numpy as np
@@ -26,7 +28,7 @@ Du = 1.0        # Diffusion coef for u
 Dv = 50.0       # Diffusion coef for v
 Pu = 0.1        # Production coef for u
 Pv = 0.9        # Production coef for v
-gamma = 32**2   # Reaction scaling
+gamma = 12      # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -34,13 +36,13 @@ uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
 perturbation_strength = 0.1
 
 def initial_condition_u(x):
-    # return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_u
+    return uniform_steady_state_u + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_u
     # return [uniform_steady_state_u] * x.shape[1]
 
 def initial_condition_v(x):
-    # return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
-    return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_v
+    return uniform_steady_state_v + perturbation_strength * (np.random.rand(x.shape[1]) - 0.5)
+    # return (np.exp(-400 * (x[0]**2 + x[1]**2)) + np.exp(-400 * ((x[0] - 0.5)**2 + (x[1] + 0.3)**2)) + np.exp(-400 * ((x[0] + 0.2)**2 + (x[1] - 0.7)**2)) + np.exp(-400 * ((x[0] + 0.3)**2 + (x[1] + 0.8)**2))) + uniform_steady_state_v
     # return [uniform_steady_state_v] * x.shape[1]
 
 t = 0.0
@@ -54,7 +56,7 @@ nx, ny = 128, 128
 
 domain = mesh.create_rectangle(
     comm=MPI.COMM_WORLD,
-    points=[[-1.0, -1.0], [1.0, 1.0]],
+    points=[[-8.0, -8.0], [8.0, 8.0]],
     n=[nx, ny],
     cell_type=mesh.CellType.triangle
 )
@@ -94,7 +96,7 @@ a = u * phi * ufl.dx \
     + v * psi * ufl.dx \
     + dt * Du * ufl.dot(ufl.grad(u), ufl.grad(phi)) * ufl.dx \
     + dt * Dv * ufl.dot(ufl.grad(v), ufl.grad(psi)) * ufl.dx \
-    + dt * gamma * 0.1 * v * psi * ufl.dx
+    # + dt * gamma * 0.1 * v * psi * ufl.dx
 
 L = (u_n + dt * gamma * (Pu - u_n + u_n * u_n * v_n)) * phi * ufl.dx \
     + (v_n + dt * gamma * (Pv - u_n * u_n * v_n)) * psi * ufl.dx
@@ -134,7 +136,7 @@ plotter.open_gif(OUT_FILE, fps=FPS)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
 # plotter.view_xy()
-plotter.camera.zoom(0.2)
+# plotter.camera.zoom(0.2)
 # actor = plotter.show_grid(
 #     font_size = 20,
 #     font_family = "times",
@@ -143,7 +145,7 @@ plotter.camera.zoom(0.2)
 #     ztitle = "z"
 # )
 
-warp_factor = 0.1
+warp_factor = 1.0
 u_grid.point_data["uh"] = u_n.x.array[mapu]
 v_grid.point_data["vh"] = v_n.x.array[mapv]
 u_graph = u_grid.warp_by_scalar("uh", factor=warp_factor)
@@ -155,7 +157,7 @@ plotter.subplot(0,1)
 plotter.enable_parallel_projection()
 plotter.isometric_view()
 # plotter.view_xy()
-plotter.camera.zoom(0.2)
+# plotter.camera.zoom(0.2)
 
 plotter.add_mesh(
     u_graph,
@@ -168,7 +170,8 @@ plotter.add_mesh(
         "font_family": "times",
         "position_x": 0.2,
         "position_y": 0.9,
-        "title":" "
+        "title_font_size":30,
+        "title":r"$u$"
     }
 )
 
@@ -184,15 +187,18 @@ plotter.add_mesh(
         "font_family": "times",
         "position_x": 0.2,
         "position_y": 0.9,
-        "title":""
+        "title_font_size":30,
+        "title":r"$v$"
     }
 )
 
-# time_text = plotter.add_text(
-#     f"{str(int(t/T * 100))}\t/100 %",
-#     font_size=14,
-#     font="times",
-# )
+time_text = plotter.add_text(
+    fr"$t = {round(t) * gamma}\ /\ \gamma$",
+    font_size=14,
+    font="times",
+)
+
+plotter.write_frame()
 
 #endregion
 
@@ -204,7 +210,7 @@ for n in range(num_steps):
     t += dt
     
     progress = int(t/T * 100)
-    # time_text.SetText(2, f"{str(progress)}\t/100 %")
+    time_text.SetText(2, fr"$t = {round(t * gamma)}\ /\ \gamma$")
     
     with b.localForm() as loc_b:
         loc_b.set(0)
@@ -230,6 +236,9 @@ for n in range(num_steps):
         os.system("clear")
         eta = timedelta(seconds=round((time.monotonic() - start) / (n + 1) * num_steps - time.monotonic() + start))
         print(f"ETA: {eta}")
+        
+        print(f"u_n: {min(u_n.x.array[mapu])} - {max(u_n.x.array[mapu])}")
+        print(f"v_n: {min(v_n.x.array[mapv])} - {max(v_n.x.array[mapv])}")
 
 if OUT_SCREENSHOT:
     plotter.view_xz()
