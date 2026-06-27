@@ -27,7 +27,7 @@ Du      = 1.0       # Diffusion coef for u
 Dv      = 50.0      # Diffusion coef for v
 Pu      = 0.1     # Production coef for u
 Pv      = 0.9     # Production coef for v
-gamma   = 64.0      # Reaction scaling
+gamma   = 32.0      # Reaction scaling
 
 uniform_steady_state_u = Pu + Pv
 uniform_steady_state_v = (Pv / (Pu + Pv)**m) ** (1/n)
@@ -191,7 +191,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap="Blues",
-    clim=[uniform_steady_state_u - perturbation_strength, uniform_steady_state_u + perturbation_strength],
+    clim=[0.0, 2.0],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -205,7 +205,7 @@ plotter.add_mesh(
     show_edges=False,
     lighting=False,
     cmap="Reds",
-    clim=[uniform_steady_state_v - perturbation_strength, uniform_steady_state_v + perturbation_strength],
+    clim=[0.4, 1.3],
     scalar_bar_args={
         "font_family": "times",
         "position_x": 0.2,
@@ -263,7 +263,7 @@ for n in range(num_steps):
         v_graph.point_data["vh"][:] = vh.x.array
 
         plotter.write_frame()
-
+        
 plotter.close()
 
 #endregion
