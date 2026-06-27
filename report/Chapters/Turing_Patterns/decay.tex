@@ -1,0 +1,22 @@
+The $-u$ term in \cref{eq:schnakenberg_reactions} could be interpreted as natural decay of the species represented by $u$. We show that the addition of decay of $v$ does not cause the model to lose its ability to generate Turing patterns. To this end, consider the kinetics
+
+\begin{equation}
+    f(u, v) = a - u + u^2 v \qquad \text{and} \qquad g(u, v) = b - \delta_v v - u^2 v,
+\end{equation}
+
+\noindent
+where $\delta_v > 0$ is the decay coefficient for $v$. When we use these new kinetics in the model of \cref{eq:reac_diff} with the new parameter $\delta_v$ set to $0.1$, we see from the simulations in \cref{fig:schnak_dec_1-3} are also able to generate Turing patterns. In this simulation, the other parameters are set to the same values as before, i.e. $d = 50$, $a = 0.1$, $b = 0.9$ and $\gamma = 8$. The domain is $\Omega = (-8, 8)^2$ again, and the initial conditions are the same as in \cref{eq:schnakenberg_initial} with
+
+\begin{equation*}
+    V := \frac{b}{U^2 + \delta_v}
+\end{equation*}
+
+\noindent
+and $U$ being a positive real root of
+
+\begin{equation*}
+    U^3 - (a + b)U^2 + \delta_v U - a \delta_v = 0,
+\end{equation*}
+
+\noindent
+if such a root exists. One can check that if $\delta_v = 0$, this returns the uniform steady states from the classical Schnakenberg equations, given in \cref{eq:schnakenberg_steadystates}.
