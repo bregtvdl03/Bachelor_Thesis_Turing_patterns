@@ -65,7 +65,7 @@ The Schnakeberg equations, originally discussed in \cite{schnakenberg79}, is an 
 \end{equation}
 
 \noindent
-where $a$ and $b$ are positive real numbers representing constant production of both chemical species. In \cite{murray03}, a detailed analysis is given into the specific conditions for these reactions to form Turing patterns in one-dimensional domains. As a result, we get conditions for the production parameters $a$ and $b$ that define a subset of the $(a, b)$-plane within which Turing instabilities take place, referred to as the \emph{Turing space}. This subset is given by the area between the two curves
+where $a$ and $b$ are positive real numbers representing constant production of both chemical species. In \cite{murray03}, a detailed analysis is given into the specific conditions for these reactions to form Turing patterns in one-dimensional domains. As a result, we get conditions for the parameters in the model that define a subset of the parameter space within which Turing instabilities take place, referred to as the \emph{Turing space}. For fixed $d$, this subset is given by the area between the two curves
 
 \begin{align*}
     a &> \frac{1}{2} u_0 \left(1 - u_0^2\right), & b &= \frac{1}{2} u_0 \left(1 + u_0^2\right), \\
@@ -73,4 +73,11 @@ where $a$ and $b$ are positive real numbers representing constant production of 
 \end{align*}
 
 \noindent
-where $u_0$ is the chosen steady state for $u$. 
+parameterised by $u_0$, see \cref{fig:turingspace}. If $(a, b)$ is in between these two curves and $\gamma$ is high enough, a Turing instability will take place. You can see that the Turing space grows as larger values of $d$ are chosen. 
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.5\linewidth]{img/Turing_space.png}
+    \caption{The Turing space for \cref{eq:schnakenberg_reactions} plotted for $d = 20$, $d = 50$ and $d = 100$.}
+    \label{fig:turingspace}
+\end{figure}
