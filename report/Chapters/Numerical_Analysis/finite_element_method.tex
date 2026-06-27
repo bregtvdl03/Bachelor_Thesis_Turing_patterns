@@ -1,4 +1,4 @@
-Numerical methods for ODEs typically include defining a small time step and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. This is called the finite \emph{difference} method \todo{Stefanie comment}, and it is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
+Numerical methods for ODEs typically include defining a small time step and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. One method that uses this approach is the finite \emph{difference} method, which is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
 
 The finite \emph{element} method is another way to approximate solutions to a PDE. It is mainly used for discretising the space variable, so let us focus on an example that does not include time. We consider the standard Poisson equation
 
@@ -31,7 +31,6 @@ The subscript $h$ derives from the idea that this still represents the fineness 
     h := \max_{T \in \mathcal{T}_h} \diam(T),
 \end{equation*}
 
-\todo{ugly??}
 \noindent
 we want $\Omega_h$ to approximate $\Omega$ increasingly well as $h$ approaches $0$. \todo{example}
 
