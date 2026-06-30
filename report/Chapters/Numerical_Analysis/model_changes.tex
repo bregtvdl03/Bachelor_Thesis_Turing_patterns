@@ -1,20 +1,20 @@
-\subsubsection{Diffusion on the surface}
+\subsection{Diffusion on the surface}
 
 Now that we are working with simulations, we can make our model slightly more complex by dropping one of our assumptions. Let $\Omega$ and $\Gamma$ be constructed as in \cref{sec:bio_motiv}. In this chapter, we restrict our study to the dimensions of $d = 2$ and $d = 3$, since these are the most relevant to the biological applications of this model. Recall that in \cref{sec:bio_motiv}, we assumed the receptors, both free and bounded, to be fixed in place on the cell membrane. This resulted in a system of one PDE and two ODEs, the latter being both defined separately for every point on the cell membrane. We now drop this assumption and add diffusion of free and bounded receptors, leading to a new system of reaction diffusion PDEs given by
 
 \begin{equation}
     \label{eq:threespeciesmodel}
     \begin{aligned}
-    u_t &= D_u \Delta u + P_u + \alpha u_b - \delta_u u - 2 \kon u^2 v + 2 \koff u_b & \text{on } &(0, T) \times \Gamma, \\
-    u_{b,t} &= D_{u_b} \Delta u_b - \delta_{u_b} u_b + \kon u^2 v - \koff u_b & \text{on } &(0, T) \times \Gamma, \\
-    v_t &= D_v \Delta v - \delta_v v & \text{in } &(0, T) \times \Omega, \\
-    D_v \pderiv[v]{\nu} &= P_v - \kon u^2 v + \koff u_b & \text{on } &(0, T) \times \Gamma, \\
+    u_t &= D_u \Delta u + \gamma \left( P_u + \alpha u_b - \delta_u u - 2 \kon u^2 v + 2 \koff u_b \right) & \text{on } &(0, T) \times \Gamma, \\
+    u_{b,t} &= D_{u_b} \Delta u_b + \kappa \gamma \left( - \delta_{u_b} u_b + \kon u^2 v - \koff u_b \right) & \text{on } &(0, T) \times \Gamma, \\
+    v_t &= D_v \Delta v - \gamma \delta_v v & \text{in } &(0, T) \times \Omega, \\
+    D_v \pderiv[v]{\nu} &= \gamma \left( P_v - \kon u^2 v + \koff u_b \right) & \text{on } &(0, T) \times \Gamma, \\
     D_v \pderiv[v]{\nu} &= 0 & \text{on } &(0, T) \times \Gamma_e, \\
 \end{aligned}
 \end{equation}
 
 \noindent
-where $D_u$ and $D_{u_b}$ are positive. The corresponding initial conditions are
+where $D_u$ and $D_{u_b}$ are positive. We have also added two reaction scaling coefficients $\gamma > 0$ and $\kappa > 0$. When Turing instabilities can take place in the system, we will adjust $\gamma$ such that the domain is sufficiently large and the patterns become visible. The second scaling coefficient $\kappa$ is used to simulate the quasi-steady state assumption we will discuss in the next subsection. The corresponding initial conditions are
 
 \begin{equation*}
 \begin{aligned}
@@ -29,9 +29,9 @@ There are multiple things to note about \cref{eq:threespeciesmodel}. Since $\Gam
 
 Since we now have PDEs for $u$ and $u_b$, it seems necessary to impose certain boundary conditions. However, recalling our exact construction of the domain, we can see that the set $\Gamma$ representing the cell membranes, when viewed as a separate $(d - 1)$-dimensional manifold, does not have a boundary. Since the equations for $u$ and $u_b$ strictly live on this manifold, boundary conditions are not required.
 
-\subsubsection{Derivation of the two-species model}
+\subsection{Derivation of the two-species model}
 
-We seek to compare this three-species bulk-surface model to a two-species model similar to that derived in $\cite{iber2014}$. To obtain such a two-species model, we make some of the same assumptions. The first and most impactful is that the dynamics of the bounded receptors are sufficiently fast to make $u_{b, t}$ and $\Delta u_b$ are negligible. This results in an explicit expression for $u_b$ in terms of $u$ and $v$,
+We seek to compare this three-species bulk-surface model to a two-species model similar to that derived in $\cite{iber2014}$. To obtain such a two-species model, we make some of the same assumptions. The first and most impactful is that the dynamics of the bounded receptors are so fast that $u_{b, t}$ and $\Delta u_b$ are negligible. In the simulations, this will be realised by setting $\kappa \gg 1$. This results in an explicit expression for $u_b$ in terms of $u$ and $v$,
 
 \begin{equation*}
     u_b = \frac{\kon}{\delta_{u_b} + \koff} u^2 v .
@@ -43,9 +43,9 @@ This is called a \emph{quasi-steady state}. This expression enables us to write 
 \begin{equation}
 \label{eq:twospeciesmodel}
 \begin{aligned}
-    u_t &= D_u \Delta u + P_u - \delta_u u + \beta u^2 v & \text{on } &(0, T) \times \Gamma, \\
-    v_t &= D_v \Delta v - \delta_v v & \text{in } &(0, T) \times \Omega, \\
-    D_v \pderiv[v]{\nu} &= P_v - \beta u^2 v & \text{on } &(0, T) \times \Gamma, \\
+    u_t &= D_u \Delta u + \gamma \left( P_u - \delta_u u + \beta u^2 v \right) & \text{on } &(0, T) \times \Gamma, \\
+    v_t &= D_v \Delta v - \gamma \delta_v v & \text{in } &(0, T) \times \Omega, \\
+    D_v \pderiv[v]{\nu} &= \gamma \left( P_v - \beta u^2 v \right) & \text{on } &(0, T) \times \Gamma, \\
     D_v \pderiv[v]{\nu} &= 0 & \text{on } &(0, T) \times \Gamma_e, \\
 \end{aligned}
 \end{equation}

@@ -46,26 +46,24 @@ The following is a much more complex inequality, which is used very often in the
     for all $t \in [0, T]$.
 \end{lemma}
 
-This is known as the \emph{differential form} of Gronwall's lemma. We also have an \emph{integral form}, which is especially useful when dealing with non-differentiable functions. 
+This is known as the \emph{differential form} of Gronwall's lemma. A proof can be found in \cite{evans2010partial}. We also have an \emph{integral form}, which is especially useful when dealing with non-differentiable functions. 
 
 \begin{lemma}{Gronwall's lemma: integral form}{gronwall_int}
-    Let $T > 0$ and let $\xi$ be a non-negative, $L^1$ function on $[0, T]$ which satisfies
+    Let $T > 0$ and let $y: [0, T] \to \R$ and $a: [0, T] \to \R$ be nonnegative functions such that $a$ and $ay$ belong to $L^1([0, T])$ and
 
     \begin{equation*}
-        \xi(t) \leq C_1 \int_{0}^{t} \xi(s) \d s + C_2
+        y(t) \leq C + \int_{0}^{t} y(s)a(s) \d s
     \end{equation*}
 
     \noindent
-    for almost every $t \in [0, T]$ and constants $C_1, C_2 \geq 0$. Then
+    for some constant $C$ and all $t \in [0, T]$. Then for any $t \in [0, T]$, we have
 
     \begin{equation*}
-        \xi(t) \leq C_2 \left( 1 + C_1 t e^{C_1 t} \right)
+        y(t) \leq C e^{\int_{0}^{t} a(s) \d s} .
     \end{equation*}
-
-    for almost every $t \in [0, T]$.
 \end{lemma}
 
-Both of their proofs can be found in \cite{evans2010partial}.
+This formulation can be found in \cite{chepyzhov02}.
 
 \begin{definition}{}{}
     Let $\Omega \subseteq \R^d$ be open. A Lebesgue measurable function $f: \Omega \to \R$ is said to be \emph{locally integrable} if

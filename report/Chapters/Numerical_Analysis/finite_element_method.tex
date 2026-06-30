@@ -1,5 +1,7 @@
 Numerical methods for ODEs typically include defining a small time step and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. One method that uses this approach is the finite \emph{difference} method, which is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case, so we need a more robust and adaptable approach.
 
+\subsection{Basic construction}
+
 The finite \emph{element} method is another way to approximate solutions to a PDE. It is mainly used for discretising the space variable, so let us focus on an example that does not include time. We consider the standard Poisson equation
 
 \begin{equation}
@@ -16,7 +18,23 @@ with Neumann boundary conditions
 \end{equation}
 
 \noindent
-Here, $\Omega \subseteq \R^d$ is an open and bounded set with $C^1$ boundary and $f$ and $g$ are known functions on $\Omega$ and $\partial \Omega$, respectively. To discretise this spatial domain, we use the same approach as in \cite{dziuk_elliott_2013} to define a \emph{mesh}. We choose a finite number of points $\{ x_i \}_{i = 1}^{m}$ in $\Omega$ and use them as endpoints of $d$-simplices\footnote{An $n$-simplex is the $n$-dimensional equivalent of a triangle. The most important instances are the 0-simplex, which is a point, the 1-simplex, a line segment, the 2-simplex, a triangle, and the 3-simplex, a tetrahedron. Every $n$-simplex is enclosed by $n + 1$ $(n-1)$-simplices, which in turn are enclosed by $(n-2)$-simplices, etc. All of these are referred to as its subsimplices.}, which we collect in a set $\mathcal{T}_h$. These points are called \emph{nodes}, and the $d$-simplices they enclose are referred to as \emph{elements}. To have a well-behaved discretisation, for any two distinct $d$-simplices $T, T' \in \mathcal{T}_h$ we require $T \cap T'$ to either be empty or form a common subsimplex of dimension $k < d$.
+Here, $\Omega \subseteq \R^d$ is an open and bounded set with $C^1$ boundary and $f$ and $g$ are known real-valued functions on $\Omega$ and $\partial \Omega$, respectively. We first derive the weak form of this PDE. Multiply \cref{eq:fem_ex_poisson} with a smooth function $\phi \in C^\infty(\Omega)$ and integrate to get
+
+\begin{equation*}
+    \int_\Omega f \phi = \int_\Omega \Delta u \phi = \int_{\partial \Omega} \pderiv[u]{\nu} \phi \d S - \int_\Omega \nabla u \cdot \nabla \phi = \int_{\partial \Omega} g \phi \d S - \int_\Omega \nabla u \cdot \nabla \phi.
+\end{equation*}
+
+\noindent
+A weak solution of \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois} then is a function $u \in H^1(\Omega)$ such that
+
+\begin{equation}\label{eq:fem_pois_weak_form}
+     \int_\Omega \nabla u \cdot \nabla \phi = \int_{\partial \Omega} g \phi \d S - \int_\Omega f \phi
+\end{equation}
+
+\noindent
+for every $\phi \in H^1(\Omega)$.
+
+By discretising the spatial domain, we will transform \cref{eq:fem_pois_weak_form} into a system of linear equations. To this end, we use the same approach as in \cite{dziuk_elliott_2013} and define a \emph{mesh}. We choose a finite number of points $\mathcal{N}_h = \{ x_i \}_{i = 1}^{m}$ in $\overline{\Omega}$ and use them as vertices to define $d$-simplices\footnote{An $n$-simplex is the $n$-dimensional equivalent of a triangle. The most important instances are the 0-simplex, which is a point, the 1-simplex, a line segment, the 2-simplex, a triangle, and the 3-simplex, a tetrahedron. Every $n$-simplex is enclosed by $n + 1$ $(n-1)$-simplices, which in turn are enclosed by $(n-2)$-simplices, etc. All of these are referred to as its subsimplices.}, which we collect in a set $\mathcal{T}_h$. These points are called \emph{nodes}, and the $d$-simplices they enclose are referred to as \emph{elements}. To have a well-behaved discretisation, for any two distinct $d$-simplices $T, T' \in \mathcal{T}_h$ we require $T \cap T'$ to either be empty or form a common subsimplex of dimension $k < d$.
 
 This leaves us with an approximation of $\Omega$, denoted by
 
@@ -34,26 +52,26 @@ The subscript $h$ derives from the idea that this still represents the fineness 
 \noindent
 we want $\Omega_h$ to approximate $\Omega$ increasingly well as $h$ approaches $0$. \todo{example}
 
-Additionally, we want a discretised function space that we use to construct approximate solutions to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}, called the \emph{trial space}. To this end, for every node $x_i$, we define a basis function $\phi_i: \Omega_h \to \R$ such that $\phi_i(x_i) = 1$, $\phi_i(x_j) = 0$ for all $j \neq i$ and $\phi_i$ is linearly interpolated on each element. \todo{example} Now the function space we consider for our trial functions is the space of linear combinations of these basis functions,
+Additionally, we want a discretised function space that we use to construct approximate solutions to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}, called the \emph{trial space}. To this end, for every node $x_i \in \mathcal{N}_h$, we define a basis function $\phi_i: \Omega_h \to \R$ such that $\phi_i(x_j) = \delta_{ij}$ for all $j \in  \{ 1, \dots, m \}$ and $\phi_i$ is linearly interpolated on each element. \todo{example} Now the function space we consider for our trial functions is the space of linear combinations of these basis functions,
 
 \begin{equation*}
-    \mathcal{V}_h := \linspan \{ \phi_1, \dots, \phi_m \}.
+    \mathcal{V}_{\Omega_h} := \linspan \{ \phi_1, \dots, \phi_m \},
 \end{equation*}
 
 \noindent
-This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many other kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements. \todo{reference}
+which is a finite-dimensional subspace of $H^1(\Omega)$\todo{$H^1(\Omega_h)$ better?}. This is called the space of \emph{first-order Lagrange elements}, derived from the fact that the functions are piecewise linear polynomials on each element. There are many other kinds of function spaces used in finite element simulations, such as second-order Lagrange spaces, where the functions are piecewise quadratic polynomials on each element, or spaces where the functions are allowed to be discontinuous, referred to as discontinuous Galerkin elements. \todo{reference}
 
-We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_h$ be an approximate solution to \cref{eq:fem_ex_poisson,eq:fem_ex_neumann_pois}. Than for any $i \in \{ 1, \dots, m \}$, we can multiply the Poisson equation by $\phi_i$, integrate over $\Omega_h$ and use partial integration to get
+We can now use this setup to convert our original problem into one that a computer can handle. Let $u_h \in \mathcal{V}_{\Omega_h}$ be an approximate solution to \cref{eq:fem_pois_weak_form}. That is, let $u_h$ solve
 
 \begin{equation*}
-    \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \Delta u_h \phi_i = \int_{\partial \Omega_h} \pderiv[u_h]{\nu} \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i = \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} \nabla u_h \cdot \nabla \phi_i .
+    \int_{\Omega_h} \nabla u_h \cdot \nabla \phi = \int_{\partial \Omega_h} g \phi \d S - \int_{\Omega_h} f \phi
 \end{equation*}
 
 \noindent
-Rearranging terms and writing $u_h$ as its linear decomposition with coefficients $U_1, \dots, U_m \in \R$, we derive
+for every $\phi \in \mathcal{V}_{\Omega_h}$\footnote{Note that for this to be well-defined, we should also define some approximation of $g$ and $f$ such that they are properly defined on $\partial \Omega_h$ and $\Omega_h$, respectively. We will not go into detail about that here.}. Than for any $i \in \{ 1, \dots, m \}$, we can set $\phi = \phi_i$ and write $u_h$ as its linear decomposition with coefficients $U_1, \dots, U_m \in \R$, deriving
 
 \begin{equation*}
-    \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \nabla \left( \sum_{j = 1}^{N} U_j \phi_j \right) \cdot \nabla \phi_i = \sum_{j = 1}^{m} U_j \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i .
+    \int_{\partial \Omega_h} g \phi_i  \d S - \int_{\Omega_h} f \phi_i = \int_{\Omega_h} \nabla \left( \sum_{j = 1}^{m} U_j \phi_j \right) \cdot \nabla \phi_i = \sum_{j = 1}^{m} U_j \int_{\Omega_h} \nabla \phi_j \cdot \nabla \phi_i .
 \end{equation*}
 
 \noindent
@@ -73,7 +91,9 @@ for every $i, j \in \{1, \dots, m\}$, this is equivalent to the linear system
 \noindent
 Here, $K$ is typically referred to as the \emph{stiffness matrix}. We have now transformed the PDE into a linear system of equations, which we can solve using a wide variety of algorithms.
 
-Before deriving the linear system for \cref{eq:threespeciesmodel}, we should quickly illustrate how time discretisation ties into this approach. Consider, therefore, the heat equation
+\subsection{Time-dependent PDEs}
+
+We should quickly illustrate how time discretisation ties into this approach. Consider, therefore, the heat equation
 
 \begin{equation}
     \label{eq:fem_ex_heat}
@@ -89,7 +109,7 @@ with Neumann boundary conditions
 \end{equation}
 
 \noindent
-where $T > 0$ is some final time and now $f$ and $g$ are functions on $(0, T) \times \Omega$ and $[0, T) \times \partial \Omega$, respectively. Of course, we also need initial conditions
+where $T > 0$ is some final time and now $f$ and $g$ are real-valued functions on $(0, T) \times \Omega$ and $[0, T) \times \partial \Omega$, respectively. Of course, we also need initial conditions
 
 \begin{equation}
     \label{eq:fem_ex_initial}
@@ -97,17 +117,19 @@ where $T > 0$ is some final time and now $f$ and $g$ are functions on $(0, T) \t
 \end{equation}
 
 \noindent
-Similarly to the numerical study of ODEs, we choose a number of steps $N \in \N$ and let $\tau := T/N$. For every $n \in \{0, \dots, N\}$, we seek to approximate the time step
+From \cref{sec:weak_forms}, we know that we can define a weak solution of this PDE as a function $u \in H^1(0, T; H^1(\Omega))$ such that \cref{eq:weak_heat} holds for every $\phi \in H^1(\Omega)$ and almost every $t \in [0, T]$.
+
+Similarly to the numerical study of ODEs, we now choose a number of steps $N \in \N$ and let $\tau := T/N$. For every $n \in \{1, \dots, N\}$, we seek to approximate the time step
 
 \begin{equation*}
-    u_n(x) := u(n\tau, x).
+    u_n(x) := u(n\tau, x), \qquad x \in \Omega.
 \end{equation*}
 
 \noindent
-To this end, we use the difference quotient to approximate the time derivative,
+To this end, we use a difference quotient to approximate the time derivative and write
 
 \begin{equation*}
-    \frac{u_{n + 1}(x) - u_{n}(x)}{\tau} \approx \Delta u_{n + 1} (x) + f(n\tau, x),
+    \int_{\Omega} \frac{u_{n + 1} - u_n}{\tau} \phi + \int_{\Omega} \nabla u_{n + 1} \cdot \nabla \phi = \int_{\partial \Omega} g(n \tau, x) \phi(x) \d S(x) + \int_\Omega f(n \tau, x) \phi(x) \d x .
 \end{equation*}
 
 \noindent
@@ -115,12 +137,12 @@ where we have used implicit diffusion and explicit forcing. This is a widely use
 
 After rearranging terms, this leads to the time-independent problem
 
-\begin{equation*}
-    u_{n + 1}(x) \approx \tau \Delta u_{n + 1}(x) + u_n(x) + \tau f(n \tau, x), \qquad n = 0, \dots, N - 1.
-\end{equation*}
+\begin{equation}\label{eq:fem_weak_form}
+    \int_\Omega u_{n + 1} \phi + \tau \int_\Omega \nabla u_{n + 1} \cdot \nabla \phi = \tau \int_\Gamma g(n \tau, x) \phi(x) \d S(x) + \int_\Omega u_n \phi + \tau \int_\Omega f(n \tau, x) \phi(x) \d x
+\end{equation}
 
 \noindent
-We can now use the same approach as before, transforming this problem into a linear system of equations
+for $n = 0, \dots, N - 1$. After substituting $u_{n + 1}$ and $u_n$ with their linear decompositions and setting $\phi = \phi_i \in \mathcal{V}_{\Omega_h}$ for some $i \in \{ 1, \dots, m \}$, this is transformed to the system of equations
 
 \begin{equation*}
     (M + \tau K) U^{n + 1} = M U^n + \tau F^n,
@@ -139,3 +161,37 @@ for $i, j \in \{1, \dots, m\}$. $M$ is often called the \emph{mass matrix}. When
 \begin{equation*}
     U^0_i := u_0(x_i), \qquad i = 0, \dots, m.
 \end{equation*}
+
+In this example, we first discretised time, leading to a PDE in space which was then discretised with the finite element method. This order can also be swapped by assuming that the approximate solution $u$ can be written as a linear combination of functions in $\mathcal{V}_{\Omega_h}$ with time-dependent coefficients
+
+\begin{equation*}
+    u(t, x) = \sum_{j = 1}^{m} U_j(t) \phi_j(x) .
+\end{equation*}
+
+\noindent
+Then the process of integrating over $\Omega$ and using integration by parts leads to a system of linear ODEs for $U(t) = \left(U_1(t), \dots, U_m(t)\right)$, called the \emph{semi-discrete} form of the PDE \cite{vidar84}. This approach is more similar to the Galerkin method for proving existence and uniqueness of weak solutions to PDEs as demonstrated in \cite{evans2010partial}. The reason why we instead choose to illustrate discretising time first is that, as we will discuss later, the libraries we use to simulate the PDEs require us to input the form of \cref{eq:fem_weak_form}, after which it will derive the linear system of equations for us. This makes it more important for us to explicitly think about discretising time instead of first discretising space.
+
+\subsection{Bulk-surface equations}
+
+In a bulk-surface setting, interacting functions are defined on different domains that depend on each other, so we should carefully think about how to discretise them. Let $\Gamma \subseteq \partial \Omega$. When simulating a bulk-surface equation, we first discretise the bulk and extract the surface mesh from the bulk mesh by defining the set of \emph{boundary facets} (or \emph{exterior facets})
+%
+\begin{equation*}
+    \mathcal{F}_h^e := \{ S \mid S \text{ is a $(d-1)$-dimensional subsimplex of some } T \in \mathcal{T}_h \text{ and every vertex of $S$ lies on } \Gamma\},
+\end{equation*}
+
+\noindent
+after which we define
+
+\begin{equation*}
+    \Gamma_h := \bigcup_{S \in \mathcal{F}_h^e} S \subseteq \partial \Omega_h,
+\end{equation*}
+
+\noindent
+analogous to the definition of $\Omega_h$. This also generates a subset of boundary nodes $\mathcal{N}_h^\Gamma := \mathcal{N}_h \cap \Gamma_h = \{ y_1, \dots, y_l \}$, on which we can define another collection of basis functions $\psi_1, \dots, \psi_l$ such that $\psi_i (y_j) = \delta_{ij}$ for every $i,j \in \{ 1, \dots, l \}$ and every $\psi_i$ is linearly interpolated in between nodes. This defines a finite-dimensional subspace of $H^1(\Gamma)$ given by
+
+\begin{equation*}
+    \mathcal{V}_{\Gamma_h} := \linspan \{ \psi_1, \dots \psi_l \}.
+\end{equation*}
+
+\noindent
+In the next section, this function space is used to derive the time discretisations for our bulk surface models.
