@@ -9,7 +9,7 @@ Using the notion of weak derivatives, we can weaken the requirements for solutio
 \end{equation}
 
 \noindent
-where $f$ and $g$ are continuous functions on $(0, T) \times \Omega$ and $[0, T) \times \partial \Omega$ respectively. For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}((0, T) \times \Omega) \cap C^{0}([0, T] \times \overline{\Omega})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $[0, T] \times \overline{\Omega}$. We can multiply the heat equation by a smooth \todo{smooth, not test function right?}function $\phi \in C^{\infty}(\Omega)$, integrate over $\Omega$ and integrate by parts to derive
+where $f$ and $g$ are continuous functions on $(0, T) \times \Omega$ and $[0, T) \times \partial \Omega$ respectively. For a function $u$ to be a classical solution, we require $u$ to be of class $C^{1,2}((0, T) \times \Omega) \cap C^{0}([0, T] \times \overline{\Omega})$, i.e. continuously differentiable with respect to $t$, twice continuously differentiable with respect to $x$ and continuously extendable to $[0, T] \times \overline{\Omega}$. We can multiply the heat equation by a smooth function $\phi \in C^{\infty}(\Omega)$, integrate over $\Omega$ and integrate by parts to derive
 
 \begin{equation*}
     \int_{\Omega} u_{t} \phi = \int_{\Omega} \Delta u \phi + \int_\Omega f \phi = \int_{\partial \Omega} \pderiv[u]{\nu} \phi \d S - \int_{\Omega} \nabla u \cdot \nabla \phi + \int_\Omega f \phi = \int_{\partial \Omega} g \phi \d S - \int_{\Omega} \nabla u \cdot \nabla \phi + \int_\Omega f \phi .

@@ -43,6 +43,7 @@
 \DeclareMathOperator*{\esssup}{ess\,sup}
 \DeclareMathOperator*{\diam}{diam}
 \DeclareMathOperator*{\linspan}{span}
+\renewcommand{\phi}{\varphi}
 
 \newtcbtheorem[
     number within=chapter,
@@ -199,11 +200,32 @@
 	\clearpage
 \end{titlepage}
 
+\frontmatter
+
+\newgeometry{left=4.5cm, right=4.5cm, top=3cm, bottom=3cm}
+
+\chapter*{}
+\begin{center}
+    {\Large \textbf{Abstract}}
+\end{center}
+
+\noindent
+Interactions between ligands and receptors can be influenced by the heterogeneous distribution of receptors on the cell membrane. We study several theoretical models describing these ligand-receptor dynamics, both analytically, by showing the existence and uniqueness of non-negative and bounded weak solutions for finite time intervals, and numerically, by discussing an implementation of the finite element method using FEniCSx. These numerical simulations show that it is possible to use theory on Turing patterns to explain the spatial effects in distribution of receptors on the cell membrane. We derive a reduced variant of the model that is both simpler to study analytically and less computationally expensive to simulate, and show that this reduced model is an adequate representation of its full counterpart.
+
+\restoregeometry
+
+\chapter*{\Large Acknowledgements}
+
+I want to sincerely thank dr. Stefanie Sonner 
+
 \tableofcontents
 
 \clearpage
 
 \chapter{Introduction}
+% \addcontentsline{toc}{chapter}{Introduction}
+
+\mainmatter
 
 \chapter{Preliminaries}
 \label{ch:Preliminaries}
@@ -220,6 +242,10 @@
 \chapter{Numerical analysis}
 \label{ch:Numerical_Analysis}
 \input{Chapters/Numerical_Analysis/Ch_Numerical_Analysis.tex}
+
+\backmatter
+
+\chapter{Conclusion and outlook}
 
 \bibliographystyle{alpha}
 \bibliography{references.bib}

@@ -1,13 +1,6 @@
 Before we start proving the existence of solutions to this model, we must discuss what class of solutions we are considering. Specifically, we will derive the weak formulations of \cref{sys:ODEs,sys:PDEs,sys:Init} and discuss which function spaces are suitable.
 
-We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $\widetilde{u}$, $\widetilde{u_b}$ and $\widetilde{v}$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init} and note that we can also interpret them as the corresponding functions $u \in \odespace$, $u_b \in \odespace$ and $v \in \pdespace$ given by \todo{specify $\odespace$ and $\pdespace$}
-
-\begin{equation*}
-    u(t) = \widetilde{u}(t, \cdot\ ), \qquad u_b(t) = \widetilde{u_b}(t, \cdot\ ) \qquad \text{and} \qquad v(t) = \widetilde{v}(t, \cdot\ ).
-\end{equation*}
-
-\noindent
-We multiply the PDE by a test function $\phi \in C^\infty_c(\Omega)$ and integrate over $\Omega$, giving
+We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $u$, $u_b$ and $v$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init}. We multiply the PDE by a smooth function $\phi \in C^\infty(\Omega)$ and integrate over $\Omega$, giving
 
 \begin{equation*}
     \begin{aligned}
@@ -19,14 +12,27 @@ We multiply the PDE by a test function $\phi \in C^\infty_c(\Omega)$ and integra
 \end{equation*}
 
 \noindent
-for all $t \in (0, T)$, which we can write using inner product notation as \todo{mention $L^2$ of $u^2v$?}
-
-\begin{equation}\label{eq:weak_pde}
-    \inner{v_t, \phi}_{\Ltwo{\Omega}} = P_v \int_{\Gamma} \phi \d S - \kon \inner{u^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b, \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} - \delta_v \inner{v, \phi}_{\Ltwo{\Omega}}.
-\end{equation}
+for all $t \in (0, T)$, which we can write using inner product notation as
+%
+\begin{equation*}
+    \inner{v_t, \phi}_{\Ltwo{\Omega}} = \inner{P_v, \phi}_{\Ltwo{\Gamma}} - \kon \inner{u^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b, \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} - \delta_v \inner{v, \phi}_{\Ltwo{\Omega}}.
+\end{equation*}
 
 \noindent
-Note that this also requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $\inner{u^2 v, \phi}_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can show that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this derivation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is a function $v$ in a suitable Sobolev space that satisfies \cref{eq:weak_pde} for almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
+We can substantially weaken the regularity conditions on $v$ while keeping the terms in this equation well-defined. Both $v$ and $\nabla v$ should be $L^2$ in space, i.e. we would need $v \in L^2(0, T; H^1(\Omega))$. Instead of assuming the same regularity for $v_t$, we can generalise even further and assume that $v_t \in L^2(0, T; H^1(\Omega)^*)$. This uses the fact that $L^2(\Omega)$ is identified with a subspace of $H^1(\Omega)^*$ by identifying a function $f \in L^2(\Omega)$ with a functional $f^* \in H^1(\Omega)^*$ defined by
+
+\begin{equation*}
+    \pair{f^*, \phi} := \inner{f, \phi}_{\Ltwo{\Omega}}, \qquad \phi \in H^1(\Omega).
+\end{equation*}
+
+\noindent
+As a result, we can write
+
+\begin{equation}\label{eq:weak_pde}
+    \pair{v_t, \phi} = \inner{P_v, \phi}_{\Ltwo{\Gamma}} - \kon \inner{u^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b, \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} - \delta_v \inner{v, \phi}_{\Ltwo{\Omega}}.
+\end{equation}
+
+Note that this requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $(u^2 v, \phi)_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can show that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this derivation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is a function $v$ in a suitable Sobolev space that satisfies \cref{eq:weak_pde} for almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
 
 For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. To this end, we assume a solution $v \in \pdespace$ of the PDE exists. We fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
 
@@ -48,15 +54,13 @@ almost everywhere, where $F: \R \times \R^2 \to \R^2$ is given by
 where $\gamma v$ denotes the trace of $v$ as discussed in \cref{sec:weak_derivatives}. Note that this definition of $F$ takes into account that we assumed the existence of $v$. We will justify this in the next section, when we separate the problems for the ODEs and the PDE. Also note that this definition depends on the fact that $x$ is assumed to be fixed. Thus for any $x \in \Gamma$, this defines a different ODE.
 
 We can now combine these two formulations and start discussing the existence and uniqueness of their solutions.
-\todo{define $\odespace$ and $\pdespace$}
 
 \begin{definition}{}{}
-    The functions $u, u_b \in \odespace$ and $v \in \pdespace$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if $v$ satisfies \cref{eq:weak_pde} for almost every $t \in [0, T]$ and $\phi \in H^1(\Omega)$ and 
+    The functions $u, u_b \in H^1(0, T; \Ltwo{\Gamma})$ and $v \in \Ltwo{0, T; H^1(\Omega)}$ with $v_t \in \Ltwo{0, T; H^1(\Omega)^*}$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if $v$ satisfies \cref{eq:weak_pde} for almost every $t \in [0, T]$ and $\phi \in H^1(\Omega)$ and 
     
     \begin{equation*}
-        w(t) = (u(t, x), u_b(t, x))
+        w(t) = (u(t)(x), u_b(t)(x))
     \end{equation*}
     
     satisfies \cref{eq:weak_ode} for almost every $t \in [0, T]$ and $x \in \Gamma$.
 \end{definition}
-\todo{correct?}

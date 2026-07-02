@@ -55,22 +55,3 @@ Since this definition requires less from the solution, there is also a more gene
 
     has a solution in the sense of Carath\'eodory on the interval $|t - t_0| \leq \beta$ for some $\beta > 0$, satisfying $x(0) = x_0$.
 \end{theorem}
-
-\begin{theorem}{Nagumo's invariance theorem}{nagumo}
-    Let $M \subseteq \R^n$ be closed and $J = [a, b]$ some real interval. Assume that $f: D \subseteq J \times M \to \R^n$ satisfies the tangent condition
-
-    \begin{equation*}
-        \inner{\nu(x), f(t, x)} \leq 0 \qquad \text{for } t \in [\xi, \xi + a] \text{ and } x \in \partial M,
-    \end{equation*}
-
-    \noindent
-    where $\nu(x)$ is the outward normal vector to $M$ at $x$, as well as a condition of Lipschitz type
-    
-    \begin{equation*}
-        \inner{x_1 - x_2, f(t, x_1) - f(t, x_2)} \leq L \norm{x_1 - x_2}^2.
-    \end{equation*}
-
-    \noindent
-    Then $M$ is flow-invariant with respect to the differential equation $x' = f(t, x)$.
-\end{theorem}
-\todo{reference}

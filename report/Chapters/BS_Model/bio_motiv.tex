@@ -1,5 +1,3 @@
-\todo{actual biological terms}
-
 Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T > 0$. This can be interpreted as the microscopic part of the body we are investigating. We identify the cells in this part of the body by an open set $C \subseteq U$, also with $C^1$ boundary, and the extracellular space by $\Omega := U \setminus \overline{C}$. We require that the closure $\overline{C}$ of $C$ is also completely contained in $U$, i.e. no cells should touch the boundary of our domain. In particular, this implies that the boundary $\partial \Omega$ of the extracellular space can be written as the disjoint union of the boundary of our region of investigation $\partial U$ and the cell membranes $\partial C$, which we denote by $\Gamma_{e}$ and $\Gamma$, respectively. We use the function $u: [0, T] \times \Gamma \to \R$ to represent the concentration of free receptors at a given time and location on a cell membrane. Similarly, $u_b: [0, T] \times \Gamma \to \R$ represents the concentration of bounded receptors, and $v: [0, T] \times \overline{\Omega} \to \R$ represents the concentration of ligands in $\overline{\Omega}$, see \cref{fig:domain}.
 
 \begin{figure}[!t]
@@ -57,7 +55,7 @@ Consider an open and bounded set $U \subseteq \R^d$ with $C^1$ boundary and $T >
     \label{fig:domain}
 \end{figure}
 
-The ligands can move freely through the extracellular space. This can be modelled by the standard diffusion (or heat) equation. To simplify the setting, we assume the individual receptors will be fixed in their position on the cell membrane.
+We derive similar dynamics to the ones used in \cite{iber2014}.The ligands can move freely through the extracellular space. This can be modelled by the standard diffusion (or heat) equation. To simplify the setting, we assume the individual receptors will be fixed in their position on the cell membrane.
 
 When a ligand binds to a free receptor, the concentration of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. This reaction is described by $\kon u^2 v$ for some $\kon > 0$. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new ligand again. The concentration of bounded receptors decrease, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is described by $\koff u_b$, where $\koff > 0$.
 

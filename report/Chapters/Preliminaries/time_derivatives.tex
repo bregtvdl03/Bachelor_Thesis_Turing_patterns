@@ -21,7 +21,22 @@ These spaces are called \emph{Bochner spaces}, and just as with traditional $L^p
     for all $\phi \in C_c^\infty(0, T)$.
 \end{definition}
 
-\todo{define time dependent Sobolev spaces}
+\noindent
+These weakly differentiable functions make up a different kind of Sobolev space, dependent on time.
+
+\begin{definition}{}{}
+    The Sobolev space $W^{1, p}(0, T; X)$ consists of all functions $u \in L^p(0, T; X)$ such that $u_t$ exists in the weak sense and belongs to $L^p(0, T; X)$. This space is equipped with the norm
+
+    \begin{equation*}
+        \norm{u}_{W^{1, p}(0, T; X)} := \begin{cases}
+        \left( \int_0^T \norm{u(t)}_X^p + \norm{u_t(t)}_X^p \d t \right)^{1/p}  & \text{if } p \in [1, \infty), \\
+        \esssup_{t\ \in\ [0, T]} \left( \norm{u(t)}_X + \norm{u_t(t)}_X \right)              & \text{if } p = \infty,
+    \end{cases}
+    \end{equation*}
+
+    \noindent
+    with which it forms a Banach space. We write $H^1(0, T; X) := W^{1, 2}(0, T; X)$.
+\end{definition}
 
 Lastly, $C([0, T]; X)$ denotes the space of all continuous functions $u: [0, T] \to X$ with
 
@@ -40,7 +55,7 @@ There is an important connection between these two new spaces, which will be ver
     \begin{enumerate}[label=(\roman*)]
         \item $u \in C([0, T]; \Ltwo{\Omega})$ after possibly being redefined on a set of measure zero,
         \item the mapping $t \mapsto \norm{u(t)}_{\Ltwo{\Omega}}^2$ is absolutely continuous with derivative \begin{equation*}
-            \frac{\d}{\d t} \norm{u(t)}_{\Ltwo{\Omega}}^2 = 2 \inner{u_t(t), u(t)}_{\Ltwo{\Omega}}
+            \frac{\d}{\d t} \norm{u(t)}_{\Ltwo{\Omega}}^2 = 2 \pair{u_t(t), u(t)}
         \end{equation*}
         for almost every $t \in [0, T]$, and
         \item we have the estimate \begin{equation*}
@@ -49,3 +64,31 @@ There is an important connection between these two new spaces, which will be ver
         the constant $C$ only depending on $T$.
     \end{enumerate}
 \end{theorem}
+
+We now prove a property of the trace operator that will be essential to our study of bulk-surface equations.
+
+\begin{proposition}{}{trace_regularity}
+    If $v \in \Ltwo{0, T; H^1(\Omega)}$, then the mapping $t \mapsto \gamma (v(t))$ is in $\Ltwo{0, T; \Ltwo{\Gamma}}$. Consequentially, for almost every $x \in \Gamma$, the function $t \mapsto \gamma(v(t))(x)$ is in $L^2(0, T)$.
+\end{proposition}
+
+\begin{proof}
+    We begin by showing that the function $t \mapsto \gamma(v(t))$ is strongly measurable. We know that $v: [0, T] \to H^1(\Omega)$ is strongly measurable, so there are simple functions $v_n: [0, T] \to H^1(\Omega)$, $n \in \N$ such that $v_n \to v$ pointwise for almost every $t \in [0, T]$. Since $\gamma$ is a bounded linear operator due to \cref{thm:trace}, we can take the limit inside and see that
+    
+    \begin{equation*}
+        \lim_{n \to \infty} \gamma(v_n(t)) = \gamma \left( \lim_{n \to \infty} v_n(t) \right) = \gamma (v(t))
+    \end{equation*}
+
+    \noindent
+    for almost every $t \in [0, T]$. Since $t \mapsto \gamma (v_n(t))$ is a simple function for every $n \in \N$, this shows that $t \mapsto \gamma(v(t))$ is strongly measurable.
+
+    We can bound its norm by
+
+    \begin{equation*}
+        \norm{\gamma v}_{\Ltwo{0, T; \Ltwo{\Gamma}}}^2 = \int_{0}^{T} \norm{\gamma(v(t))}_{\Ltwo{\Gamma}}^2 \d t \leq C_\gamma^2 \int_{0}^{T} \norm{v(t)}_{H^1(\Omega)}^2 \d t = C_\gamma^2 \norm{v}_{\Ltwo{0, T; H^1(\Omega)}}^2 < \infty,
+    \end{equation*}
+
+    \noindent
+    showing that indeed, $t \mapsto \gamma (v(t))$ is in $\Ltwo{0, T; \Ltwo{\Gamma}}$.
+
+    Now by \cite{hytonen16}, $\Ltwo{0, T; \Ltwo{\Gamma}}$ is isometrically isomorphic to $\Ltwo{(0, T) \times \Gamma}$, so we have a representative of $\gamma v$ in $\Ltwo{(0, T) \times \Gamma}$. Then by Fubini's theorem we can say that for almost every $x$, $t \mapsto \gamma (v(t))(x)$ is in $\Ltwo{0, T}$.
+\end{proof}
