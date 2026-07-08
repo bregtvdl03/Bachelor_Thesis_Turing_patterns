@@ -4,7 +4,7 @@ Our goal in this section is to prove the following theorem.
     Let the initial conditions $u_0, u_{b, 0} \in \Ltwo{\partial \Omega}$ and $v_0 \in \Ltwo{\Omega}$ be essentially bounded and non-negative. Then there exist unique weak solutions $u, u_b \in H^1(0, T; \Ltwo{\Gamma})$ and $v \in \Ltwo{0, T; H^1(\Omega)}$ with $v_t \in \Ltwo{0, T; H^1(\Omega)^*}$ to \cref{sys:ODEs,sys:PDEs,sys:Init}. Moreover, these solutions are also non-negative and bounded.
 \end{theorem}
 
-As previously mentioned, the proof will be based on an application of Banach's fixed-point theorem. The proof for our model follows the same general idea as the proof of the Picard-Lindel\"of theorem proving the existence and uniqueness for ODEs, but we need to adjust the arguments to handle our situation of a coupled bulk-surface system. The idea is to consider the problem at a smaller time interval $[0, \widetilde{T}]$ for some $\widetilde{T} \leq T$ and ``freeze'' the function $v$ in the ODEs so we can use the standard existence and uniqueness theory for ODEs to get solutions $u$ and $u_b$ to this problem. The PDE we treat similarly, freezing the functions $u$ and $u_b$. Having a solution of this PDE, we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$, where $\pdespace$ is the space defined by
+As previously mentioned, the proof will be based on an application of Banach's fixed-point theorem. The proof for our model follows the same general idea as the proof of the Picard-Lindel\"of theorem proving the existence and uniqueness for ODEs, but we need to adjust the arguments and function spaces to handle our situation of a coupled bulk-surface system. The idea is to consider the problem at a smaller time interval $[0, \widetilde{T}]$ for some $\widetilde{T} \leq T$ and ``freeze'' the function $v$ in the ODEs so we can use the standard existence and uniqueness theory for ODEs to get solutions $u$ and $u_b$ to this problem. The PDE we treat similarly, freezing the functions $u$ and $u_b$. Having a solution of this PDE, we can ``update'' the frozen terms in the ODE. This produces an operator $\mathcal{T}$ that maps any $v \in \pdespace$ to another $\widetilde{v} \in \pdespace$, where $\pdespace$ is the space defined by
 %
 \begin{equation*}
     \pdespace := \left\{ v \in \Ltwo{0, \widetilde{T}; H^1(\Omega)}\ \middle|\ v_t \in \Ltwo{0, \widetilde{T}; H^1(\Omega)^*} \text{ and } 0 \leq v \leq M_v(T) \text{ almost everywhere} \right\},
@@ -12,7 +12,7 @@ As previously mentioned, the proof will be based on an application of Banach's f
 
 \noindent
 which we view as a closed subset of $\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}$. We will derive the exact value of $M_v(T)$ later. Defining this operator, we will need another function space $\odespace$ given by
-
+%
 \begin{equation*}
     \odespace := \left\{ (u, u_b) \in \left(H^1(0, \widetilde{T}; \Ltwo{\Gamma})\right)^2\ \middle|\ 0 \leq u \leq M_u(T) \text{ and } 0 \leq u_b \leq M_{u_b}(T) \text{ almost everywhere} \right\},
 \end{equation*}
@@ -21,7 +21,7 @@ which we view as a closed subset of $\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}$. We
 which we view as a closed subset of the space $(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}})^2$. Again, the exact values of $M_u(T)$ and $M_{u_b}(T)$ will be derived later. If we can then show that this operator is a contraction, Banach's fixed-point theorem will guarantee the existence and uniqueness of a fixed point $v^* \in \pdespace$, which will be a local solution to the PDE. We will then show how we can stitch together local solutions to get a unique solution for every final time $T$.
 
 Let us first make precise what we mean by ``freezing'' the function $v$ in the ODE system. Fix $\widetilde{T} \leq T$ and $v^* \in \pdespace$ and consider the modified system of ODEs given by
-
+%
 \begin{equation}\label{eq:frozen_odes}
     \begin{aligned}
         u_t         &= P_u + \alpha u_b - \delta_u u - 2 \kon u^2 \gamma v^* + 2 \koff u_b   & \text{on }& (0, \widetilde{T}) \times \Gamma, \\
@@ -48,7 +48,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
     Fix $x$ and define $w$ and $F: \R \times \R^2 \to \R^2$ as in \cref{eq:weak_ode,eq:ode_system_function}, where $v$ is replaced by $v^*$. Since the components of $F$ are polynomial in $w$, the function $F$ is certainly continuous in $w$. Additionally, by the regularity of $\gamma v^*$ which we showed in \cref{prop:trace_regularity}, we know that $F$ is measurable in $t$. This also implies that for any compact subset of $\R \times \R^2$, we can bound $F$ by some time-dependent integrable function $m$. In particular, this subset can be taken to be a rectangle\footnote{On first sight, it can seem strange to call this type of set a rectangle instead of a cylinder. This name comes from the fact that in our main source \cite{coddington_theory_1984}, the theorem is proved for the case of $n = 1$. } as in the hypothesis of \cref{thm:caratheodory}, so let $R$ be such a rectangle around the initial time $t = 0$ and initial data $(u_0, u_{b,0})$. The hypotheses of \cref{thm:caratheodory} are then fully satisfied, giving us a local solution $w: [0, \beta] \to \R^2$ for some $\beta > 0$, with $w(0) = (u_0, u_{b,0})$.
 
     We show that this local solution is unique. Suppose we have two such local solutions, $w_1$ and $w_2$. Since these solutions are absolutely continuous, they are bounded on $[0, \beta]$, so we can take a compact set $K \subseteq \R^2$ that contains both their trajectories. For any $t \in [0, \beta]$ and $\overline{w} = (\ub, \ubb), \widetilde{w} = (\ut, \ubt) \in K$, $F$ satisfies
-
+%
     \begin{equation*}
     \begin{aligned}
         \left|F(t, \overline{w}) - F(t, \widetilde{w})\right|^2 &= \left| \begin{pmatrix}
@@ -66,14 +66,13 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
             2 \koff + \alpha \\
             \koff + \delta_{u_b}
         \end{pmatrix} \left(\ubb - \ubt\right) \right|^2 \\
-        &\leq L_K(t)^2 \left(\left(\ub - \ut\right)^2 + \left(\ubb - \ubt\right)^2\right) \\
-        &\leq L_K(t)^2 \left|\overline{w} - \widetilde{w}\right|^2,
+        &\leq L_K(t)^2 \left(\left(\ub - \ut\right)^2 + \left(\ubb - \ubt\right)^2\right) \leq L_K(t)^2 \left|\overline{w} - \widetilde{w}\right|^2,
     \end{aligned}
     \end{equation*}
 
     \noindent
     where $L_K(t)$ is defined as
-
+%
     \begin{equation*}
         L_K(t) := \sqrt{2} \max \left\{ \left| \begin{pmatrix}
             4 \kon \diam(K) v^*(t, x) + \delta_u \\
@@ -86,12 +85,11 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
 
     \noindent
     which is of $L^2$-regularity in $t$ due to the essential boundedness of $v^*$. Now for the difference of the two solutions we obtain
-
+%
     \begin{equation*}
         \begin{aligned}
             \left|w_1(t) - w_2(t)\right| &= \left|(u_0, u_{b,0}) + \int_{0}^{t} F(t, w_1(t)) \d t - (u_0, u_{b,0}) - \int_{0}^{t} F(t, w_2(t)) \d t \right| \\
-            &\leq \int_{0}^{t} \left|F(t, w_1(t)) - F(t, w_2(t))\right| \d t \\
-            &\leq \int_{0}^{t} L_K(t) \left|w_1(t) - w_2(t)\right| \d t
+            &\leq \int_{0}^{t} \left|F(t, w_1(t)) - F(t, w_2(t))\right| \d t \leq \int_{0}^{t} L_K(t) \left|w_1(t) - w_2(t)\right| \d t
         \end{aligned}
     \end{equation*}
 
@@ -99,21 +97,18 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
     for every $t \in [0, \beta]$. Using Gronwall's lemma and the fact that $w_1(0) = w_2(0)$, we see that this implies that $\left|w_1(t) - w_2(t)\right| = 0$ for all $t \in [0, \beta]$, so $w_1 = w_2$.
 
     To show that the components $u$ and $u_b$ of this solution $w$ are non-negative, we multiply the equations of \cref{eq:frozen_odes} by $u_{-} := - \min (0, u)$ and $u_{b, -} := - \min (0, u_b)$, respectively, and obtain
-
+%
     \begin{align*}
-        \left( u_{b,-}(t) \right)^2 &= 2 \int_{0}^{t} u_{b,-}(r) \frac{\d}{\d t} u_{b, -}(r)\d r \\
-        &= - 2 \int_{0}^{t} u_{b,-}(r) u_{b, t}(r) \d r \\
+        \left( u_{b,-}(t) \right)^2 &= 2 \int_{0}^{t} u_{b,-}(r) \frac{\d}{\d t} u_{b, -}(r)\d r = - 2 \int_{0}^{t} u_{b,-}(r) u_{b, t}(r) \d r \\
         &= - 2 \int_{0}^{t} \left[ - \delta_{u_b} u_b(r) + \kon u(r)^2 \gamma v^*(r, x) - \koff u_b(r) \right] u_{b, -}(r) \d r \\
-        &= 2 \int_{0}^{t} \left[ - \delta_{u_b} \left( u_{b,-}(r) \right)^2 - \kon u^2(r) \gamma v^*(r, x) u_{b,-}(r) - \koff \left( u_{b,-}(r) \right)^2 \right] \d r \\
-        &\leq 0,
+        &= 2 \int_{0}^{t} \left[ - \delta_{u_b} \left( u_{b,-}(r) \right)^2 - \kon u^2(r) \gamma v^*(r, x) u_{b,-}(r) - \koff \left( u_{b,-}(r) \right)^2 \right] \d r \leq 0,
     \end{align*}
 
     \noindent
     so $u_{b,-}(t) = 0$ for every $t \in [0, \beta]$, showing that $u_b$ must be non-negative for almost every $t \in [0, \beta]$. Using this in the estimate for $u$, we get
-
+%
     \begin{align*}
-        \left( u_{-}(t) \right)^2 &= 2 \int_{0}^{t} u_{-}(r) \frac{\d}{\d t} u_{-}(r)\d r \\
-        &= - 2 \int_{0}^{t} u_{-}(r) u_{t}(r) \d r \\
+        \left( u_{-}(t) \right)^2 &= 2 \int_{0}^{t} u_{-}(r) \frac{\d}{\d t} u_{-}(r)\d r = - 2 \int_{0}^{t} u_{-}(r) u_{t}(r) \d r \\
         &= - 2 \int_{0}^{t} \left[ P_{u} + \alpha u_b(r) - \delta_{u} u(r) - 2 \kon u(r)^2 \gamma v^*(r, x) + 2 \koff u_b(r) \right] u_{-}(r) \d r \\
         &= 4 \kon \int_{0}^{t} u(r)^2 \gamma v^*(r, x)u_{-}(r) \d r \\
         & \qquad - 2 \int_{0}^{t} \left[ P_{u} u_{-}(r) + \alpha u_b(r) u_{-}(r) + \delta_{u} u(r)^2 + 2 \koff u_b(r)u_{-}(r) \right] \d r \\
@@ -124,21 +119,21 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
     By application of Gronwall's lemma, this shows that $u_-(t) = 0$ for almost all $t \in [0, \beta]$, so $u \geq 0$.
     
     We can use the non-negativity of $u$ and $u_b$ to show that these functions are bounded. Define $r := u + 2 u_b$ and note that
-
+%
     \begin{equation*}
         r_t = u_t + 2 u_{b, t} = P_u - \delta_u u + (\alpha - 2 \delta_{u_b}) u_b \leq P_u + m r,
     \end{equation*}
 
     \noindent
     where $m := \max\left(\delta_u, \frac{1}{2}(\alpha - 2 \delta_{u_b})\right)$. Then Gronwall's lemma gives
-
+%
     \begin{equation*}
         r(t) \leq e^{mt}\left(r(0) + t P_u\right).
     \end{equation*}
 
     \noindent
     Now the non-negativity of both $u$ and $u_b$ and the essential boundedness of $u_0$ and $u_{b,0}$ allows us to bound the solutions independent of $\widetilde{T}$ by
-
+%
     \begin{equation}\label{eq:ode_bounds}
     \begin{alignedat}{2}
         u &\leq e^{mT} \left(M + P_u\right) &&=: M_u(T) \qquad \text{and} \\
@@ -157,7 +152,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
 \endgroup
 
 We can use a similar approach for the PDE in \cref{sys:PDEs}. Fix $(u^*, u_b^*) \in \odespace$ and consider the modified weak formulation given by
-
+%
 \begin{equation}\label{eq:frozen_pde}
 \begin{split}
     \pair{v_t, \phi} = \inner{P_v, \phi}_{\Ltwo{\Gamma}} - \kon \inner{\left(u^*\right)^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b^*, \phi}_{\Ltwo{\Gamma}} \\
@@ -173,16 +168,15 @@ for almost every $t \in [0, \widetilde{T}]$. This PDE is now decoupled from the 
 \end{lemma}
 
 \begin{proof}
-    \todo{Existence and Uniqueness}
-    Now let $v$ be such a local solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $\max(0, v)$ and $- \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then as discussed in \cite{evans2010partial}, we have $v_{+}, v_{-} \in \Ltwo{0, \widetilde{T}; H^1(\Omega)}$ and $\left(v_{+}\right)_t, \left(v_{-}\right)_t \in \Ltwo{0, \widetilde{T}; H^1(\Omega)^*}$. Furthermore, $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
-
+    To prove the existence and uniqueness goes beyond the scope of this thesis. Hence, we assume that a unique weak solution $v$ of the PDE exists and $v$ is essentially bounded by a constant depending on $T$. This can be proven using Galerkin methods, as demonstrated in \cite{evans2010partial}. Let $v$ now be such a solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $v_+ := \max(0, v)$ and $v_- := - \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then as discussed in \cite{evans2010partial}, we have $v_{+}, v_{-} \in \Ltwo{0, \widetilde{T}; H^1(\Omega)}$ and $\left(v_{+}\right)_t, \left(v_{-}\right)_t \in \Ltwo{0, \widetilde{T}; H^1(\Omega)^*}$. Furthermore, $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
+%
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = \pair{(v_-)_t, v_-} = - \pair{v_t, v_{-}}
     \end{equation*}
 
     \noindent
     due to \cref{thm:lionsmagenes}. We use $v_-$ as a test function and employ the fact that $v$ is a solution to the PDE, which gives
-    
+    %
     \begin{equation*}
         \begin{aligned}
          \frac{\d}{\d t} &\frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = - \pair{v_t, v_{-}} = D_v \int_{\Omega} \nabla v \cdot \nabla v_- + \delta_v \int_{\Omega} v v_- - \int_{\Gamma} \left(P_v - \kon u^2 v + \koff u_b\right) v_-  \d S \\
@@ -194,13 +188,13 @@ for almost every $t \in [0, \widetilde{T}]$. This PDE is now decoupled from the 
 
     \noindent
     where we used the non-negativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
-
+%
     \begin{equation*}
         \norm{v_{-}}_{\Ltwo{\Omega}} = 0
     \end{equation*}
 
     \noindent
-    for almost every $t$, and thus $v$ being non-negative.
+    for almost every $t$, which implies that $v$ is non-negative.
 
     % To show boundedness of $v$, we consider $\left( v - M_1 e^{M_2 t} \right)_+$ as a test function for constants $M_1$ and $M_2$. This gives
 
@@ -270,7 +264,7 @@ for almost every $t \in [0, \widetilde{T}]$. This PDE is now decoupled from the 
 \end{proof}
 
 Using \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we can define two operators between $\pdespace$ and $\odespace$. One takes a function $v^* \in \pdespace$ and maps it to the unique solution $(u, u_b) \in \odespace$ of \cref{eq:frozen_odes}. Let us refer to this operator as $\mathcal{T}_{1}: \pdespace \to \odespace$. The other operator, $\mathcal{T}_{2}: \odespace \to \pdespace$, takes two arbitrary functions $(u^*, u_b^*) \in \odespace$ and defines $\mathcal{T}_{2}(u^*, u_b^*)$ as the unique solution $v \in \pdespace$ to \cref{eq:frozen_pde}. Combining these two operators, we define  
-
+%
 \begin{equation*}
     \mathcal{T} := \mathcal{T}_{2} \circ \mathcal{T}_{1} : \pdespace \to \pdespace.
 \end{equation*}
@@ -290,7 +284,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
 \begin{lemma}{}{contraction_pde}
     For $\widetilde{T} > 0$ small enough, $\mathcal{T}_{2}: \odespace \to \pdespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that
-    
+    %
     \begin{equation*}
         \norm{\mathcal{T}_{2} (\ub, \ubb) - \mathcal{T}_{2} (\ut, \ubt)}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 \leq q \norm{(\ub, \ubb) - (\ut, \ubt)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2
     \end{equation*}
@@ -300,21 +294,21 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
 \begin{proof}
     Let $(\ub, \ubb), (\ut, \ubt) \in \odespace$ and define $\vb, \vt \in \pdespace$ by $\vb := \mathcal{T}_{2}(\ub, \ubb)$ and $\vt := \mathcal{T}_{2}(\ut, \ubt)$. We now denote their differences by
-
+%
     \begin{equation*}
         v := \vb - \vt, \qquad u := \ub - \ut \qquad \text{and} \qquad u_b := \ubb - \ubt,
     \end{equation*}
 
     \noindent
     such that
-
+%
     \begin{equation*} 
         \norm{\mathcal{T}_{2} (\ub, \ubb) - \mathcal{T}_{2} (\ut, \ubt)}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 = \norm{\vb - \vt}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 = \norm{v}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2.
     \end{equation*}
 
     \noindent
     We can estimate this norm using the weak form of the PDE. We use \cref{thm:lionsmagenes} to see that
-
+%
     \begin{equation*}
     \begin{aligned}
         \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 = \pair{v_t, v} = - D_v \int_\Omega \left|\nabla v\right|^2 - \delta_v \int_\Omega v^2 + \int_\Gamma \left(- \kon \ub^2 \vb + \koff \ubb + \kon \ut^2 \vt - \koff \ubt\right) v \d S ,
@@ -323,7 +317,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     which after rearranging becomes
-
+%
     \begin{equation*}
     \begin{aligned}
         \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 &= - \kon \int_\Gamma \left(\ub^2 \vb - \ut^2 \vt\right)v \d S + \koff \int_\Gamma u_b v \d S
@@ -332,14 +326,14 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     for almost all $t$. We then use the identity
-
+%
     \begin{equation} \label{eq:contraction_identity_1}
         \ub^2 \vb - \ut^2 \vt = \ub^2 \vb - \ut^2 \vb + \ut^2 \vb - \ut^2 \vt = (\ub^2 - \ut^2) \vb + \ut^2 v = (\ub + \ut) \vb u + \ut^2 v
     \end{equation}
 
     \noindent
     to estimate
-
+%
     \begin{equation*}
     \begin{aligned}
         \frac{\d}{\d t} \frac{1}{2} \norm{v}_{\Ltwo{\Omega}}^2 + &D_v \norm{\nabla v}_{\Ltwo{\Omega; \R^d}}^2 + \delta_v \norm{v}_{\Ltwo{\Omega}}^2 \\
@@ -351,7 +345,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     The mixed terms can be separated using Young's inequality, giving
-
+%
     \begingroup
     \allowdisplaybreaks
     \begin{align*}
@@ -364,14 +358,14 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     for almost all $t$. Now let $\delta := \min (\delta_v, D_v)$ and integrate from 0 to $\widetilde{T}$ to get
-
+%
     \begin{equation*}
         \frac{1}{2} \norm{v(t)}_{\Ltwo{\Omega}}^2 + (\delta - C_\gamma^2 C(T) \eps) \norm{v}_{\Ltwo{0, \widetilde{T}; H^1(\Omega)}}^2 \leq B_\eps(T) \norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \koff A_{\eps} \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2
     \end{equation*}
 
     \noindent
     for almost all $t$. If we now choose $\eps < \frac{\delta}{C_\gamma^2 C(T)}$, we can estimate both the $\Ltwo{0, \widetilde{T}; H^1(\Omega)}$-norm and the $\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}$-norm of $v$. The first will only be helpful later, but the latter concludes this proof. First, since $\delta - C_\gamma^2 C(T) \eps > 0$, we have
-
+%
     \begin{equation}\label{eq:extra_estimate}
     \begin{aligned}
         \norm{v}_{\Ltwo{0, \widetilde{T}; H^1(\Omega)}}^2 \leq D_\eps(T) \left(\norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2\right) .
@@ -380,7 +374,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     Second, we can integrate from 0 to $\widetilde{T}$ once more to get
-
+%
     \begin{equation*}
         \norm{v}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 \leq \widetilde{T} M_\eps(T) \left(\norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2\right).
     \end{equation*}
@@ -391,7 +385,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
 \begin{lemma}{}{contraction_odes}
     For $\widetilde{T} > 0$ small enough, $\mathcal{T}_{1}: \pdespace \to \odespace$ is a contraction. That is, there is a $q \in [0, 1)$ such that
-    
+    %
     \begin{equation*}
         \norm{\mathcal{T}_{1} (\vb) - \mathcal{T}_{1} (\vt)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2 \leq q \norm{\vb - \vt}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2
     \end{equation*}
@@ -401,14 +395,14 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
 \begin{proof}
     Now let $\vb, \vt \in \pdespace$ and define $\ub, \ubb, \ut$ and $\ubt$ by $(\ub, \ubb) := \mathcal{T}_{1}(\vb)$ and $(\ut, \ubt) := \mathcal{T}_{1}(\vt)$. Once again, we denote their differences by
-
+%
     \begin{equation*}
         v := \vb - \vt, \qquad u := \ub - \ut \qquad \text{and} \qquad u_b := \ubb - \ubt,
     \end{equation*}
 
     \noindent
     such that
-
+%
     \begin{align*}
         \norm{\mathcal{T}_{1} (\vb) - \mathcal{T}_{1} (\vt)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2 &= \norm{(\ub, \ubb) - (\ut, \ubt)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2 = \norm{(u, u_b)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2 \\
         &= \norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2.
@@ -418,15 +412,14 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
     We therefore seek to estimate these separate differences $u$ and $u_b$ in terms of $v$. Starting off with $u$, we see that it satisfies
     \begin{equation*}
     \begin{aligned}
-        \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &= 2 \int_\Gamma u_t u \d S \\
-        &= 2 \int_\Gamma (\ub_t - \ut_t) u \d S \\
+        \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &= 2 \int_\Gamma u_t u \d S = 2 \int_\Gamma (\ub_t - \ut_t) u \d S \\
         &= 2 \int_\Gamma \left( \alpha (\ubb - \ubt) - \delta_u (\ub - \ut) - 2 \kon (\ub^2 \vb - \ut^2 \vt) + 2 \koff (\ubb - \ubt) \right) u \d S \\
         &= 2 (\alpha + 2 \koff) \int_\Gamma u u_b \d S - 2 \delta_u \int_\Gamma u^2 \d S - 4 \kon \int_\Gamma (\ub^2 \vb - \ut^2 \vt) u \d S
     \end{aligned}
     \end{equation*}
 
     \noindent
-    for almost every $t$. Here, the first step is justified because we know that $u$ is of $H^1(0, \widetilde{T}; \Ltwo{\Gamma})$ regularity. As we did for the previous lemma, we now use the identity from \cref{eq:contraction_identity_1} to further derive
+    for almost every $t$. Here, the first step is justified because we know that $u$ belongs to $H^1(0, \widetilde{T}; \Ltwo{\Gamma})$. As we did in the proof of \cref{lem:contraction_pde}, we now use the identity in \cref{eq:contraction_identity_1} to conclude that
     %
     \begin{equation*}
     \begin{aligned}
@@ -437,8 +430,8 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
     \end{equation*}
     
     \noindent
-    To further separate the mixed terms, we use Young's inequality twice and estimate
-
+    To further separate the mixed terms, we use Young's inequality twice and obtain the estimate
+%
     \begin{equation*}
     \begin{aligned}
         \frac{\d}{\d t} \norm{u}_{\Ltwo{\Gamma}}^2 &\leq A_1(T) \norm{u}_{\Ltwo{\Gamma}}^2 + A_2 \norm{u_b}_{\Ltwo{\Gamma}}^2 + \widetilde{B_1}(T) \norm{v}_{\Ltwo{\Gamma}}^2 , \\
@@ -448,12 +441,12 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     where $A_1(T)$, $A_2$, $\widetilde{B_1}(T)$ and $B_1(T)$ are defined as
-
+%
     \begin{equation*}
-        A_1(T) := - 2 \delta_u + \alpha + 2 \koff + 2 \kon M_u (T)^2 , \qquad A_2 := \alpha + 2 \koff
-    \end{equation*}
-    \begin{equation*}
-        \widetilde{B_1}(T) := 2 \kon M_u (T)^2 \qquad \text{and} \qquad B_1(T) := C_\gamma^2 \widetilde{B_1}(T) .
+        \begin{aligned}
+            A_1(T) &:= - 2 \delta_u + \alpha + 2 \koff + 2 \kon M_u (T)^2 ,& A_2 &:= \alpha + 2 \koff \\
+            \widetilde{B_1}(T) &:= 2 \kon M_u (T)^2 \qquad \text{and} & B_1(T) &:= C_\gamma^2 \widetilde{B_1}(T) .
+        \end{aligned}
     \end{equation*}
 
     \noindent
@@ -474,7 +467,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     where $A_3(T)$, $A_4(T)$, $\widetilde{B_2}(T)$ and $B_2(T)$ are given by
-
+%
     \begin{equation*}
         A_3(T) := 2 \kon M_u(T) M_v(T) + \kon M_u(T)^2 - 2 \delta_{u_b} - 2 \koff ,
     \end{equation*}
@@ -483,15 +476,15 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
     \end{equation*}
     
     \noindent
-    To merge these estimates, we let
+    To combine these estimates, we set
     %
     \begin{equation*}
         A(T) := 2 \max \left(A_1(T), A_2, A_3(T), A_4(T)\right) \qquad \text{and} \qquad B(T) := 2 \max \left(B_1(T), B_2(T)\right)
     \end{equation*}
 
     \noindent
-    and sum to get
-
+    and sum them to get
+%
     \begin{equation*}
         \frac{\d}{\d t} \left(\norm{u}_{\Ltwo{\Gamma}}^2 + \norm{u_b}_{\Ltwo{\Gamma}}^2\right) \leq A(T) \left(\norm{u}_{\Ltwo{\Gamma}}^2 + \norm{u_b}_{\Ltwo{\Gamma}}^2\right) + B(T) \norm{v}_{H^1(\Omega)}^2
     \end{equation*}
@@ -508,7 +501,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     since the initial conditions of $\ub$ and $\ut$ are the same, and therefore $u(0) = 0$ for every $x \in \Gamma$. Naturally, the same holds for $u_b(0)$. After integrating from 0 to $\widetilde{T}$, we can conclude that
-
+%
     \begin{equation*}
         \norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 \leq \widetilde{T} B(T) e^{T A(T)} \norm{v}_{\Ltwo{0, \widetilde{T}; H^1(\Omega)}}^2 .
     \end{equation*}
@@ -523,7 +516,7 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
 
     \noindent
     or after rearranging terms,
-
+%
     \begin{equation*}
     \begin{aligned}
         \norm{u}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 + \norm{u_b}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}}^2 \leq \frac{\widetilde{T} B(T) e^{T A(T)}}{1 - \widetilde{T} B(T) e^{T A(T)} D_\eps(T)} \norm{v}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2.
@@ -534,11 +527,11 @@ It should be clear now how we will apply Banach's fixed-point theorem. If we pro
     As this factor clearly approaches 0 when $\widetilde{T}$ goes to 0, we can choose $\widetilde{T}$ sufficiently small such that it is less than 1 and conclude the proof.
 \end{proof}
 
-We have now gathered enough results to prove the main statement of this section.
+We have now gathered the needed auxiliary results to prove the main statement of this section.
 
 \begin{proof}[Proof of \cref{thm:eq_and_un}]
     Let $\widetilde{T} > 0$ be small enough such that, by \cref{lem:contraction_pde,lem:contraction_odes}, $\mathcal{T}_1$ and $\mathcal{T}_2$ are contractions with Lipschitz constants $q_1$ and $q_2$, respectively. Define, as discussed before, $\mathcal{T}$ as the composition of $\mathcal{T}_1$ and $\mathcal{T}_2$. Then for any $\vb, \vt \in \Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}$, we have
-
+%
     \begin{equation*}
         \norm{\mathcal{T}(\vb) - \mathcal{T}(\vt)}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 \leq q_2 \norm{\mathcal{T}_1(\vb) - \mathcal{T}_1(\vt)}_{\left(\Ltwo{0, \widetilde{T}; \Ltwo{\Gamma}}\right)^2}^2 \leq q_2 q_1 \norm{\vb - \vt}_{\Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}}^2 ,
     \end{equation*}
@@ -547,7 +540,7 @@ We have now gathered enough results to prove the main statement of this section.
     showing that $\mathcal{T}$ is a contraction since $q_2 q_1 \in [0, 1)$. We apply Banach's fixed-point theorem to get a unique fixed point $v \in \Ltwo{0, \widetilde{T}; \Ltwo{\Omega}}$. As previously discussed, this corresponds to a unique weak solution on $(0, \widetilde{T})$. 
     
     We now seek to extend this to a solution on $(0, T)$. Since all bounds for $u$, $u_b$ and $v$ were derived independently of $\widetilde{T}$, we can set new initial conditions
-    
+    %
     \begin{equation*}
         \vt_0 := v(\tfrac12 \widetilde{T}) \qquad \text{and} \qquad(\ut_0, \widetilde{u}_{b,0}) = (u(\tfrac12 \widetilde{T}), u_b(\tfrac12 \widetilde{T})) := \mathcal{T}_1(v)(\tfrac12 \widetilde{T})
     \end{equation*}
@@ -555,7 +548,7 @@ We have now gathered enough results to prove the main statement of this section.
     \noindent
     and get the same contraction estimates. This gives another local solution $\vt$, this time defined on $(\frac12 \widetilde{T}, \frac32 \widetilde{T})$. Because of the uniqueness properties of both $v$ and $\vt$, their overlap on $(\frac12 \widetilde{T}, \widetilde{T})$ must coincide. This means that $\vt$ can be used to define an extension of $v$ to the interval $(0, \frac32 \widetilde{T})$.
 
-    This process can be repeated, getting a solution on $(\frac{j}{2} \widetilde{T}, \frac{j + 2}{2} \widetilde{T})$ for $j = 2, \dots$ and using them to define extensions of $v$ until the full time interval $(0, T)$ is reached. We can simultaneously construct the corresponding solutions to the ODEs by extending the local solutions using $(\ut, \ubt) := \mathcal{T}_1(\vt)$ at every step. For these solutions $u$, $u_b$ and $v$, the same non-negativity and boundedness properties hold as for all the local solutions, since these properties were proven independently of $\widetilde{T}$.
+    This process can be repeated, getting a solution on $(\frac{j}{2} \widetilde{T}, \frac{j + 2}{2} \widetilde{T})$ for $j = 2, \dots$ and using them to define extensions of $v$ until we cover the full time interval $(0, T)$. We can simultaneously construct the corresponding solutions to the ODEs by extending the local solutions using $(\ut, \ubt) := \mathcal{T}_1(\vt)$ at every step. For these solutions $u$, $u_b$ and $v$, the same non-negativity and boundedness properties hold as for all the local solutions, since these properties were proven independently of $\widetilde{T}$.
 \end{proof}
 
 \endgroup

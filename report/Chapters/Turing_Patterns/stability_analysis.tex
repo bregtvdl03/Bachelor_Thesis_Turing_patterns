@@ -1,4 +1,4 @@
-We describe the outline of the derivation of necessary conditions for the existence of Turing patterns given in \cite{murray03}. Consider a system of two chemical species, of which the concentrations are modelled by two coupled reaction-diffusion equations. Let $\Omega \subseteq \R^d$ be an open and bounded set with $C^1$ boundary and $T > 0$. Let $u(t, x)$ and $v(t, x)$ denote the concentrations of the two species at $t \in [0, T]$ and $x \in \overline{\Omega}$. A reaction-diffusion model for these concentrations $u$ and $v$ are of the form
+We give an outline of the derivation of necessary conditions for the existence of Turing patterns given in \cite{murray03}. Consider the concentrations of two chemical substances. Their dynamics are modelled by two coupled reaction-diffusion equations. Let $\Omega \subseteq \R^n$ be an open and bounded set with $C^1$ boundary and $T > 0$. Let $u(t, x)$ and $v(t, x)$ denote the concentrations of the two species at $t \in [0, T]$ and $x \in \overline{\Omega}$. A reaction-diffusion model for these concentrations $u$ and $v$ is of the form
 %
 \begin{equation}
     \label{eq:reac_diff}
@@ -12,7 +12,7 @@ We describe the outline of the derivation of necessary conditions for the existe
 \end{equation}
 
 \noindent
-where $f: \R^2 \to \R$ and $g: \R^2 \to \R$ are the reactions, $d > 0$ is the diffusion coefficient for $v$, $\gamma > 0$ is a reaction scaling coefficient and $u_0, v_0: \Omega \to \R$ are given initial data. Turing patterns can emerge when this type of system has a homogeneous equilibrium that is linearly stable in the absence of diffusion, i.e. if it is a linearly stable steady state of the system
+where $f: \R^2 \to \R$ and $g: \R^2 \to \R$ are the reaction functions, $d > 0$ is the diffusion coefficient for $v$, $\gamma > 0$ is a reaction scaling coefficient and $u_0, v_0: \Omega \to \R$ are given initial data. Turing patterns can emerge when this type of system has a homogeneous equilibrium that is linearly stable in the absence of diffusion, i.e. if it is a linearly stable steady state of the system
 %
 \begin{equation}
     \label{eq:reac_nodiff}
@@ -20,33 +20,36 @@ where $f: \R^2 \to \R$ and $g: \R^2 \to \R$ are the reactions, $d > 0$ is the di
 \end{equation}
 
 \noindent
-and becomes unstable due to the introduction of diffusion in \cref{eq:reac_diff}, referred to as a \emph{diffusion driven instability}. The relevant steady state is the positive solution $(u_0, v_0)$ of
-
+and becomes unstable due to the introduction of diffusion in \cref{eq:reac_diff}, referred to as a \emph{diffusion driven instability}. The relevant steady state is the positive solution $(U, V)$ of
+%
 \begin{equation*}
-    f(u_0, v_0) = g(u_0, v_0) = 0,
+    f(U, V) = g(U, V) = 0,
 \end{equation*}
 
 \noindent
-if it exists. To first investigate the stability of the steady state in absence of diffusion, we linearise the system of \cref{eq:reac_nodiff} around the $(u_0, v_0)$ and compute the eigenvalues of the relevant matrix. For the steady state to be stable, we require that $\Re{\lambda} < 0$ for every eigenvalue $\lambda \in \mathbb{C}$.
-
-To study the instability of the steady state with respect to the system of \cref{eq:reac_diff}, the system is linearised and decomposed into \emph{Fourier modes} $w_k$ with \emph{wave number} $k$\footnote{These Fourier nodes and wave numbers are the solutions of the problem $\Delta w_k + k^2 w_k = 0$. They depend on the shape of the spatial domain $\Omega$ as well as the boundary conditions of \cref{eq:reac_diff}. For more detail, see \cite{murray03}.}. We assume that the solution can be written as
-
-\begin{equation*}
-    \begin{pmatrix}u(t, x) - u_0 \\ v(t, x) - v_0\end{pmatrix} = w(t, x) = \sum_{k} c_k e^{\lambda(k)t} w_k(x)
-\end{equation*}
-
-\noindent
-for coefficient $c_k \in \R$ and growth rate $\lambda(k) \in \mathbb{C}$ for every wave number $k$. If the growth rate $\lambda(k)$ has positive real part for some wave number $k$, the corresponding Fourier mode grows exponentially in time, causing the steady state to become unstable. Exactly which Fourier modes cause the instability depends on $\gamma$ and influences the spatial scale of the patterns.
-
-These considerations lead to the following set of necessary conditions for the reactions $f$ and $g$,
-
+if it exists. To first investigate the stability of the steady state in absence of diffusion, we linearise the system of \cref{eq:reac_nodiff} around $(U, V)$ and compute the eigenvalues of the corresponding matrix. For the steady state to be asymptotically stable, we require that $\Re{\lambda} < 0$ for every eigenvalue $\lambda \in \mathbb{C}$ of this matrix, for which we should have
+%
 \begin{equation}
-    \label{eq:pattern_conditions}
-    \begin{aligned}
-        f_u + g_v &< 0, & &f_u g_v - f_v g_u 0> 0, \\
-        d f_u + g_v &> 0, & &\left(d f_u + g_v\right)^2 - 4d \left(f_u g_v - f_v g_u\right) > 0,
-    \end{aligned}
+    \label{eq:pattern_conds_1}
+    f_u + g_v < 0 \qquad \text{and} \qquad f_u g_v - f_v g_u > 0,
 \end{equation}
 
 \noindent
-where every derivative is evaluated at the steady state $(u_0, v_0)$. In particular, these conditions require $f_u$ and $g_v$ to be of opposite sign, and $d > 1$. Chemically, this is interpreted as one of the two species diffusing faster than the other. Lastly, the reaction scaling coefficient $\gamma$ should be set such that the spatial scale of the patterns is comparable to the size of the spatial domain $\Omega$.
+where all partial derivatives are evaluated at the steady state $(U, V)$. To study the instability of the steady state with respect to the system of \cref{eq:reac_diff}, the system is linearised and decomposed into \emph{Fourier modes} $w_k$ with \emph{wave number} $k$\footnote{These Fourier nodes and wave numbers are the solutions of the problem $\Delta w_k + k^2 w_k = 0$. They depend on the dimension $n$, the shape of the spatial domain $\Omega$ as well as the boundary conditions of \cref{eq:reac_diff}. For more details, see \cite{murray03}.}. We assume that the solution can be written as
+%
+\begin{equation*}
+    \begin{pmatrix}u(t, x) - U \\ v(t, x) - V \end{pmatrix} = w(t, x) = \sum_{k} c_k e^{\lambda(k)t} w_k(x) ,
+\end{equation*}
+
+\noindent
+for coefficients $c_k \in \R$ and growth rates $\lambda(k) \in \mathbb{C}$ for every wave number $k$. If the growth rate $\lambda(k)$ has positive real part for some wave number $k$, the corresponding Fourier mode grows exponentially in time, causing the steady state to become unstable. Which Fourier modes precisely cause the instability depends on $\gamma$ and influences the spatial scale of the patterns.
+
+One can show that these considerations lead to the following additional set of necessary conditions for the reaction functions $f$ and $g$,
+%
+\begin{equation}
+    \label{eq:pattern_conds_2}
+    d f_u + g_v > 0 \qquad \text{and} \qquad \left(d f_u + g_v\right)^2 - 4d \left(f_u g_v - f_v g_u\right) > 0,
+\end{equation}
+
+\noindent
+where all partial derivatives are evaluated at $(U, V)$. In particular, the conditions of \cref{eq:pattern_conds_1,eq:pattern_conds_2} require $f_u$ and $g_v$ to be of opposite sign, and $d > 1$. Chemically, this is interpreted as one of the two species diffusing faster than the other. Lastly, the reaction scaling coefficient $\gamma$ should be set such that the spatial scale of the patterns is comparable to the size of the spatial domain $\Omega$.

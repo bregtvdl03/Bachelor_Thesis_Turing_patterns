@@ -1,4 +1,4 @@
-\documentclass[oneside]{book}
+\documentclass[oneside,draft]{book}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -38,12 +38,12 @@
 \newcommand{\koff}{k_\text{off}}
 \newcommand{\Ltwo}[1]{L^2(#1)}
 \newcommand{\eps}{\varepsilon}
+\renewcommand{\phi}{\varphi}
 \renewcommand{\d}{\mathop{}\!\mathrm{d}}
 \renewcommand{\Re}{\operatorname{Re}}
 \DeclareMathOperator*{\esssup}{ess\,sup}
 \DeclareMathOperator*{\diam}{diam}
 \DeclareMathOperator*{\linspan}{span}
-\renewcommand{\phi}{\varphi}
 
 \newtcbtheorem[
     number within=chapter,
@@ -148,7 +148,7 @@
     breakable
 }{prop}
 
-\def\thesistitle{Bulk-Surface Models for\\ Ligand-Receptor Dynamics}
+\def\thesistitle{Bulk-Surface Models for\\ Ligand-Receptor Interactions}
 % \def\thesistitle{The Prosciutto Question}
 \def\thesissubtitle{}
 \def\thesisauthorfirst{Bregt}
@@ -210,20 +210,23 @@
 \end{center}
 
 \noindent
-Interactions between ligands and receptors can be influenced by the heterogeneous distribution of receptors on the cell membrane. We study several theoretical models describing these ligand-receptor dynamics, both analytically, by showing the existence and uniqueness of non-negative and bounded weak solutions for finite time intervals, and numerically, by discussing an implementation of the finite element method using FEniCSx. These numerical simulations show that it is possible to use theory on Turing patterns to explain the spatial effects in distribution of receptors on the cell membrane. We derive a reduced variant of the model that is both simpler to study analytically and less computationally expensive to simulate, and show that this reduced model is an adequate representation of its full counterpart.
+Interactions between ligands and receptors can be influenced by the heterogeneous distribution of receptors on the cell membrane. We study several theoretical models describing these ligand-receptor dynamics both analytically, by showing the existence and uniqueness of non-negative and bounded weak solutions for finite time intervals, and numerically, by discussing an implementation of the finite element method using FEniCSx. These numerical simulations show that it is possible to use theory on Turing patterns to explain the spatial effects in distribution of receptors on the cell membrane. We derive a reduced variant of the model that is both simpler to study analytically and less computationally expensive to simulate, and show that this reduced model is an adequate representation of its full counterpart.
 
 \restoregeometry
 
 \chapter*{\Large Acknowledgements}
+\vspace{-0.75cm}
 
-I want to sincerely thank dr. Stefanie Sonner 
+I am deeply grateful to Stefanie Sonner for her incredible supervision of my bachelor's thesis. Our weekly meetings were a great source of inspiration and motivation while studying and writing and additionally, she provided helpful insights for choosing and applying for my master's degree. I also want to thank Mariya Ptashnyk for her help with the numerical simulations as well as the details of the analytical proofs. Despite their busy schedules, Stefanie and Mariya consistently found the time to arrange meetings and discuss my results and questions. During my time of writing this thesis, I have learned a lot from them both.
+
+Lastly, I want to thank my friends and family for supporting me while listening to me ramble about dots and stripes appearing on some digital spheres, and for providing a seemingly endless supply of brownie in the deep nights at Huize Duke.
 
 \tableofcontents
 
 \clearpage
 
 \chapter{Introduction}
-% \addcontentsline{toc}{chapter}{Introduction}
+\input{Chapters/introduction.tex}
 
 \mainmatter
 
@@ -231,13 +234,13 @@ I want to sincerely thank dr. Stefanie Sonner
 \label{ch:Preliminaries}
 \input{Chapters/Preliminaries/Ch_Preliminaries}
 
-\chapter{Turing patterns}
-\label{ch:Turing_patterns}
-\input{Chapters/Turing_Patterns/Ch_Turing_Patterns.tex}
-
 \chapter{A bulk-surface model}
 \label{ch:Bulk_surface_model}
 \input{Chapters/BS_Model/Ch_BS_Model.tex}
+
+\chapter{Turing patterns}
+\label{ch:Turing_patterns}
+\input{Chapters/Turing_Patterns/Ch_Turing_Patterns.tex}
 
 \chapter{Numerical analysis}
 \label{ch:Numerical_Analysis}
@@ -246,6 +249,7 @@ I want to sincerely thank dr. Stefanie Sonner
 \backmatter
 
 \chapter{Conclusion and outlook}
+\input{Chapters/conclusion.tex}
 
 \bibliographystyle{alpha}
 \bibliography{references.bib}

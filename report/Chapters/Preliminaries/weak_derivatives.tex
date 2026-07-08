@@ -1,7 +1,7 @@
 Before we talk about weak solutions to PDEs, we need to define spaces of functions that can form potential candidates for solutions. We derive this space by weakening the conditions of differentiable functions.
 
 Consider an open and bounded domain $\Omega \subseteq \R^{d}$. Then for any continuously differentiable function $u \in C^{1}(\Omega)$ and test function $\phi \in C_{c}^{\infty}(\Omega)$, we have
-
+%
 \begin{equation}
     \label{random}
     \int_{\Omega} u_{x_i} \phi = \int_{\partial \Omega} \frac{\partial u}{\partial \nu} \phi \d S - \int_{\Omega} u \phi_{x_i} = - \int_{\Omega} u \phi_{x_i} ,
@@ -9,7 +9,7 @@ Consider an open and bounded domain $\Omega \subseteq \R^{d}$. Then for any cont
 
 \noindent
 since $\phi$ is 0 on the boundary. Consequentially, for any function $u \in C^k(\Omega)$ and multi-index $\alpha \in \N^{d}$ with $|\alpha| \leq k$, we have
-
+%
 \begin{equation}
     \label{eq:weak_deriv_expr}
     \int_{\Omega} D^{\alpha} u \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha}  \phi,
@@ -20,7 +20,7 @@ using the fact that $D^\beta \phi$ has compact support as well, for every $\beta
 
 \begin{definition}{}{}
     Let $u, v \in L^{1}_{\text{loc}}(\Omega)$ and $\alpha \in \N^{d}$. We say that $v$ is the \emph{$\alpha$-th weak derivative} of $u$ if
-    
+    %
     \begin{equation}
         \int_{\Omega} v \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha} \phi
     \end{equation}
@@ -39,14 +39,14 @@ The proof of this proposition is a good example of how the Fundamental Lemma of 
 
 \begin{proof}
     Suppose that $v$ and $w$ are two $\alpha$-th weak derivatives of $u$. Then for every $\phi \in C^{\infty}_{c}(\Omega)$,
-    
+    %
     \begin{equation*}
         \int_{\Omega} v \phi = (-1)^{|\alpha|} \int_{\Omega} u D^{\alpha} \phi = \int_{\Omega} w \phi ,
     \end{equation*}
 
     \noindent
     which gives
-
+%
     \begin{equation*}
         \int_{\Omega} (v - w) \phi = 0
     \end{equation*}
@@ -59,13 +59,13 @@ With this new notion of weak differentiability, we can define new function space
 
 \begin{definition}{}{}
     For $k \in \N$ and $p \in [1, \infty)$, the \emph{Sobolev space of order k}, denoted $W^{k, p}(\Omega)$, is the space of functions for which the $\alpha$-th weak derivative exists and is in $L^{p}(\Omega)$, for all $|\alpha| \leq k$:
-
+%
     \begin{equation*}
         W^{k, p}(\Omega) := \{ u \in L^{p}(\Omega) \mid D^{\alpha} u \in L^{p}(\Omega),\ |\alpha| \leq k \} .
     \end{equation*}
     
     It is equipped with the norm
-    
+    %
     \begin{equation*}
         \norm{u}_{W^{k,p}(\Omega)} := \left( \sum_{|\alpha| \leq k} \norm{D^\alpha u}_{L^p(\Omega)}^p \right)^{1/p} .
     \end{equation*}
@@ -75,14 +75,14 @@ With this new notion of weak differentiability, we can define new function space
 \end{definition}
 
 Recall that $L^p(\Omega)$ is a Banach space for every $p \in [1, \infty]$ and additionally forms a Hilbert space for $p = 2$. This holds for Sobolev spaces as well. We write $H^{k}(\Omega) := W^{k,2}(\Omega)$ and equip it with the inner product
-
+%
 \begin{equation*}
     \inner{u, v}_{H^k(\Omega)} := \sum_{|\alpha| \leq k} \inner{D^\alpha u, D^\alpha v}_{\Ltwo{\Omega}} ,
 \end{equation*}
 
 \noindent
 forming a Hilbert space. We write $H^k(\Omega)^*$ for its dual space and $\pair{u, v}$ for the pairing between $H^k(\Omega)^*$ and $H^{k}(\Omega)$, i.e.
-
+%
 \begin{equation*}
     \pair{u, v} := u(v)
 \end{equation*}
@@ -97,7 +97,7 @@ In this thesis, we will be studying a bulk-surface reaction-diffusion model. Thi
 \end{proposition}
 
 More precisely, for any function $u \in W^{k,p}(\Omega)$, there is a sequence of smooth functions defined on the closure of $\Omega$, $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$, such that
-
+%
 \begin{equation*}
     \norm{u - u_n}_{W^{k,p}(\Omega)} \to 0 \qquad \text{as } n \to \infty.
 \end{equation*}
@@ -122,14 +122,14 @@ A full proof of this theorem can be found in \cite{evans2010partial}, but we wil
     As we previously discussed, we can start by defining $\gamma u := u \vert_{\partial \Omega}$ for any $u \in C^1(\overline{\Omega})$. The first step in extending this definition is to use that the boundary is Lipschitz to locally flatten it and prove \cref{item:trace_property_2} for $u \in C^1(\overline{\Omega})$ in a neighbourhood of some point $x \in \partial \Omega$. We can then use the fact that $\Omega$ is bounded to see that $\partial \Omega$ is compact, which allows us to get a finite number of points $x_1, \dots, x_n \in \partial \Omega$ with corresponding constants $C_1, \dots, C_n$, their neighourhoods covering $\partial \Omega$. Combining the results for each $x_i$, we can conclude \cref{item:trace_property_2} for the entirety of $\partial \Omega$.
 
     For the general case of $u \in W^{1,p}(\Omega)$, we can use \cref{prop:approx_by_smooth} to get an approximation for $u$ of smooth functions $(u_n)_{n \in \N} \subseteq C^\infty(\overline{\Omega})$. The first part of the proof then implies that
-
+%
     \begin{equation*}
         \norm{\gamma u_n - \gamma u_m}_{\Ltwo{\partial \Omega}} = \norm{\gamma \left( u_n - u_m \right)}_{\Ltwo{\partial \Omega}} \leq C \norm{u_n - u_m}_{W^{k,p}(\Omega)},
     \end{equation*}
 
     \noindent
     which means that $(\gamma u_n)_{n \in \N}$ is a Cauchy sequence in $\Ltwo{\partial \Omega}$. We have used that $\gamma$ is linear on $C^1(\overline{\Omega})$, since it simply acts as a restriction there. Using the fact that $\Ltwo{\partial \Omega}$ is a Hilbert space, we can define
-
+%
     \begin{equation*}
         \gamma u := \lim_{n \to \infty} \gamma u_n = \lim_{n \to \infty} u_n \vert_{\partial \Omega},
     \end{equation*}

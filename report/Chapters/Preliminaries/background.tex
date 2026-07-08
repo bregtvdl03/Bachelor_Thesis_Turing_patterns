@@ -1,14 +1,14 @@
 We begin by specifying some notation and recalling and defining some general tools that play an important role throughout this thesis. We will be working with a wide variety of spaces, many of them having their own inner products and norms. First of all, we denote the Euclidean norm on $\R^m$ by $\left|\ \cdot\ \right|$, for all $m \in \N$. For a more general normed space $X$, where $X$ is different from $\R^m$ for some $m$, we write $\norm{\ \cdot\ }_X$ for its norm. When this norm is induced by an inner product, we denote this inner product by $\inner{\ \cdot\ , \cdot\ }_X$. First we collect a few inequalities that are mainly used in the estimates of our existence and uniqueness proof.
 \begin{lemma}{Young's inequality}{}
     For every $a, b \in \R$, we have
-
+%
     \begin{equation*}
         ab \leq \frac{1}{2} \left(a^2 + b^2\right) .
     \end{equation*}
 
     \noindent
     More generally, for every $\eps > 0$, we have
-
+%
     \begin{equation*}
         ab \leq \eps a^2 + \frac{1}{4 \eps} b^2 .
     \end{equation*}
@@ -16,7 +16,7 @@ We begin by specifying some notation and recalling and defining some general too
 
 \begin{proof}
     Let $a, b \in \R$ and $\eps > 0$. Then
-
+%
     \begin{equation*}
         0 \leq \left(\sqrt{\eps} a - \frac{1}{2 \sqrt{\eps}} b\right)^2 = \eps a^2 - ab + \frac{1}{4 \eps} b^2 .
     \end{equation*}
@@ -25,19 +25,40 @@ We begin by specifying some notation and recalling and defining some general too
     This proves the second inequality. The first inequality is a special case of the second, with $\eps$ set to $\frac{1}{2}$.
 \end{proof}
 
-The following is a much more complex inequality, which is used very often in the study of differential equations to derive explicit estimates given an inequality that involves the unknown function.
-\todo{move definition absolutely continuous here}
+To formulate the next inequality in its most general form, we need a new notion of continuity.
+
+\begin{definition}{}{}
+    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\eps > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
+%
+    \begin{equation*}
+        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \eps.
+    \end{equation*}
+\end{definition}
+
+This notion of continuity is much stronger than the traditional one. There is a crucial equivalence, proved in \cite{nielsen97}.
+
+\begin{proposition}{}{}
+    A function $f: [a, b] \to \R$ is absolutely continuous if and only if $f$ has derivative $f'$ almost everywhere, $f'$ is integrable, and
+%
+    \begin{equation*}
+        f(x) = f(a) + \int_{a}^{x} f'(t) \d t
+    \end{equation*}
+
+    for every $x \in [a, b]$.
+\end{proposition}
+
+We can now formulate Gronwall's lemma, which is used very often in the study of differential equations to derive explicit estimates given an inequality that involves the unknown function.
 
 \begin{lemma}{Gronwall's lemma: differential form}{gronwall_dif}
     Let $T > 0$ and let $\eta$ be a non-negative, absolutely continuous function on $[0, T]$, which satisfies
-    
+    %
     \begin{equation*}
         \eta'(t) \leq \phi(t) \eta(t) + \psi(t)
     \end{equation*}
     
     \noindent
     for almost every $t \in [0, T]$, where $\phi$ and $\psi$ are non-negative, $L^1$ functions on $[0, T]$. Then
-
+%
     \begin{equation*}
         \eta(t) \leq e^{\int_{0}^{t} \phi(s) \d s} \left[ \eta(0) + \int_{0}^{t} \psi(s) \d s \right] .
     \end{equation*}
@@ -50,14 +71,14 @@ This is known as the \emph{differential form} of Gronwall's lemma. A proof can b
 
 \begin{lemma}{Gronwall's lemma: integral form}{gronwall_int}
     Let $T > 0$ and let $y: [0, T] \to \R$ and $a: [0, T] \to \R$ be nonnegative functions such that $a$ and $ay$ belong to $L^1([0, T])$ and
-
+%
     \begin{equation*}
         y(t) \leq C + \int_{0}^{t} y(s)a(s) \d s
     \end{equation*}
 
     \noindent
     for some constant $C$ and all $t \in [0, T]$. Then for any $t \in [0, T]$, we have
-
+%
     \begin{equation*}
         y(t) \leq C e^{\int_{0}^{t} a(s) \d s} .
     \end{equation*}
@@ -67,21 +88,20 @@ This formulation can be found in \cite{chepyzhov02}.
 
 \begin{definition}{}{}
     Let $\Omega \subseteq \R^d$ be open. A Lebesgue measurable function $f: \Omega \to \R$ is said to be \emph{locally integrable} if
-
+%
     \begin{equation*}
         \int_K |f| < \infty
     \end{equation*}
 
     for all compact subsets $K$ of $\Omega$. The space of all locally integrable functions is denoted by $L^1_\text{loc}(\Omega)$, where we identify two functions with each other if they agree almost everywhere in $\Omega$.
 \end{definition}
-\todo{Put this before FLCV}
 
 An important fact that should be noted is that every function that is square-integrable is also locally integrable. That is, $\Ltwo{\Omega} \subseteq L^{1}_\text{loc}(\Omega)$. For the sake of completeness, we will sometimes state definitions or results with the hypothesis that a function is locally integrable, only to use them on functions that are square-integrable.
 
-We now continue with some concepts that are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to partial differential equations (PDEs).
+We now continue with some concepts that are often used to translate local properties into global results. This method plays a fundamental part in our later discussions about the formulation and analysis of weak forms and solutions to PDEs.
 
 Let $X$ be a topological space. A function $\phi: X \to \R$ is said to have \emph{compact support} if the set
-
+%
 \begin{equation*}
     \text{supp}(\phi) := \overline{\{ x \in X \mid \phi (x) \neq 0 \}}
 \end{equation*}
@@ -93,7 +113,7 @@ An important property of these functions is that they must be 0 on the boundary 
 
 \begin{lemma}{Fundamental Lemma of the Calculus of Variations}{flcv}
     Let $\Omega \subseteq \R^{d}$ be open and $f \in L^{1}_\text{loc}(\Omega)$. If
-
+%
     \begin{equation*}
         \int_{\Omega} f \phi = 0
     \end{equation*}
@@ -103,7 +123,7 @@ An important property of these functions is that they must be 0 on the boundary 
 
 \begin{proof}
     For every $\eps > 0$, define $\eta_\eps \in C_c^\infty$ as the standard mollifier from \cite[Appendix C.5]{evans2010partial}. Then Theorem 7 from \cite[Appendix C.5]{evans2010partial} implies that
-
+%
     \begin{equation*}
         \int_\Omega \eta_\eps(x - y) f(y) \d y \to f(x) \qquad \text{as } \eps \to 0
     \end{equation*}
@@ -115,7 +135,7 @@ An important property of these functions is that they must be 0 on the boundary 
 Multiplying a PDE with a test function and integrating by parts is sometimes referred to as \emph{testing against} a test function $\phi \in C^\infty_c(\Omega)$. We will see more applications of this in \cref{sec:weak_derivatives}.
 
 When we are differentiating functions in $C^k$ defined in a subset of $\R^d$, we sometimes use the abbreviated notation
-
+%
 \begin{equation*}
     D^\alpha := \frac{\partial^{|\alpha|}}{\partial x_1^{\alpha_1} \dots \partial x_d^{\alpha_d}} ,
 \end{equation*}

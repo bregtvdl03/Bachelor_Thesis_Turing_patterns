@@ -2,6 +2,7 @@ Before we start proving the existence of solutions to this model, we must discus
 
 We first consider the PDE, proceeding similarly to \cref{sec:weak_forms}. To state the weak formulation, we assume $u$, $u_b$ and $v$ are smooth solutions to \cref{sys:ODEs,sys:PDEs,sys:Init}. We multiply the PDE by a smooth function $\phi \in C^\infty(\Omega)$ and integrate over $\Omega$, giving
 
+%
 \begin{equation*}
     \begin{aligned}
         \int_\Omega v_t \phi &= D_v \int_\Omega \Delta v \phi - \delta_v \int_{\Omega} v \phi \\
@@ -19,30 +20,30 @@ for all $t \in (0, T)$, which we can write using inner product notation as
 \end{equation*}
 
 \noindent
-We can substantially weaken the regularity conditions on $v$ while keeping the terms in this equation well-defined. Both $v$ and $\nabla v$ should be $L^2$ in space, i.e. we would need $v \in L^2(0, T; H^1(\Omega))$. Instead of assuming the same regularity for $v_t$, we can generalise even further and assume that $v_t \in L^2(0, T; H^1(\Omega)^*)$. This uses the fact that $L^2(\Omega)$ is identified with a subspace of $H^1(\Omega)^*$ by identifying a function $f \in L^2(\Omega)$ with a functional $f^* \in H^1(\Omega)^*$ defined by
-
+We can substantially weaken the regularity conditions on $v$ while keeping the terms in this equation well-defined. Both $v$ and $\nabla v$ should be square integrable in space, i.e. we would need $v \in L^2(0, T; H^1(\Omega))$. Instead of assuming the same regularity for $v_t$, we can generalise even further and assume that $v_t \in L^2(0, T; H^1(\Omega)^*)$. This uses the fact that $L^2(\Omega)$ is identified with a subspace of $H^1(\Omega)^*$ by identifying a function $f \in L^2(\Omega)$ with a functional $f^* \in H^1(\Omega)^*$ defined by
+%
 \begin{equation*}
     \pair{f^*, \phi} := \inner{f, \phi}_{\Ltwo{\Omega}}, \qquad \phi \in H^1(\Omega).
 \end{equation*}
 
 \noindent
 As a result, we can write
-
+%
 \begin{equation}\label{eq:weak_pde}
     \pair{v_t, \phi} = \inner{P_v, \phi}_{\Ltwo{\Gamma}} - \kon \inner{u^2 v, \phi}_{\Ltwo{\Gamma}} + \koff \inner{u_b, \phi}_{\Ltwo{\Gamma}} - D_v \inner{\nabla v, \nabla \phi}_{\Ltwo{\Omega; \R^d}} - \delta_v \inner{v, \phi}_{\Ltwo{\Omega}}.
 \end{equation}
 
-Note that this requires us to show that a solution $u$ is essentially bounded. Otherwise, $u^2 v$ might not be of $L^2$-regularity, so the term $(u^2 v, \phi)_{\Ltwo{\Gamma}}$ would not be well-defined. Using \cref{prop:approx_by_smooth}, we can show that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this derivation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is a function $v$ in a suitable Sobolev space that satisfies \cref{eq:weak_pde} for almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
+Note that this in fact requires higher integrability of the solution $u$. Otherwise, $u^2 v$ might not be square integrable, so the term $(u^2 v, \phi)_{\Ltwo{\Gamma}}$ would not be well-defined. Therefore, we will consider solutions $u$ that are essentially bounded. Using \cref{prop:approx_by_smooth}, we can show that \cref{eq:weak_pde} also holds for more general functions $\phi \in H^1(\Omega)$ . Additionally, since we used integration with respect to space in this derivation, this expression only depends on time. For these reasons, a weak solution of \cref{sys:PDEs} is a function $v$ in a suitable Sobolev space that satisfies \cref{eq:weak_pde} for almost every $t \in (0, T)$ and for all $\phi \in H^1(\Omega)$. 
 
-For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$. To this end, we assume a solution $v \in \pdespace$ of the PDE exists. We fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
-
+For the ODEs, we want to use \cref{thm:caratheodory}, i.e. we will be looking for solutions of the system in the sense of Carath\'eodory on $[0, T]$ for fixed points on $\Gamma$. To this end, we assume a solution $v \in \pdespace$ of the PDE exists. We fix $x \in \Gamma$ and look for an absolutely continuous function $w := (u(\cdot, x), u_b(\cdot, x))$ such that
+%
 \begin{equation}\label{eq:weak_ode}
     w'(t) = F(t, w(t))
 \end{equation}
 
 \noindent
 almost everywhere, where $F: \R \times \R^2 \to \R^2$ is given by
-
+%
 \begin{equation}\label{eq:ode_system_function}
     F(t, (u, u_b)) = \begin{pmatrix}
         P_u + \alpha u_b - \delta_u u - 2 k_{on} u^2 \gamma v(t, x) + 2 \koff u_b \\
@@ -57,7 +58,7 @@ We can now combine these two formulations and start discussing the existence and
 
 \begin{definition}{}{}
     The functions $u, u_b \in H^1(0, T; \Ltwo{\Gamma})$ and $v \in \Ltwo{0, T; H^1(\Omega)}$ with $v_t \in \Ltwo{0, T; H^1(\Omega)^*}$ are \emph{weak solutions} to \cref{sys:ODEs,sys:PDEs,sys:Init} if $v$ satisfies \cref{eq:weak_pde} for almost every $t \in [0, T]$ and $\phi \in H^1(\Omega)$ and 
-    
+    %
     \begin{equation*}
         w(t) = (u(t)(x), u_b(t)(x))
     \end{equation*}

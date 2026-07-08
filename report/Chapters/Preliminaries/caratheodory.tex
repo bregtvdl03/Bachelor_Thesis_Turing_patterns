@@ -1,30 +1,8 @@
-Next, we develop a weakened and more general notion of solutions to ordinary differential equations (ODEs).
-
-\begin{definition}{}{}
-    Let $a < b$. A function $f: [a, b] \to \R$ is called \emph{absolutely continuous} if for every $\eps > 0$, there exists a $\delta > 0$ such that for any finite collection of subintervals $\left\{ (x_k, y_k) \right\}_{k = 1}^{N}$ of $[a, b]$,
-
-    \begin{equation*}
-        \sum_{k = 1}^{N} (y_k - x_k) < \delta \quad \implies \quad \sum_{k = 1}^{N} \left| f(y_k) - f(x_k) \right| < \eps.
-    \end{equation*}
-\end{definition}
-
-This notion of continuity is much stronger than the traditional one. There is a crucial equivalence, proved in \cite{nielsen97}.
-
-\begin{proposition}{}{}
-    A function $f: [a, b] \to \R$ is absolutely continuous if and only if $f$ has derivative $f'$ almost everywhere, $f'$ is integrable, and
-
-    \begin{equation*}
-        f(x) = f(a) + \int_{a}^{x} f'(t) \d t
-    \end{equation*}
-
-    for every $x \in [a, b]$.
-\end{proposition}
-
-We now have enough context to define a new class of ODE solutions. 
+Next, we develop a weakened and more general notion of solutions to ODEs.
 
 \begin{definition}{}{}
     Let $n$ be a positive integer, $I$ an interval, $x: I \to \R^n$ and $f: S \to \R^n$ for some set $S \subseteq \R \times \R^n$. Then $x$ is called a \emph{solution of}
-
+%
     \begin{equation}\label{eq:standard_ode}
         x'(t) = f(t, x(t))
     \end{equation}
@@ -32,23 +10,24 @@ We now have enough context to define a new class of ODE solutions.
     \emph{in the sense of Carath\'eodory on $I$} if $x$ is absolutely continuous, $(t, x(t)) \in S$ for every $t \in I$ and \cref{eq:standard_ode} is satisfied for almost every $t \in I$.
 \end{definition}
 
+\noindent
 Since this definition requires less from the solution, there is also a more general existence theorem, found in \cite{coddington_theory_1984}.
 
 \begin{theorem}{Carath\'eodory's existence theorem}{caratheodory}
     Let $n$ be a positive integer, $a, b > 0$ and $(t_0, x_0) \in \R \times \R^n$. Define
-
+%
     \begin{equation*}
         R := \{ (t, x) \in \R \times \R^n \mid |t - t_0| \leq a \text{ and } \left|x - x_0\right| \leq b \}
     \end{equation*}
 
     and let $f: R \to \R^n$ be continuous in $x$ for every fixed $t$, measurable in $t$ for every fixed $x$ and bounded by some time-dependent integrable function $m$,
-    
+    %
     \begin{equation*}
         \left|f(t, x)\right| \leq m(t)
     \end{equation*}
 
     for all $(t, x) \in R$. Then the differential equation
-
+%
     \begin{equation*}
         x'(t) = f(t, x(t))
     \end{equation*}
