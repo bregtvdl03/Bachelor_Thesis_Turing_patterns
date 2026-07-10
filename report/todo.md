@@ -1,3 +1,8 @@
 - acknowledgements
-- % after equations
+- equation spacing
 - simulations
+  - Schnakenberg with decay
+  - 2d 2 species
+  - 2d 3 species
+  - 3d 2 species
+  - 3d 3 species
