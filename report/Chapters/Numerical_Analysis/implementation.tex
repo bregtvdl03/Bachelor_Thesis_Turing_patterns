@@ -1,4 +1,4 @@
-We now derive the time discretisations of \cref{eq:threespeciesmodel,eq:twospeciesmodel}. For both models, we use an IMEX scheme where we choose implicit discretisation for all linear terms and explicit discretisation for the non-linear reaction. For \cref{eq:twospeciesmodel}, this results in the iteration
+We now derive the time discretisations of Systems \eqref{eq:twospeciesmodel} and \eqref{eq:threespeciesmodel}. For both models, we use an IMEX scheme where we choose implicit discretisation for all linear terms and explicit discretisation for the non-linear reaction. For System \eqref{eq:twospeciesmodel}, this results in the iteration
 %
 \begin{equation}\label{eq:2s_weak_form_surface}
     (1 + \tau \gamma \delta_u) \int_{\Gamma_h} u_{n + 1} \psi \d S + \tau D_u \int_{\Gamma_h} \nabla u_{n + 1} \cdot \nabla \psi \d S = \int_{\Gamma_h} u_n \psi \d S + \tau \gamma \int_{\Gamma_h} \left[ P_u + \beta u_n^2 v_n \right] \psi \d S
@@ -12,7 +12,7 @@ for the surface PDE, where we now let $\Gamma_h$ denote the submesh of $\partial
 \end{equation}
 
 \noindent
-for the bulk PDE, where $\psi \in \mathcal{V}_{\Gamma_h}$ and $\phi \in \mathcal{V}_{\Omega_h}$. With the same approach, \cref{eq:threespeciesmodel} admits the time discretisation
+for the bulk PDE, where $\psi \in \mathcal{V}_{\Gamma_h}$ and $\phi \in \mathcal{V}_{\Omega_h}$. With the same approach, System \eqref{eq:threespeciesmodel} admits the time discretisation
 %
 \begin{equation}\label{eq:3s_u}
     \begin{aligned}

@@ -1,4 +1,4 @@
-Numerical methods for ODEs typically include defining a small time step to discretise the equation and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spacial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. One method that uses this approach is the \emph{finite difference} method, which is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case \cite{quarteroni07}, so we need a more robust and adaptable approach.
+Numerical methods for ODEs typically include defining a small time step to discretise the equation and using the ODE to derive a suitable iteration. In the study of PDEs, one might think to extend this approach to the spatial variable. This would result in defining a time step $\tau > 0$ as well as a space discretisation $h > 0$ and discretising the domain $(0, T) \times \Omega$ as a subset of $\tau \Z \times h\Z^{d}$. One method that uses this approach is the \emph{finite difference} method, which is very successfully applied to a wide range of PDEs. However, this method is fairly hard to use when the dimension gets higher than $d = 1$ or $d = 2$, or the shape of the domain becomes more complex than, for instance, a rectangle. Our model is defined on a domain that contains holes that are designed to model cells and as a result, will contain some curvature. The finite difference method is too unreliable in this case \cite{quarteroni07}, so we need a more robust and adaptable approach.
 
 \subsection{Basic construction}
 
@@ -18,7 +18,7 @@ with Neumann boundary conditions
 \end{equation}
 
 \noindent
-Here, $\Omega \subseteq \R^d$ is an open and bounded set with $C^1$ boundary and $f$ and $g$ are known real-valued functions on $\Omega$ and $\partial \Omega$, respectively. We first derive the weak form of this PDE. Multiply \cref{eq:fem_ex_poisson} with a smooth function $\phi \in C^\infty(\Omega)$ and integrate to get
+Here, $\Omega \subseteq \R^d$ is an open and bounded set with $C^1$ boundary and $f$ and $g$ are known real-valued functions on $\Omega$ and $\partial \Omega$, respectively. We first derive the weak form of this PDE. Multiply \cref{eq:fem_ex_poisson} with a smooth function $\phi \in C^\infty(\overline{\Omega})$ and integrate to get
 %
 \begin{equation*}
     \int_\Omega f \phi = \int_\Omega \Delta u \phi = \int_{\partial \Omega} \pderiv[u]{\nu} \phi \d S - \int_\Omega \nabla u \cdot \nabla \phi = \int_{\partial \Omega} g \phi \d S - \int_\Omega \nabla u \cdot \nabla \phi.
@@ -169,11 +169,11 @@ In this example, we first discretised time, leading to a PDE in space which was 
 \end{equation*}
 
 \noindent
-Then the process of integrating over $\Omega$ and using integration by parts leads to a system of linear ODEs for $U(t) = \left(U_1(t), \dots, U_m(t)\right)$, called the \emph{semi-discrete} form of the PDE \cite{vidar84}. This approach is more similar to the Galerkin method for proving existence and uniqueness of weak solutions to PDEs as demonstrated in \cite{evans2010partial}. The reason why we instead choose to illustrate discretising time first is that, as we will discuss later, the libraries we use to simulate the PDEs require us to input the form of \cref{eq:fem_weak_form}, after which it will derive the linear system of equations for us. We therefore first think about discretising time instead of first discretising space.
+Then the process of integrating over $\Omega$ and using integration by parts leads to a system of linear ODEs for $U(t) = \left(U_1(t), \dots, U_m(t)\right)$, called the \emph{semi-discrete} form of the PDE \cite{vidar84}. This approach is more similar to the Galerkin method for proving existence and uniqueness of weak solutions to PDEs as demonstrated in \cite{evans2010partial}. The reason why we instead choose to illustrate discretising time first is that, as we will discuss later, the libraries we use to simulate the PDEs require us to input the form of \cref{eq:fem_weak_form}, after which it will derive the linear system of equations for us. We therefore first discretise time instead of first discretising space.
 
 \subsection{Bulk-surface equations}
 
-In a bulk-surface setting, interacting functions are defined on different domains that depend on each other, so we should carefully think about how to discretise them. Let $\Gamma \subseteq \partial \Omega$. When simulating a bulk-surface equation, we first discretise the bulk and extract the surface mesh from the bulk mesh by defining the set of \emph{boundary facets} (or \emph{exterior facets})
+In a bulk-surface setting, the interacting functions are defined on different spatial domains of different dimensions, so we should carefully think about how to discretise them. Let $\Gamma \subseteq \partial \Omega$. When simulating a bulk-surface equation, we first discretise the bulk and extract the surface mesh from the bulk mesh by defining the set of \emph{boundary facets} (or \emph{exterior facets})
 %
 \begin{equation*}
     \mathcal{F}_h^e := \{ S \mid S \text{ is a $(d-1)$-dimensional subsimplex of some } T \in \mathcal{T}_h \text{ and every vertex of $S$ lies on } \Gamma\},

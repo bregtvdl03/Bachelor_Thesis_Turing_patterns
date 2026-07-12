@@ -116,7 +116,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
     \end{align*}
 
     \noindent
-    By application of Gronwall's lemma, this shows that $u_-(t) = 0$ for almost all $t \in [0, \beta]$, so $u \geq 0$.
+    Applying Gronwall's lemma, this shows that $u_-(t) = 0$ for almost all $t \in [0, \beta]$, so $u \geq 0$.
     
     We can use the non-negativity of $u$ and $u_b$ to show that these functions are bounded. Define $r := u + 2 u_b$ and note that
 %
@@ -142,7 +142,7 @@ These ODEs are now \emph{decoupled} from the PDE, so we can investigate the exis
     \end{equation}
 
     \noindent
-    where $M = \esssup(u_0 + 2 u_{b, 0})$, for almost every $x \in \Gamma$ and $t \in [0, \beta]$.
+    where $M = \esssup(u_0 + 2 u_{b, 0})$ and $T \geq \widetilde{T}$ is the original final time, for almost every $x \in \Gamma$ and $t \in [0, \beta]$.
 
     Now suppose we have solutions $u$ and $u_b$ on a maximum time interval $[0, \widetilde{\beta})$. Since we have a bound for $u$ and $u_b$ that is independent of $\widetilde{\beta}$, we can use the continuation argument from \cite{coddington_theory_1984} and see that we have a solution for $u$ and $u_b$ on $[0, \widetilde{T}]$.
 
@@ -168,7 +168,7 @@ for almost every $t \in [0, \widetilde{T}]$. This PDE is now decoupled from the 
 \end{lemma}
 
 \begin{proof}
-    To prove the existence and uniqueness goes beyond the scope of this thesis. Hence, we assume that a unique weak solution $v$ of the PDE exists and $v$ is essentially bounded by a constant depending on $T$. This can be proven using Galerkin methods, as demonstrated in \cite{evans2010partial}. Let $v$ now be such a solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $v_+ := \max(0, v)$ and $v_- := - \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then as discussed in \cite{evans2010partial}, we have $v_{+}, v_{-} \in \Ltwo{0, \widetilde{T}; H^1(\Omega)}$ and $\left(v_{+}\right)_t, \left(v_{-}\right)_t \in \Ltwo{0, \widetilde{T}; H^1(\Omega)^*}$. Furthermore, $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for all almost every $t$ we have
+    To prove the existence and uniqueness goes beyond the scope of this thesis. Hence, we assume that a unique weak solution $v$ of the PDE exists and $v$ is essentially bounded by a constant depending on $T$. This can be proven using Galerkin methods, as demonstrated in \cite{evans2010partial}. Let $v$ now be such a solution. To show that $v$ is non-negative, we estimate the negative part of $v$. Let $v_{+}$ and $v_{-}$ be defined as $v_+ := \max(0, v)$ and $v_- := - \min(0, v)$ respectively, such that $v = v_{+} - v_{-}$. Then as discussed in \cite{evans2010partial}, we have $v_{+}, v_{-} \in \Ltwo{0, \widetilde{T}; H^1(\Omega)}$ and $\left(v_{+}\right)_t, \left(v_{-}\right)_t \in \Ltwo{0, \widetilde{T}; H^1(\Omega)^*}$. Furthermore, $v_t v_{-} = - (v_{-})_t v_{-}$, as well as $\nabla v \cdot \nabla v_{-} = - \left|\nabla v_{-}\right|^2$, so for almost every $t$ we have
 %
     \begin{equation*}
          \frac{\d}{\d t} \frac12 \norm{v_{-}}_{\Ltwo{\Omega}}^2 = \pair{(v_-)_t, v_-} = - \pair{v_t, v_{-}}
@@ -187,7 +187,7 @@ for almost every $t \in [0, \widetilde{T}]$. This PDE is now decoupled from the 
     \end{equation*}
 
     \noindent
-    where we used the non-negativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing the time derivative is non-positive, is by having
+    where we used the non-negativity of $v_-$ and $u_b$ in the last step. By \cref{thm:lionsmagenes}, we know that $v$ is continuous in time with respect to the $L^2$-norm. The only way for this to be achieved while also guaranteeing that the time derivative is non-positive, is by having
 %
     \begin{equation*}
         \norm{v_{-}}_{\Ltwo{\Omega}} = 0
@@ -270,7 +270,7 @@ Using \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we can define two operato
 \end{equation*}
 
 \noindent
-We want to show that this operator has a unique fixed point. If this is the case, we have a functions $v \in \pdespace$ such that $\mathcal{T}(v) = v$, and let $(u, u_b) \in \odespace$ denote $(u, u_b) = \mathcal{T}_{1}(v)$. Given that then $\mathcal{T}_{2}(u, u_b) = v$, by definition this means that $v$ solves \cref{eq:weak_pde} for almost every $t \in (0, \widetilde{T})$, and $w = (u, u_b)$ solves \cref{eq:weak_ode} for almost every $t \in (0, \widetilde{T})$ and $x \in \Gamma$, meaning that $v$, $u$ and $u_b$ are weak solutions of our model on the local time scale $(0, \widetilde{T})$. Conversely, if $v$, $u$ and $u_b$ are weak solutions to the model, then by the uniqueness of solutions in \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we must have that $\mathcal{T}_{2}(u, u_b) = v$ and $\mathcal{T}_{1}(v) = (u, u_b)$, and thus $\mathcal{T}(v) = v$.
+We want to show that this operator has a unique fixed point. If this is the case, we have a function $v \in \pdespace$ such that $\mathcal{T}(v) = v$, and let $(u, u_b) \in \odespace$ denote $(u, u_b) = \mathcal{T}_{1}(v)$. Given that then $\mathcal{T}_{2}(u, u_b) = v$, by definition this means that $v$ solves \cref{eq:weak_pde} for almost every $t \in (0, \widetilde{T})$, and $w = (u, u_b)$ solves \cref{eq:weak_ode} for almost every $t \in (0, \widetilde{T})$ and $x \in \Gamma$, meaning that $v$, $u$ and $u_b$ are weak solutions of our model on the local time scale $(0, \widetilde{T})$. Conversely, if $v$, $u$ and $u_b$ are weak solutions to the model, then by the uniqueness of solutions in \cref{lem:exun_frozen_odes,lem:exun_frozen_pde}, we must have that $\mathcal{T}_{2}(u, u_b) = v$ and $\mathcal{T}_{1}(v) = (u, u_b)$, and thus $\mathcal{T}(v) = v$.
 
 It should be clear now how we will apply Banach's fixed-point theorem. If we prove that $\mathcal{T}$ is a contraction, we can guarantee the existence of a fixed point and therefore a weak solution. Since every weak solution of the model is also a fixed point, the theorem also grants us uniqueness of such solutions. To prove that $\mathcal{T}$ is a contraction, we first show this for $\mathcal{T}_{2}$ and $\mathcal{T}_{1}$ separately, after which we can easily combine the results.
 

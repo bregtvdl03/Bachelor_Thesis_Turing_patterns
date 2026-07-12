@@ -1,22 +1,7 @@
-In this thesis, we have discussed multiple related systems of differential equations modelling interactions of ligands and receptors. Using a fixed-point argument, we have seen that weak solutions to the ODE-PDE system of \cref{ch:Bulk_surface_model} exist for every finite time interval and that they are unique. Furthermore, we have proven that these solutions are bounded and non-negative on these finite time intervals, which are both mathematically desirable and biologically meaningful.
+In this thesis, we have discussed different bulk-surface systems modelling interactions of ligands and receptors. Using a fixed-point argument, we have seen that weak solutions to the ODE-PDE system of \cref{ch:Bulk_surface_model} exist for every finite time interval and that they are unique. Furthermore, we have proven that these solutions are bounded and non-negative on these finite time intervals, which are both mathematically desirable and biologically meaningful.
 
 We then studied how spatial organisations can arise in ligand-receptor systems through the theory of Turing patterns. This provided a theoretical explanation for how receptors can be found distributed in clusters despite their diffusive nature. Building on this theory, we introduced a modified model that incorporates diffusion on the cell membrane and derived a reduced two-species formulation that is simpler to analyse and simulate.
 
-Finally, we discussed the finite element method and used it to numerically solve multiple bulk-surface reaction-diffusion equations. These simulations showed that the modified model is able to generate Turing patterns. We reduced the model to a two-species variant and showed that this reduced form reproduces the behaviour of the full system while requiring less computational effort. This makes the two-species system an adequate alternative for future analytical and numerical studies.
+Finally, we discussed the finite element method and used it to numerically solve two different bulk-surface reaction-diffusion equations in two and three dimensional domains. These simulations showed that the modified model is able to generate Turing patterns. We reduced the model to a two-species variant and showed that this reduced form reproduces the behaviour of the full system while requiring less computational effort. This makes the two-species system an adequate alternative for future analytical and numerical studies.
 
-There are multiple interesting directions for further research. One could drop the assumption of \cref{ch:Bulk_surface_model} that free and bounded receptors are fixed in their position on the cell membrane and instead study the existence and uniqueness of solutions of \cref{eq:threespeciesmodel}. Additionally, the regularity of these solutions could be studied, as well as their long-time behaviour such as convergence towards a periodic steady state. It could also be interesting to derive a constant bound for these solutions for infinite time intervals, inspired by the observations in \cref{ch:Numerical_Analysis}. To ensure the accuracy of conclusions drawn from the numerical solutions, one could study stability and convergence properties of the finite element method applied to these models. Finally, comparing the predictions of these models with experimental data would help further develop them as useful tools for biological studies. 
-
-
-% Existence and uniqueness proof
-% non-negativity and boundedness
-% extend analysis to PDEs
-% regularity of solutions
-
-% used fem for analysing two and three species model
-% three species model is able to generate turing patterns
-% very similar patterns for the two and three species models
-% complex distribution is similar to receptor
-% two species model seems to be good representation for three species
-
-% accuracy and convergence properties of numerical solutions
-% studying a uniform bound for the solutions
+There are multiple interesting directions for further research. One could drop the assumption of \cref{ch:Bulk_surface_model} that free and bounded receptors are fixed in their position on the cell membrane and instead study the existence and uniqueness of solutions of System \eqref{eq:threespeciesmodel}. Additionally, the regularity of these solutions could be studied, as well as their long-time behaviour such as convergence towards a steady state. It could also be interesting to derive a constant bound for these solutions for infinite time intervals, inspired by the observations in \cref{ch:Numerical_Analysis}. To ensure the accuracy of conclusions drawn from the numerical solutions, one could study stability and convergence properties of the finite element method applied to these models. Finally, comparing the predictions of these models with experimental data would help further develop them as useful tools for biological studies. 

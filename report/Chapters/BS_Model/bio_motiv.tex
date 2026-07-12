@@ -59,9 +59,9 @@ We derive a model that is similar to the ones used in \cite{iber2014}.The ligand
 
 When a ligand binds to a free receptor, the concentrations of free receptors and ligands decrease, and the concentration of bounded receptors at that position increases accordingly. This reaction is described by $\kon u^2 v$ for some $\kon > 0$. After some time, the bounded receptor has done its task, passing the signal through to the interior of the cell. It releases the ligand and is now available to bind to a new ligand again. The concentration of bounded receptors decreases, and the concentration of free receptors and ligands increase accordingly. The rate of this dissociation is described by $\koff u_b$, where $\koff > 0$.
 
-Finally, two reactions that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter the domain $\Omega$ through the cell membrane. We assume the production of ligands and free receptors mainly happens at constant rates $P_u > 0$ and $P_v > 0$, but is also upregulated by the concentration of bounded receptors, which is taken into account by $\alpha u_b$ for some upregulation coefficient $\alpha > 0$. The ligands, free receptors and complex receptors decay at constant rates $\delta_v$, $\delta_u$ and $\delta_{u_b}$, respectively.
+Finally, two reactions that happen constantly are production and decay. To keep intercellular communication possible, cells produce ligands and receptors that enter the domain $\Omega$ through the cell membrane. We assume the production of ligands and free receptors mainly happens at constant rates $P_u > 0$ and $P_v > 0$, but is also upregulated by the concentration of bounded receptors, which is taken into account by $\alpha u_b$ for some upregulation coefficient $\alpha > 0$. The ligands, free receptors and receptor complexes decay at constant rates $\delta_v > 0$, $\delta_u > 0$ and $\delta_{u_b} > 0$, respectively.
 
-We can describe the dynamics of ligands and receptors by a system of coupled differential equations. Denote the diffusion coefficient by $D_v > 0$ and the outward unit normal vector on $\partial \Omega$ by $\nu$. Then the concentrations of receptors can be described by the system of ODEs given by
+We can describe the dynamics of ligands and receptors by a system of coupled ODEs given by
 %
 \begin{equation}
     \label{sys:ODEs}
@@ -72,9 +72,9 @@ We can describe the dynamics of ligands and receptors by a system of coupled dif
 \end{equation}
 
 \noindent
-Note that even though they are given by only two equations, this is actually a system of uncountably many ODEs. For every boundary point $x \in \Gamma$, we have one ODE for the function $t \mapsto u(t, x)$ and one for the function $t \mapsto u_b(t, x)$.
+Note that even though this is a system of two equations, these are actually uncountably many ODEs. For every boundary point $x \in \Gamma$, we have one ODE for the function $t \mapsto u(t, x)$ and one for the function $t \mapsto u_b(t, x)$.
 
-Since the dynamics of the ligands include diffusion in $\Omega$ and reaction on $\Gamma$, they can be described by the PDE and boundary conditions given by
+Denote the diffusion coefficient by $D_v > 0$ and the outward unit normal vector on $\partial \Omega$ by $\nu$. Since the dynamics of the ligands include diffusion in $\Omega$ and reaction on $\Gamma$, they can be described by the PDE and boundary conditions given by
 %
 \begin{equation}
     \label{sys:PDEs}
@@ -86,7 +86,7 @@ Since the dynamics of the ligands include diffusion in $\Omega$ and reaction on 
 \end{equation}
 
 \noindent
-Additionally, we need to specify initial conditions for the concentration of ligands and receptors. That is, the solutions should satisfy
+Additionally, we need to specify initial conditions for the concentrations of ligands and receptors. That is, the solutions should satisfy
 %
 \begin{equation}
     \label{sys:Init}
